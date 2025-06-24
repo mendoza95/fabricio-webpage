@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Portfolio{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+    <ul>
+        <li><a href="/{{ lang }}/">Home</a></li>
+        <li><a href="/{{ lang }}/about">About Me</a></li>
+        <li><a href="/{{ lang }}/projects">Projects</a></li>
+        <li><a href="/{{ lang }}/education">Education</a></li>
+        <li><a href="/{{ 'es' if lang == 'en' else 'en' }}/">
+            Switch to {{ 'Español' if lang == 'en' else 'English' }}
+        </a></li>
+    </ul>
+</nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
