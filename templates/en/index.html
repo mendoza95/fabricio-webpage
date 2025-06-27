@@ -2,5 +2,23 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <h1>Welcome to My Portfolio</h1>
+<div class="profile-container">
+    <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Your Name" class="profile-photo">
+    <div class="welcome-message">
+        <p>Hello! I'm Fabricio Mendoza, a Ph.D candidate in Computing Science based in Glasgow.</p>
+        <p>Currently: [Your Position] at [Your Institution/Company]</p>
+        <ul>
+            <li>🏆 Awarded [Award Name]</li>
+            <li>📄 Published in [Journal/Conference]</li>
+            <li>💻 Working on [Project Name]</li>
+        </ul>
+        <a href="{{ url_for('static', filename='cv.pdf') }}" class="btn">Download CV</a>
+        <a href="mailto:your@email.com" class="btn">Contact Me</a>
+        <div class="social-links">
+            <a href="https://github.com/yourusername">GitHub</a>
+            <a href="https://linkedin.com/in/yourusername">LinkedIn</a>
+        </div>
+    </div>
+</div>
 <p>This is the home page of my personal portfolio website.</p>
 {% endblock %}
