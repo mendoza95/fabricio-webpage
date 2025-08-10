@@ -1,3 +1,9 @@
 Flask==2.2.5
-Werkzeug==2.2.3
+Flask-FlatPages
+Flask-Mail
+Flask-WTF
 gunicorn==20.1.0
+Markdown
+Pygments
+PyYAML
+Werkzeug==2.2.3

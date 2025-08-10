@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Education{% endblock %}
 {% block content %}
-<h1>Education</h1>
-<p>Here you can list your academic background and achievements.</p>
+<section class="education-section">
+  <div class="container">
+    <h1 class="text-center mb-5">Education</h1>
+    <div class="timeline">
+      {% for item in education_history %}
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <div class="education-header">
+            {% if item.institution_logo %}
+            <img src="{{ url_for('static', filename=item.institution_logo) }}" alt="{{ item.institution }} Logo" class="institution-logo">
+            {% endif %}
+            <div>
+              <h3>{{ item.degree }}</h3>
+              <h4><a href="{{ item.institution_url }}" target="_blank" rel="noopener noreferrer">{{ item.institution }}</a></h4>
+              <p class="text-muted">{{ item.location }} | {{ item.start_year }} - {{ item.end_year }}</p>
+            </div>
+          </div>
+          <p>{{ item.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 {% endblock %}

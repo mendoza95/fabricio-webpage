@@ -76,19 +76,77 @@ p {
 .profile-container {
     display: flex;
     align-items: center;
-    gap: 2rem; /* space between photo and text */
+    gap: 2rem;
     margin-bottom: 2rem;
+    justify-content: space-between;
 }
 
 .profile-photo {
-    width: 100%;
-    max-width: 150px;   /* Adjust max-width as needed */
-    height: auto;
-    border-radius: 50%; /* Optional: circular photo */
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 15px;
     display: block;
-    margin: 0; /* Remove vertical margin for better alignment */
+    margin: 0;
 }
 
 .welcome-message {
     flex: 1;
 }
+
+.social-links a {
+    margin-right: 1rem;
+    font-size: 2rem;
+    color: #333;
+    transition: color 0.2s;
+}
+
+.social-links a:hover {
+    color: #0077b5; /* LinkedIn blue or your preferred color */
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Important for padding and width */
+}
+
+textarea.form-control {
+    min-height: 150px;
+    resize: vertical;
+}
+
+/* Alert Styles for Flashed Messages */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+

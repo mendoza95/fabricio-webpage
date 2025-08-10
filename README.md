@@ -31,13 +31,24 @@ To set up and run this application, follow these steps:
    cd my-personal-webpage
    ```
 
-3. **Install Dependencies**
-   Make sure you have Python installed. Then, install the required dependencies using pip:
+3. **Create and Activate a Virtual Environment**
+   It's recommended to use a virtual environment to manage dependencies.
+   ```
+   # Create a virtual environment
+   python3 -m venv venv
+
+   # Activate the virtual environment (on macOS/Linux)
+   source venv/bin/activate
+   # On Windows, use: venv\Scripts\activate
+   ```
+
+4. **Install Dependencies**
+   With your virtual environment activated, install the required dependencies using pip:
    ```
    pip install -r requirements.txt
    ```
 
-4. **Run the Application**
+5. **Run the Application**
    Start the Flask application by running:
    ```
    python app.py

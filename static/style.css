@@ -1,0 +1,303 @@
+/* 
+   A modern, clean, and responsive stylesheet for your personal webpage.
+*/
+
+/* --- CSS Variables for easy theming --- */
+:root {
+    --primary-color: #4A90E2;      /* A more vivid, modern blue */
+    --secondary-color: #50E3C2;    /* A bright teal for accents */
+    --background-color: #FFFFFF;   /* A clean white background */
+    --section-bg-alt: #F7F9FC;   /* A very light blue-grey for alternating sections */
+    --text-color: #4A4A4A;         /* A softer, dark grey for text */
+    --heading-color: #2E3D49;      /* A deep, desaturated blue for headings */
+    --card-bg-color: #ffffff;
+    --border-color: #E4E7EB;
+    --shadow-color: rgba(46, 61, 73, 0.15);
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+}
+
+/* --- General & Typography --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--heading-color);
+    margin-bottom: 0.75rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* --- Layout & Sections --- */
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+section {
+    padding: 5rem 1rem; /* Increased padding for more space */
+    border-bottom: 1px solid var(--border-color);
+    /* This ensures that when you jump to a section, the heading isn't
+       covered by the sticky navigation bar. This value should match
+       the fixed height of your header. */
+    scroll-margin-top: 5rem;
+}
+
+section:last-of-type {
+    border-bottom: none;
+}
+
+section:nth-of-type(even) {
+    background-color: var(--section-bg-alt); /* Alternating background color for clear separation */
+}
+
+/* --- Header & Navigation --- */
+.primary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    background-color: var(--card-bg-color);
+    box-shadow: 0 2px 5px var(--shadow-color);
+    z-index: 1000;
+    height: 5rem; /* Fixed height for reliable scroll-margin */
+}
+
+.nav-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--heading-color);
+}
+.nav-logo:hover {
+    text-decoration: none;
+}
+
+.primary-navigation {
+    list-style: none;
+    display: flex;
+    gap: clamp(1rem, 5vw, 2.5rem); /* Responsive gap */
+    align-items: center;
+}
+
+.primary-navigation a {
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.primary-navigation a:hover {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.mobile-nav-toggle {
+    display: none;
+}
+
+/* For accessibility on the menu button */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* --- Project & Education Cards --- */
+.projects-container,
+.education-container,
+.experience-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.project-card,
+.education-item,
+.experience-item {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.project-card:hover,
+.education-item:hover,
+.experience-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.project-card img,
+.education-item img,
+.experience-item img {
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+/* --- Contact Form --- */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+form p {
+    margin-bottom: 1rem;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="email"],
+form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+form input[type="submit"] {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* --- Flash Messages --- */
+.flash-messages {
+    max-width: 600px;
+    margin: 0 auto 1rem auto;
+}
+
+.alert-success, .alert-danger {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.alert-success { background-color: var(--success-color); }
+.alert-danger { background-color: var(--danger-color); }
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--heading-color);
+    color: var(--background-color);
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .primary-navigation {
+        position: fixed;
+        z-index: 1000;
+        inset: 0 0 0 30%; /* top, right, bottom, left */
+        flex-direction: column;
+        padding: min(20vh, 10rem) 2rem;
+        gap: 2rem;
+
+        background: hsl(0 0% 100% / 0.1);
+        backdrop-filter: blur(1rem);
+        -webkit-backdrop-filter: blur(1rem);
+
+        transform: translateX(100%);
+        transition: transform 350ms ease-out;
+    }
+
+    .primary-navigation[data-visible="true"] {
+        transform: translateX(0%);
+    }
+
+    .mobile-nav-toggle {
+        display: block;
+        position: absolute;
+        z-index: 2000;
+        background-color: transparent;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgb(46, 61, 73)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        width: 2rem;
+        height: 2rem;
+        border: 0;
+        top: 1.5rem;
+        right: 2rem;
+        cursor: pointer;
+    }
+
+    .mobile-nav-toggle[aria-expanded="true"] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgb(46, 61, 73)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M6 6l18 18M6 24L24 6'/%3e%3c/svg%3e");
+    }
+}
+
+/* --- Blog & News Styles --- */
+.posts-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.post-summary {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    transition: transform 0.2s ease-in-out;
+}
+
+.post-summary:hover {
+    transform: translateY(-3px);
+}
+
+.post-meta {
+    color: var(--secondary-color);
+    font-size: 0.9em;
+    margin-bottom: 1rem;
+}
