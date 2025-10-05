@@ -19,18 +19,19 @@
 
         <nav>
             <ul id="primary-navigation" class="primary-navigation" data-visible="false">
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#home">Home</a></li>
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#about">About</a></li>
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#education">Education</a></li>
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#experience">Work Experience</a></li>
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#projects">Projects</a></li>
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#news">News</a></li>
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#contact">Contact</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#home">{% if lang == 'en' %}Home{% else %}Inicio{% endif %}</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#about">{% if lang == 'en' %}About{% else %}Sobre Mí{% endif %}</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#education">{% if lang == 'en' %}Education{% else %}Educación{% endif %}</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#experience">{% if lang == 'en' %}Experience{% else %}Experiencia{% endif %}</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#projects">{% if lang == 'en' %}Projects{% else %}Proyectos{% endif %}</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#publications">{% if lang == 'en' %}Publications{% else %}Publicaciones{% endif %}</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#news">{% if lang == 'en' %}News{% else %}Noticias{% endif %}</a></li>
+                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#contact">{% if lang == 'en' %}Contact{% else %}Contacto{% endif %}</a></li>
                 <li class="language-switcher">
                 {% if lang == 'en' %}
-                    <a class="nav-link" href="{{ url_for('set_language', lang='es') }}">Español</a>
+                    <a class="language-toggle" href="{{ url_for('set_language', lang='es') }}">ES</a>
                 {% else %}
-                    <a class="nav-link" href="{{ url_for('set_language', lang='en') }}">English</a>
+                    <a class="language-toggle" href="{{ url_for('set_language', lang='en') }}">EN</a>
                 {% endif %}
                 </li>
             </ul>
@@ -40,6 +41,22 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    {# Modal for success messages #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            {% if category == 'success' %}
+            <div id="success-modal" class="modal-overlay">
+                <div class="modal-box">
+                    <h3>Success!</h3>
+                    <p>{{ message }}</p>
+                    <button id="modal-close-btn" class="modal-button">OK</button>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+
 
     <footer>
         <p>&copy; {{ now.year }} Fabricio Mendoza. All rights reserved.</p>

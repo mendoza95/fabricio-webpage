@@ -6,20 +6,26 @@ from datetime import datetime, timezone
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Email
-from flask_mail import Mail, Message
+from dotenv import load_dotenv
+import smtplib, ssl
+from email.message import EmailMessage
+
+load_dotenv(override=True)  # Force loading from .env, overriding existing env vars.
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Replace with a strong, random value in production
+app.secret_key = os.environ.get('SECRET_KEY')
 
 # Mail Configuration - IMPORTANT: Set these as environment variables for security
-app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
-app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER') or os.environ.get('MAIL_USERNAME')
+# We use .strip() to remove any accidental whitespace or invisible characters from the .env file.
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', '').strip()
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', '587').strip())
+app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL', 'false').strip().lower() in ['true', 'on', '1']
+# Explicitly set MAIL_USE_TLS to False if MAIL_USE_SSL is True, as they are mutually exclusive.
+app.config['MAIL_USE_TLS'] = False if app.config['MAIL_USE_SSL'] else True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', '').strip()
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '').strip()
+app.config['MAIL_DEFAULT_SENDER'] = (os.environ.get('MAIL_DEFAULT_SENDER') or os.environ.get('MAIL_USERNAME') or '').strip()
 
-mail = Mail(app)
 
 # Configuration for Flask-FlatPages
 app.config['FLATPAGES_EXTENSION'] = '.md'
@@ -57,16 +63,41 @@ class ContactForm(FlaskForm):
     message = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send')
 
+def send_email(subject, body, recipient):
+    """
+    A robust function to send an email using smtplib, bypassing Flask-Mail.
+    This uses the known-working connection logic.
+    """
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = app.config['MAIL_DEFAULT_SENDER']
+    msg['To'] = recipient
+
+    try:
+        context = ssl.create_default_context()
+        if app.config.get('MAIL_USE_SSL'):
+            with smtplib.SMTP_SSL(app.config['MAIL_SERVER'], app.config['MAIL_PORT'], context=context) as server:
+                server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
+                server.send_message(msg)
+        else: # Fallback for TLS, though SSL is preferred
+            with smtplib.SMTP(app.config['MAIL_SERVER'], app.config['MAIL_PORT']) as server:
+                server.starttls(context=context)
+                server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
+                server.send_message(msg)
+        return True, None
+    except Exception as e:
+        return False, e
 # Data for the home page with translations
 home_data = {
     'en': {
-        'title': "Hi, I'm Fabricio Mendoza",
+        'title': "Hi, I'm Fabricio Mendoza Granada",
         'subtitle': "This is my personal website showcasing my work and interests.",
         'button_text': "View My Work",
         'button_url_key': 'projects'
     },
     'es': {
-        'title': "Hola, soy Fabricio Mendoza",
+        'title': "Hola, soy Fabricio Mendoza Granada",
         'subtitle': "Este es mi sitio web personal donde muestro mi trabajo e intereses.",
         'button_text': "Ver Mis Proyectos",
         'button_url_key': 'projects'
@@ -255,6 +286,102 @@ work_experience_data = [
     }
 ]
 
+# Data for publications with translations
+publications_data = [
+    {
+        'year': 2024,
+        'url': 'https://link.to.publication/paper1', # Replace with the actual URL
+        'translations': {
+            'en': {
+                'title': 'A Groundbreaking Study on B-Chromatic Numbers',
+                'authors': 'Fabricio Mendoza, John Doe, Jane Smith',
+                'journal': 'Journal of Computational Complexity',
+                'description': 'This paper presents a novel approach to solving the b-chromatic number problem on special graph classes.'
+            },
+            'es': {
+                'title': 'Un Estudio Revolucionario sobre los Números B-Cromáticos',
+                'authors': 'Fabricio Mendoza, John Doe, Jane Smith',
+                'journal': 'Revista de Complejidad Computacional',
+                'description': 'Este artículo presenta un enfoque novedoso para resolver el problema del número b-cromático en clases especiales de grafos.'
+            }
+        }
+    },
+    # You can add more publications here
+]
+
+# Data for social media links
+social_media_data = [
+    {
+        'name': 'LinkedIn',
+        'url': 'https://www.linkedin.com/in/fabricio-augusto-mendoza-granada', # Replace with your URL
+        'username': 'fabricio-augusto-mendoza-granada',
+        'icon_svg': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>'
+    },
+    {
+        'name': 'GitHub',
+        'url': 'https://github.com/mendoza95', # Replace with your URL
+        'username': 'mendoza95',
+        'icon_svg': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>'
+    },
+    {
+        'name': 'Instagram',
+        'url': 'https://www.instagram.com/fabromendoza', # Replace with your URL
+        'username': '@fabromendoza',
+        'icon_svg': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>'
+    }#,
+    #{
+    #    'name': 'Facebook',
+    #    'url': 'https://www.facebook.com/fabricio.mendoza.9', # Replace with your URL
+    #    'username': 'fabricio.mendoza',
+    #    'icon_svg': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>'
+    #}
+]
+
+# Data for UI text elements that need translation
+ui_text_data = {
+    'en': {
+        'education_title': 'Education',
+        'experience_title': 'Work Experience',
+        'projects_title': 'Projects',
+        'publications_title': 'Publications',
+        'news_title': 'Latest News',
+        'contact_title': 'Contact Me',
+        'no_experience_message': 'No work experience to display yet.',
+        'no_publications_message': 'No publications to display yet.',
+        'no_news_message': 'No news yet. Check back soon!',
+        'technologies_label': 'Technologies',
+        'live_demo_button': 'Live Demo',
+        'github_repo_button': 'GitHub Repo',
+        'published_on_prefix': 'Published on',
+        'date_format': '%B %d, %Y',
+        'view_all_posts_button': 'View All Posts',
+        'blog_title': 'Blog',
+        'all_posts_title': 'All Posts',
+        'no_posts_found': 'No posts found.',
+
+    },
+    'es': {
+        'education_title': 'Educación',
+        'experience_title': 'Experiencia Laboral',
+        'projects_title': 'Proyectos',
+        'publications_title': 'Publicaciones',
+        'news_title': 'Últimas Noticias',
+        'contact_title': 'Contáctame',
+        'no_experience_message': 'Aún no hay experiencia laboral para mostrar.',
+        'no_publications_message': 'Aún no hay publicaciones para mostrar.',
+        'no_news_message': 'Aún no hay noticias. ¡Vuelve pronto!',
+        'technologies_label': 'Tecnologías',
+        'live_demo_button': 'Demo en Vivo',
+        'github_repo_button': 'Repositorio en GitHub',
+        'published_on_prefix': 'Publicado el',
+        'date_format': '%d de %B de %Y',
+        'view_all_posts_button': 'Ver Todas las Publicaciones',
+        'blog_title': 'Blog',
+        'all_posts_title': 'Todas las Publicaciones',
+        'no_posts_found': 'No se encontraron publicaciones.',
+    }
+}
+
 def _process_translated_list(data_list: list, lang: str) -> list:
     """Helper function to process a list of items with translations."""
     processed_list = []
@@ -307,11 +434,13 @@ def index(lang):
     # --- Gather all data for the page ---
     home_content = home_data.get(lang, home_data['en'])
     about_content = about_data.get(lang, about_data['en'])
+    ui_text = ui_text_data.get(lang, ui_text_data['en'])
 
     # Refactored data processing to a helper function to avoid repetition
     processed_projects = _process_translated_list(projects_data, lang)
     processed_education = _process_translated_list(education_data, lang)
     processed_experience = _process_translated_list(work_experience_data, lang)
+    processed_publications = _process_translated_list(publications_data, lang)
 
     # --- Fetch latest blog posts for the news section ---
     all_posts = [p for p in flatpages if p.path.startswith(lang + '/') and 'date' in p.meta]
@@ -322,11 +451,12 @@ def index(lang):
     form = ContactForm()
     if form.validate_on_submit():
         try:
-            msg = Message("New Contact Form Submission from your Website",
-                          recipients=[os.environ.get('MAIL_USERNAME')]) # Sends to your configured email
-            msg.body = f"From: {form.name.data} <{form.email.data}>\n\n{form.message.data}"
-            mail.send(msg)
-            flash('Your message has been sent successfully!' if lang == 'en' else '¡Tu mensaje ha sido enviado con éxito!', 'success')
+            email_body = f"From: {form.name.data} <{form.email.data}>\n\n{form.message.data}"
+            success, error = send_email("New Contact Form Submission", email_body, app.config['MAIL_USERNAME'])
+            if success:
+                flash('Your message has been sent successfully!' if lang == 'en' else '¡Tu mensaje ha sido enviado con éxito!', 'success')
+            else:
+                raise error
         except Exception as e:
             # It's safer to log the actual error for debugging and show a generic message to the user.
             app.logger.error(f"Mail sending failed: {e}")
@@ -343,7 +473,8 @@ def index(lang):
         form.submit.label.text = 'Enviar'
 
     # Pass all the prepared data to the index.html template
-    return render_template(f'{lang}/index.html',
+    # Render the single, unified index.html template
+    return render_template('index.html',
                            lang=lang,
                            form=form,
                            home=home_content,
@@ -351,25 +482,30 @@ def index(lang):
                            projects=processed_projects,
                            education=processed_education,
                            experience=processed_experience,
-                           latest_posts=latest_posts)
+                           ui_text=ui_text,
+                           latest_posts=latest_posts,
+                           publications=processed_publications,
+                           social_links=social_media_data)
 
 @app.route('/<lang>/blog/')
 def blog(lang):
     session['lang'] = lang
+    ui_text = ui_text_data.get(lang, ui_text_data['en'])
     # Get all pages, filter by language, and sort by date from newest to oldest
     posts = [p for p in flatpages if p.path.startswith(lang + '/') and 'date' in p.meta]
     posts.sort(key=lambda item: item.meta['date'], reverse=True)
-    return render_template(f'{lang}/blog.html', lang=lang, posts=posts)
+    return render_template('blog.html', lang=lang, posts=posts, ui_text=ui_text)
 
 
 @app.route('/<lang>/blog/<path:path>/')
 def post(lang, path):
     session['lang'] = lang
+    ui_text = ui_text_data.get(lang, ui_text_data['en'])
     # The path for a post is its filename (e.g., 'my-first-post')
     # We need to construct the full path that FlatPages uses
     full_path = f'{lang}/{path}'
     post = flatpages.get_or_404(full_path)
-    return render_template(f'{lang}/post.html', lang=lang, post=post)
+    return render_template('post.html', lang=lang, post=post, ui_text=ui_text)
 
 @app.route('/pygments.css')
 def pygments_css():

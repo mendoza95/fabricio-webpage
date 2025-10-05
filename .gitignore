@@ -1,0 +1,15 @@
+# --- Environment Variables ---
+# Contains sensitive credentials. Never commit this file!
+.env
+
+# --- Python Cache & Compiled Files ---
+__pycache__/
+*.pyc
+
+# --- Virtual Environment ---
+# This can be recreated from requirements.txt
+webpage/
+
+# --- Temporary Test Files ---
+# As requested, ignore the connection test script
+test_connection.py

@@ -2,8 +2,10 @@ Flask==2.2.5
 Flask-FlatPages
 Flask-Mail
 Flask-WTF
+email_validator
 gunicorn==20.1.0
 Markdown
 Pygments
 PyYAML
 Werkzeug==2.2.3
+python-dotenv

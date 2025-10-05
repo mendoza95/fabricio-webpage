@@ -22,3 +22,17 @@ navLinks.forEach(link => {
         }
     });
 });
+
+// --- Success Modal Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('success-modal');
+    const closeBtn = document.getElementById('modal-close-btn');
+
+    if (modal && closeBtn) {
+        const closeModal = () => {
+            modal.classList.add('hidden');
+        };
+
+        closeBtn.addEventListener('click', closeModal);
+    }
+});

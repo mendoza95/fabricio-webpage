@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block title %}{{ post.title }}{% endblock %}
-{% block content %}
-  <h1>{{ post.title }}</h1>
-  <p class="post-meta">Por {{ post.meta.author }} el {{ post.meta.date.strftime('%d de %B de %Y') }}</p>
-  <hr>
-  {{ post.html|safe }}
-{% endblock %}

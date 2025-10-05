@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <section id="post-detail">
+        <article>
+            <h1>{{ post.title }}</h1>
+            <p class="post-meta">{{ ui_text.published_on_prefix }} {{ post.meta.date.strftime(ui_text.date_format) }}</p>
+            <div class="post-content">{{ post.html | safe }}</div>
+        </article>
+    </section>
+{% endblock %}
