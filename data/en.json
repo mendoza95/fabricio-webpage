@@ -1,0 +1,151 @@
+{
+    "about": {
+        "title": "About Me",
+        "intro": [
+            "I'm a Ph.D. candidate in Computing Science based in Glasgow, UK. My main research interests lie in foundational concepts of computing science, such as algorithms, graph theory, and linear algebra. I am also interested in how these concepts can be applied to real-world problems. As a researcher and software developer, I am passionate about designing and implementing algorithms to solve complex problems.",
+            "In the past 10 years I have been a math and algorithms tutor at high school and undergraduate level. I have also worked as a data mining analyst in the industry, where I have applied my knowledge of algorithms and data structures to extract insights from large datasets.",
+            "Outside the world of computing science, I enjoy playing football with friends and watching football matches, especially those of my favorite team, Olimpia, Paraguay."
+        ],
+        "cv_button": "Download CV",
+        "cv_filename": "cv.pdf",
+        "profile_image": "profile.jpg",
+        "profile_image_alt": "A profile photo of Fabricio Mendoza Granada"
+    },
+    "ui_text": {
+        "education_title": "Education",
+        "experience_title": "Work Experience",
+        "projects_title": "Projects",
+        "publications_title": "Publications",
+        "news_title": "Latest News",
+        "contact_title": "Contact Me",
+        "no_experience_message": "No work experience to display yet.",
+        "no_publications_message": "No publications to display yet.",
+        "no_news_message": "No news yet. Check back soon!",
+        "technologies_label": "Technologies",
+        "live_demo_button": "Live Demo",
+        "github_repo_button": "GitHub Repo",
+        "published_on_prefix": "Published on",
+        "date_format": "%B %d, %Y",
+        "view_all_posts_button": "View All Posts",
+        "blog_title": "Blog",
+        "publication_link_text": "Link to Publication",
+        "all_posts_title": "All Posts",
+        "no_posts_found": "No posts found."
+    },
+    "projects": [
+        {
+            "id": "project-one",
+            "name": "Graph Spectral Sparsifier",
+            "description": "During my master's course, I implemented different graphs spectral sparsifiers in Python and C++. The implementations can be found on my GitHub.",
+            "live_url": null,
+            "github_urls": [
+                "https://github.com/mendoza95/BSSSpectralSparsifier.git"
+            ]
+        },
+        {
+            "id": "project-two",
+            "name": "mRMR Feature Selection",
+            "description": "During my year in the industry, I implemented a feature selection algorithm called Minimum Redundancy Maximum Relevance (mRMR) in PySpark to improve the performance of a churn prediction model. The implementation can be found on my GitHub.",
+            "live_url": null,
+            "github_urls": [
+                "https://github.com/mendoza95/mRMR.git"
+            ]
+        }
+    ],
+    "education": [
+        {
+            "id": "edu-uofg",
+            "degree": "Ph.D. candidate in Computing Science",
+            "institution": "University of Glasgow",
+            "location": "Glasgow, United Kingdom",
+            "description": "Currently a Ph.D. candidate focusing on the complexity of the b-chromatic colouring problem and related problems. Since the b-chromatic colouring problem is NP-hard in general, my work involves looking for polynomial-time solutions in restricted graph classes, such as graphs with a maximum degree of 3 and graphs with forbidden induced subgraphs. I also work on other variants of the b-chromatic colouring problem, such as the fall colouring problem and the total b-chromatic colouring problem."
+        },
+        {
+            "id": "edu-una-msc",
+            "degree": "M.Sc. in Computer Science",
+            "institution": "National University of Asunción, Nucleo de Investigación y Desarrollo Tecnológico de la Facultad Politecnica",
+            "location": "San Lorenzo, Paraguay",
+            "description": "Course focused on general aspects of computer science and research. My master's thesis was focused on unsupervised machine learning, spectral graph theory, and communication complexity."
+        },
+        {
+            "id": "edu-una-bsc",
+            "degree": "B.Sc. in Computer Science",
+            "institution": "National University of Asunción, Polytechnic School",
+            "location": "San Lorenzo, Paraguay",
+            "description": "A program focused on computer science fundamentals, mathematics, and programming. I graduated with a strong foundation in software engineering."
+        }
+    ],
+    "experience": [
+        {
+            "id": "exp-uofg",
+            "role": "Graduate Teaching Assistant",
+            "company": "School of Computing Science, University of Glasgow",
+            "location": "Glasgow, United Kingdom",
+            "description": "I am responsible for leading lab tutorials for the undergraduate courses Algorithmic Foundations and Algorithms and Data Structures. In Algorithmic Foundations, students learn about discrete mathematics, proof methods, and graph theory. In Algorithms and Data Structures, students learn about sorting algorithms, complexity analysis, and data structures like linked lists and trees."
+        },
+        {
+            "id": "exp-nucleo",
+            "role": "Data Mining Analyst",
+            "company": "Nucleo S.A., Paraguay",
+            "location": "Asuncion, Paraguay",
+            "description": "I was in charge of implementing new techniques for performing feature selection in a churn prediction model. My weekly duties were reading articles about the subject and coding the proposed solutions in the Apache Spark cloud with PySpark. I was also in charge of researching out-of-the-box approaches to boost the current performance model. I mainly worked with a state-of-the-art algorithm for performing feature selection called Minimum Redundancy Maximum Relevance (mRMR). Details of the implementation can be found here: https://github.com/mendoza95/mRMR."
+        },
+        {
+            "id": "exp-una-ta",
+            "role": "Teaching Assistant",
+            "company": "National University of Asunción, Engineering School, Paraguay",
+            "location": "San Lorenzo, Paraguay",
+            "description": "I have been a teaching assistant on the course of algorithms on the undergraduate course of Mechatronic Engineering. My weekly duties were preparing classes notes on undergraduate topics such as sorting algorithms, divide and conquer algorithms, greedy algorithms, dynamic programming, linear programming, fundamental graph algorithms and the game tree and alpha-beta pruning algorithms."
+        }
+    ],
+    "publications": [
+        {
+            "id": "pub-b-chromatic",
+            "title": "Total b-chromatic colouring of graphs",
+            "authors": "Fabricio Mendoza and David Manlove",
+            "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)",
+            "urls": [
+                "https://arxiv.org/abs/2508.11008"
+            ]
+        },
+        {
+            "id": "pub-distributed-spectral-sparsification",
+            "title": "A Distributed Algorithm for Spectral Sparsification of Graphs with Applications to Data Clustering",
+            "authors": "Fabricio Mendoza Granada and Marcos Villagra",
+            "journal": "Proceedings of the 18th Cologne-Twente  Workshop on Graphs and Combinatorial  Optimization (CTW)",
+            "urls": [
+                "https://www.springer.com/gp/book/9783030630713",
+                "https://arxiv.org/abs/2003.10612",
+                "http://ctw2020.iasi.cnr.it/mendoza_320813/"
+
+            ]
+        },
+        {
+            "id": "pub-noh-forehead-communication-complexity",
+            "title": "Number-On-Forehead Communication Complexity of Data Clustering with Sunflowers",
+            "authors": "Fabricio Mendoza Granada and Marcos Villagra",
+            "journal": "Anais do IV Encontro de Teoria da Computação.",
+            "urls": [
+                "https://doi.org/10.5753/etc.2019.6394"
+            ]
+        },
+        {
+            "id": "pub-hard-easy-l-tromino-tilings",
+            "title": "Hard and Easy Instances of L-Tromino Tilings",
+            "authors": "Akagi, J. T., Gaona, C. F., Mendoza, F., Saikia, M. P., and Villagra, M.",
+            "journal": "International Workshop on Algorithms and Computation",
+            "urls": [
+                "https://doi.org/10.1007/978-3-030-10564-8_7"
+            ]
+        },
+        {
+            "id": "pub-spectral-sparsification-data-clustering",
+            "title": "Distributed spectral clustering on the coordinator model",
+            "authors": "Fabricio Mendoza Granada and Marcos Villagra",
+            "journal": "Proceeding Series of the Brazilian Society of Computational and Applied Mathematics",
+            "urls": [
+                "https://proceedings.sbmac.emnuvens.com.br/sbmac/article/view/2307"
+            ]
+        }
+    ]
+}

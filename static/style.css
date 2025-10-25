@@ -25,13 +25,25 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth;    
+    /* --- Experimental Graph Background --- */
+    /* Apply the pattern to the root HTML element. It will be visible on the
+       sides of the body on wider screens. */
+    background-color: #fdfdfd; /* A slightly off-white fallback */
+    /* --- Alternating Row Background --- */
+    /* We use two background layers. The first is a gradient that creates stripes,
+       and the second is our SVG graph pattern. The transparent part of the
+       gradient lets the SVG show through. */
+    /* background-image: 
+        linear-gradient(to bottom, transparent 0px, transparent 200px, #fdfdfd 200px, #fdfdfd 400px),
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' width='200' height='200'%3e%3cdefs%3e%3cstyle%3e.node %7b fill: %23A9D7F6; %7d .edge %7b stroke: %234A4A4A; stroke-width: 1.5; %7d%3c/style%3e%3c/defs%3e%3c!-- Edges (drawn first) --%3e%3cline class='edge' x1='50' y1='50' x2='150' y2='30'/%3e%3cline class='edge' x1='50' y1='50' x2='100' y2='150'/%3e%3cline class='edge' x1='150' y1='30' x2='100' y2='150'/%3e%3cline class='edge' x1='100' y1='150' x2='30' y2='170'/%3e%3cline class='edge' x1='100' y1='150' x2='170' y2='160'/%3e%3c!-- Nodes (drawn on top of edges) --%3e%3ccircle class='node' cx='50' cy='50' r='6'/%3e%3ccircle class='node' cx='150' cy='30' r='6'/%3e%3ccircle class='node' cx='100' cy='150' r='6'/%3e%3ccircle class='node' cx='30' cy='170' r='6'/%3e%3ccircle class='node' cx='170' cy='160' r='6'/%3e%3c/svg%3e");
+    background-size: 100% 400px, auto; */ /* The gradient repeats every 400px vertically */
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
-    background-color: var(--background-color);
+    background-color: transparent; /* Make body transparent to see the html background */
     color: var(--text-color);
 }
 
@@ -57,7 +69,8 @@ a:hover {
 main {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 1rem;    
+    background-color: var(--background-color); /* Apply solid background here */
 }
 
 section {
@@ -75,21 +88,50 @@ section:last-child {
 
 /* Apply alternating background color to specific sections for better visual grouping */
 #about,
-#education,
-#experience,
 #projects,
-#publications,
-#news,
-#contact {
+#education,
+#experience {
     background-color: var(--section-bg-alt);
     border-radius: 15px; /* Add rounded corners to the section boxes */
 }
 
+/* --- About Section Layout --- */
+.about-container {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.about-text {
+    flex: 2; /* Give the text more space */
+}
+
+.about-image {
+    flex: 1;
+    max-width: 250px; /* Constrain the image size */
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 15px; /* Give the image rounded corners */
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.about-text-only {
+    max-width: 800px; /* Constrain width for readability */
+    margin: 0 auto; /* Center the text block */
+}
+
+.about-merged-title {
+    text-align: left;
+    margin-top: 0; /* Reset margin as it's now the main title */
+    margin-bottom: 1.5rem;
+}
 /* --- Header & Navigation --- */
 .primary-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 2rem; /* Add a gap between logo and nav */
     padding: 0 2rem;
     position: sticky;
     top: 0;
@@ -98,6 +140,10 @@ section:last-child {
     z-index: 1000;
     height: 5rem; /* Fixed height for reliable scroll-margin */
 }
+.primary-header nav {
+    margin-left: auto; /* Push the navigation to the right */
+}
+
 
 .nav-logo {
     font-size: 1.5rem;
@@ -111,18 +157,25 @@ section:last-child {
 .primary-navigation {
     list-style: none;
     display: flex;
-    gap: clamp(1rem, 5vw, 2.5rem); /* Responsive gap */
+    gap: 1.5rem; /* Use a fixed gap for consistency */
     align-items: center;
 }
 
 .primary-navigation a {
-    font-weight: 500;
-    transition: color 0.2s;
+    font-weight: 500; /* Base font weight */
+    padding: 0.25rem 0.75rem; /* Apply padding in the default state */
+    border-radius: 5px; /* Apply border-radius in the default state */
+    background-color: transparent; /* Make background transparent by default */
+    transition: background-color 0.2s ease-in-out, font-weight 0.2s ease-in-out; /* Smooth transitions */
 }
 
-.primary-navigation a:hover {
-    color: var(--secondary-color);
+.nav-link:hover {
     text-decoration: none;
+}
+
+.nav-link:hover {
+    background-color: rgba(74, 74, 74, 0.1); /* semi-transparent grey box */
+    font-weight: 700;
 }
 
 .language-toggle {
@@ -394,7 +447,12 @@ footer {
     .mobile-nav-toggle[aria-expanded="true"] {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgb(46, 61, 73)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M6 6l18 18M6 24L24 6'/%3e%3c/svg%3e");
     }
-
+    
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
     .contact-layout-container {
         flex-direction: column;
     }

@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}{{ home.title }}{% endblock %}
-
 {% block content %}
     {# Home Section #}
-    <section id="home">
-        <h1>{{ home.title }}</h1>
-        <p>{{ home.subtitle }}</p>
-        <a href="#{{ home.button_url_key }}">{{ home.button_text }}</a>
-    </section>
-
-    {# About Section #}
     <section id="about">
-        <h2>{{ about.title }}</h2>
-        <p>{{ about.intro }}</p>
-        <p>{{ about.details }}</p>
-        <a href="{{ url_for('static', filename=about.cv_filename) }}" download>{{ about.cv_button }}</a>
+        <div class="about-container">
+            <div class="about-text">
+                {# The "About Me" title now serves as the main heading for this section #}
+                <h1 class="section-title about-merged-title">{{ about.title }}</h1>
+                {% for paragraph in about.intro %}
+                    <p>{{ paragraph }}</p>
+                {% endfor %}
+                <a href="{{ url_for('generate_cv_pdf', lang=lang) }}" class="button" target="_blank" rel="noopener noreferrer">{{ about.cv_button }}</a>
+            </div>
+            <div class="about-image">
+                <img src="{{ url_for('static', filename='images/' + about.profile_image) }}" alt="{{ about.profile_image_alt }}">
+            </div>
+        </div>
     </section>
 
     {# Education Section #}
@@ -62,11 +62,14 @@
             <div class="project-card" id="{{ project.id }}">
                 <h3>{{ project.name }}</h3>
                 <p>{{ project.description }}</p>
-                <p><strong>{{ ui_text.technologies_label }}:</strong> {{ project.technologies | join(', ') }}</p>
                 {% if project.live_url %}
                     <a href="{{ project.live_url }}" target="_blank">{{ ui_text.live_demo_button }}</a>
                 {% endif %}
-                <a href="{{ project.repo_url }}" target="_blank">{{ ui_text.github_repo_button }}</a>
+                {% if project.github_urls %}
+                    {% for url in project.github_urls %}
+                        <a href="{{ url }}" target="_blank">{{ ui_text.github_repo_button }} #{{ loop.index }}</a>
+                    {% endfor %}
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -78,10 +81,14 @@
         <div class="publications-container">
             {% for pub in publications %}
             <div class="publication-item">
-                <h4><a href="{{ pub.url }}" target="_blank">{{ pub.title }}</a></h4>
+                <h4>{{ pub.title }}</h4>
                 <p><em>{{ pub.authors }}</em></p>
                 <p><strong>{{ pub.journal }}</strong> ({{ pub.year }})</p>
-                <p>{{ pub.description }}</p>
+                {% if pub.urls %}
+                    {% for url in pub.urls %}
+                        <a href="{{ url }}" target="_blank">{{ ui_text.publication_link_text }} #{{ loop.index }}</a>
+                    {% endfor %}
+                {% endif %}
             </div>
             {% else %}
             <p>{{ ui_text.no_publications_message }}</p>

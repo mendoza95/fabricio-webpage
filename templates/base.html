@@ -19,7 +19,6 @@
 
         <nav>
             <ul id="primary-navigation" class="primary-navigation" data-visible="false">
-                <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#home">{% if lang == 'en' %}Home{% else %}Inicio{% endif %}</a></li>
                 <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#about">{% if lang == 'en' %}About{% else %}Sobre Mí{% endif %}</a></li>
                 <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#education">{% if lang == 'en' %}Education{% else %}Educación{% endif %}</a></li>
                 <li><a class="nav-link" href="{{ url_for('index', lang=lang) }}#experience">{% if lang == 'en' %}Experience{% else %}Experiencia{% endif %}</a></li>

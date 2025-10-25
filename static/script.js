@@ -1,38 +1,47 @@
-const primaryNav = document.querySelector('.primary-navigation');
-const navToggle = document.querySelector('.mobile-nav-toggle');
-const navLinks = document.querySelectorAll('.nav-link');
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Mobile Navigation Toggle ---
+    const nav = document.querySelector(".primary-navigation");
+    const navToggle = document.querySelector(".mobile-nav-toggle");
 
-function setNavVisibility(visible) {
-    const isVisible = visible ? 'true' : 'false';
-    primaryNav.setAttribute('data-visible', isVisible);
-    navToggle.setAttribute('aria-expanded', isVisible);
-}
-
-navToggle.addEventListener('click', () => {
-    const visibility = primaryNav.getAttribute('data-visible');
-    setNavVisibility(visibility === "false");
-});
-
-// Close the mobile menu when a link is clicked
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        // Only close if the mobile nav is visible
-        if (primaryNav.getAttribute('data-visible') === 'true') {
-            setNavVisibility(false);
+    navToggle.addEventListener("click", () => {
+        const visibility = nav.getAttribute("data-visible");
+        if (visibility === "false") {
+            nav.setAttribute("data-visible", true);
+            navToggle.setAttribute("aria-expanded", true);
+        } else {
+            nav.setAttribute("data-visible", false);
+            navToggle.setAttribute("aria-expanded", false);
         }
     });
-});
 
-// --- Success Modal Logic ---
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('success-modal');
-    const closeBtn = document.getElementById('modal-close-btn');
+    // --- Scroll-Spy for Active Navigation Link ---
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.primary-navigation .nav-link');
+    const headerOffset = document.querySelector('.primary-header').offsetHeight;
 
-    if (modal && closeBtn) {
-        const closeModal = () => {
-            modal.classList.add('hidden');
-        };
+    const onScroll = () => {
+        const scrollPosition = window.scrollY + headerOffset + 1;
 
-        closeBtn.addEventListener('click', closeModal);
-    }
+        let activeSectionId = null;
+
+        sections.forEach(section => {
+            if (scrollPosition >= section.offsetTop && scrollPosition < section.offsetTop + section.offsetHeight) {
+                activeSectionId = section.id;
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            // The href is a full URL, so we check if it ends with the section ID
+            if (activeSectionId && link.href.endsWith('#' + activeSectionId)) {
+                link.classList.add('active');
+            }
+        });
+    };
+
+    // Add event listener for scroll
+    window.addEventListener('scroll', onScroll);
+
+    // Run on page load to set the initial state
+    onScroll();
 });
