@@ -23,58 +23,68 @@
         }
 
         h1 {
-            font-size: 2.5em;
-            text-align: center;
+            font-size: 2.2em;
+            text-align: left;
             margin-bottom: 0;
         }
 
         .contact-info {
-            text-align: center;
-            margin-bottom: 2em;
+            text-align: left;
+            margin-bottom: 2.5em;
             font-size: 0.9em;
             color: #555;
         }
 
         .contact-info a {
-            color: #4A90E2;
+            color: #333;
             text-decoration: none;
         }
 
         .section {
-            margin-bottom: 2em;
-            page-break-inside: avoid;
+            margin-bottom: 1.2em; /* Further reduced space between sections */
         }
 
         .section h2 {
             font-size: 1.5em;
-            border-bottom: 2px solid #4A90E2;
-            padding-bottom: 0.3em;
-            margin-bottom: 1em;
+            color: #4A90E2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 0.8em; /* Further reduced space after section titles */
         }
 
         .item {
-            margin-bottom: 1.5em;
+            display: flex;
+            gap: 1.5em;
+            margin-bottom: 0.6em; /* Further reduced space between items in a list */
+            page-break-inside: avoid;
+        }
+
+        .item-date {
+            flex: 0 0 120px; /* Fixed width for the date column */
+            font-weight: 500;
+            color: #555;
+        }
+
+        .item-content {
+            flex: 1; /* The rest of the content takes the remaining space */
         }
 
         .item h3 {
-            font-size: 1.2em;
+            font-size: 1.1em;
+            font-weight: 600;
             margin-bottom: 0.2em;
-        }
-
-        .item h4 {
-            font-size: 1em;
-            font-weight: normal;
-            color: #555;
-            margin-top: 0;
-            margin-bottom: 0.5em;
+            color: #2E3D49;
         }
 
         .item p {
             margin: 0.3em 0;
+            color: #4A4A4A;
         }
 
         .item em {
-            color: #777;
+            color: #666;
         }
 
         ul {
@@ -85,52 +95,77 @@
 <body>
     <h1>Fabricio Mendoza Granada</h1>
     <div class="contact-info">
-        {% for link in social_links %}{% if link.name == 'Email' or link.name == 'LinkedIn' or link.name == 'GitHub' %}
-            <a href="{{ link.url }}">{{ link.username }}</a>{% if not loop.last %} &bull; {% endif %}
-        {% endif %}{% endfor %}
+        {# Display Email on its own line for prominence #}
+        {% for link in social_links if link.name == 'Email' %}
+            <p style="margin-bottom: 0.2em;"><a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a></p>
+        {% endfor %}
+        {# Display other key links on the next line #}
+        <div>
+            {% set ns = namespace(first=true) %}
+            {% for link in social_links if link.name in ['LinkedIn', 'GitHub'] %}
+                {% if not ns.first %} &bull; {% endif %}<a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a>{% set ns.first = false %}
+            {% endfor %}
+        </div>
     </div>
 
     <div class="section" id="education">
         <h2>{{ ui_text.education_title }}</h2>
         {% for item in education %}
-        <div class="item">
-            <h3>{{ item.degree }}</h3>
-            <h4>{{ item.institution }} ({{ item.start_year }} - {{ item.end_year }})</h4>
-            <p><em>{{ item.location }}</em></p>
-        </div>
+            <div class="item">
+                <div class="item-date">{{ item.start_year }} - {{ item.end_year }}</div>
+                <div class="item-content">
+                    <h3>{{ item.degree }}</h3>
+                    <p><em>{{ item.institution }}, {{ item.location }}</em></p>
+                </div>
+            </div>
         {% endfor %}
     </div>
 
     <div class="section" id="experience">
         <h2>{{ ui_text.experience_title }}</h2>
         {% for job in experience %}
-        <div class="item">
-            <h3>{{ job.role }}</h3>
-            <h4>{{ job.company }} ({{ job.start_date }} - {{ job.end_date }})</h4>
-            <p><em>{{ job.location }}</em></p>
-            <p>{{ job.description }}</p>
-        </div>
+            <div class="item">
+                <div class="item-date">{{ job.start_date }} - {{ job.end_date }}</div>
+                <div class="item-content">
+                    <h3>{{ job.role }}</h3>
+                    <p><em>{{ job.company }}, {{ job.location }}</em></p>
+                    <p>{{ job.description }}</p>
+                </div>
+            </div>
         {% endfor %}
     </div>
 
     <div class="section" id="projects">
         <h2>{{ ui_text.projects_title }}</h2>
         {% for project in projects %}
-        <div class="item">
-            <h3>{{ project.name }}</h3>
-            <p>{{ project.description }}</p>
-        </div>
+            <div class="item">
+                <div class="item-date"></div> {# Empty date column for alignment #}
+                <div class="item-content">
+                    <h3>{{ project.name }}</h3>
+                    <p>{{ project.description }}</p>
+                    {% if project.github_urls and project.github_urls[0] %}
+                        <p>
+                        {% for url in project.github_urls %}
+                            <a href="{{ url }}" target="_blank">{{ url }}</a>
+                        {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
         {% endfor %}
     </div>
 
     <div class="section" id="publications">
         <h2>{{ ui_text.publications_title }}</h2>
         {% for pub in publications %}
-        <div class="item">
-            <h3>{{ pub.title }}</h3>
-            <p><em>{{ pub.authors }}</em></p>
-            <p>{{ pub.journal }} ({{ pub.year }})</p>
-        </div>
+            <div class="item">
+                <div class="item-date">{{ pub.year }}</div>
+                <div class="item-content">
+                    <h3>{{ pub.title }}</h3>
+                    <p><em>{{ pub.authors }}</em></p>
+                    <p>{{ pub.journal }}</p>
+                </div>
+            </div>
         {% endfor %}
     </div>
 

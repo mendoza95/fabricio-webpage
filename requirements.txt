@@ -1,11 +1,12 @@
-Flask==2.2.5
+Flask
 Flask-FlatPages
-Flask-Mail
 Flask-WTF
-email_validator
-gunicorn==20.1.0
+Werkzeug==2.2.3
 Markdown
 Pygments
 PyYAML
-Werkzeug==2.2.3
+email-validator
+gunicorn==20.1.0
 python-dotenv
+WeasyPrint
+WTForms

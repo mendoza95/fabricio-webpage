@@ -102,7 +102,7 @@
         {
             "id": "pub-b-chromatic",
             "title": "Total b-chromatic colouring of graphs",
-            "authors": "Fabricio Mendoza and David Manlove",
+            "authors": "Fabricio Mendoza Granada and David Manlove",
             "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)",
             "urls": [
                 "https://arxiv.org/abs/2508.11008"
