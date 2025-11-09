@@ -8,7 +8,7 @@
                 {# The "About Me" title now serves as the main heading for this section #}
                 <h1 class="section-title about-merged-title">{{ about.title }}</h1>
                 {% for paragraph in about.intro %}
-                    <p>{{ paragraph }}</p>
+                    <p>{{ paragraph | safe }}</p>
                 {% endfor %}
                 <a href="{{ url_for('generate_cv_pdf', lang=lang) }}" class="button" target="_blank" rel="noopener noreferrer">{{ about.cv_button }}</a>
             </div>
