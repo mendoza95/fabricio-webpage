@@ -227,12 +227,14 @@ def generate_cv_pdf(lang):
     # Render the CV HTML template with the necessary data
     rendered_html = render_template('cv.html',
                                     lang=lang,
+                                    about=site_data['about'],
                                     ui_text=site_data['ui_text'],
                                     education=site_data['education'],
                                     experience=site_data['experience'],
                                     projects=site_data['projects'],
                                     publications=site_data['publications'],
-                                    social_links=site_data['social_links'])
+                                    social_links=site_data['social_links'],
+                                    skills=site_data.get('skills', []))
 
     # Use WeasyPrint to generate the PDF from the rendered HTML
     pdf = HTML(string=rendered_html).write_pdf()

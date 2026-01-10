@@ -12,6 +12,27 @@
         "profile_image": "profile.jpg",
         "profile_image_alt": "A profile photo of Fabricio Mendoza Granada"
     },
+    "skills": [
+        "Python",
+        "C++",
+        "JavaScript",
+        "Flask",
+        "PySpark",
+        "Apache Spark",
+        "PostgreSQL",
+        "Pandas",
+        "NumPy",
+        "SciPy",
+        "Algorithms",
+        "Data Structures",
+        "Graph Theory",
+        "Linear Algebra",
+        "Machine Learning",
+        "Feature Selection",
+        "Clustering",
+        "Unsupervised Learning",
+        "Supervised Learning"
+    ],
     "ui_text": {
         "education_title": "Education",
         "experience_title": "Work Experience",
@@ -104,49 +125,31 @@
             "id": "pub-b-chromatic",
             "title": "Total b-chromatic colouring of graphs",
             "authors": "Fabricio Mendoza Granada and David Manlove",
-            "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)",
-            "urls": [
-                "https://arxiv.org/abs/2508.11008"
-            ]
+            "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)"
         },
         {
             "id": "pub-distributed-spectral-sparsification",
             "title": "A Distributed Algorithm for Spectral Sparsification of Graphs with Applications to Data Clustering",
             "authors": "Fabricio Mendoza Granada and Marcos Villagra",
-            "journal": "Proceedings of the 18th Cologne-Twente  Workshop on Graphs and Combinatorial  Optimization (CTW)",
-            "urls": [
-                "https://www.springer.com/gp/book/9783030630713",
-                "https://arxiv.org/abs/2003.10612",
-                "http://ctw2020.iasi.cnr.it/mendoza_320813/"
-
-            ]
+            "journal": "Proceedings of the 18th Cologne-Twente  Workshop on Graphs and Combinatorial  Optimization (CTW)"
         },
         {
             "id": "pub-noh-forehead-communication-complexity",
             "title": "Number-On-Forehead Communication Complexity of Data Clustering with Sunflowers",
             "authors": "Fabricio Mendoza Granada and Marcos Villagra",
-            "journal": "Anais do IV Encontro de Teoria da Computação.",
-            "urls": [
-                "https://doi.org/10.5753/etc.2019.6394"
-            ]
+            "journal": "Anais do IV Encontro de Teoria da Computação."
         },
         {
             "id": "pub-hard-easy-l-tromino-tilings",
             "title": "Hard and Easy Instances of L-Tromino Tilings",
             "authors": "Akagi, J. T., Gaona, C. F., Mendoza, F., Saikia, M. P., and Villagra, M.",
-            "journal": "International Workshop on Algorithms and Computation",
-            "urls": [
-                "https://doi.org/10.1007/978-3-030-10564-8_7"
-            ]
+            "journal": "International Workshop on Algorithms and Computation"
         },
         {
             "id": "pub-spectral-sparsification-data-clustering",
             "title": "Distributed spectral clustering on the coordinator model",
             "authors": "Fabricio Mendoza Granada and Marcos Villagra",
-            "journal": "Proceeding Series of the Brazilian Society of Computational and Applied Mathematics",
-            "urls": [
-                "https://proceedings.sbmac.emnuvens.com.br/sbmac/article/view/2307"
-            ]
+            "journal": "Proceeding Series of the Brazilian Society of Computational and Applied Mathematics"
         }
     ]
 }

@@ -86,7 +86,7 @@
                 <p><strong>{{ pub.journal }}</strong> ({{ pub.year }})</p>
                 {% if pub.urls %}
                     {% for url in pub.urls %}
-                        <a href="{{ url }}" target="_blank">{{ ui_text.publication_link_text }} #{{ loop.index }}</a>
+                        <a href="{{ url }}" target="_blank" style="display: block; word-break: break-all;">{{ url }}</a>
                     {% endfor %}
                 {% endif %}
             </div>

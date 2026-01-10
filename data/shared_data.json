@@ -61,7 +61,9 @@
         {
             "id": "pub-b-chromatic",
             "year": 2025,
-            "urls": ["https://arxiv.org/abs/2508.11008"]
+            "urls": [
+                "https://doi.org/10.1016/j.procs.2025.10.332",
+                "https://arxiv.org/abs/2508.11008"]
         },
         {
             "id": "pub-distributed-spectral-sparsification",

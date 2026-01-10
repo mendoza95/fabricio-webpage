@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>CV - Fabricio Mendoza Granada</title>
+    <meta name="author" content="Fabricio Mendoza Granada">
+    <meta name="description" content="Curriculum Vitae of Fabricio Mendoza Granada - Ph.D. Candidate in Computing Science">
     <style>
         /* Basic CV Styles for PDF Generation */
         @page {
@@ -55,20 +57,18 @@
         }
 
         .item {
-            display: flex;
-            gap: 1.5em;
-            margin-bottom: 0.6em; /* Further reduced space between items in a list */
+            margin-bottom: 1.2em;
             page-break-inside: avoid;
         }
 
         .item-date {
-            flex: 0 0 120px; /* Fixed width for the date column */
-            font-weight: 500;
-            color: #555;
+            font-weight: bold;
+            color: #4A90E2;
+            margin-bottom: 0.2em;
         }
 
-        .item-content {
-            flex: 1; /* The rest of the content takes the remaining space */
+        .item-date:empty {
+            display: none;
         }
 
         .item h3 {
@@ -101,12 +101,28 @@
         {% endfor %}
         {# Display other key links on the next line #}
         <div>
-            {% set ns = namespace(first=true) %}
+            <a href="https://fabriciomg.pythonanywhere.com/{{ lang }}/">website: https://fabriciomg.pythonanywhere.com/{{ lang }}/</a>
             {% for link in social_links if link.name in ['LinkedIn', 'GitHub'] %}
-                {% if not ns.first %} &bull; {% endif %}<a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a>{% set ns.first = false %}
+                 &bull; <a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a>
             {% endfor %}
         </div>
     </div>
+
+    <div class="section" id="profile">
+        <h2>Profile</h2>
+        <div class="item">
+            <p>{{ about.intro[0] | safe }}</p>
+        </div>
+    </div>
+
+    {% if skills %}
+    <div class="section" id="skills">
+        <h2>{{ ui_text.skills_title | default('Skills') }}</h2>
+        <div class="item">
+            <p>{{ skills | join(', ') }}</p>
+        </div>
+    </div>
+    {% endif %}
 
     <div class="section" id="education">
         <h2>{{ ui_text.education_title }}</h2>
@@ -139,7 +155,6 @@
         <h2>{{ ui_text.projects_title }}</h2>
         {% for project in projects %}
             <div class="item">
-                <div class="item-date"></div> {# Empty date column for alignment #}
                 <div class="item-content">
                     <h3>{{ project.name }}</h3>
                     <p>{{ project.description }}</p>
@@ -164,6 +179,11 @@
                     <h3>{{ pub.title }}</h3>
                     <p><em>{{ pub.authors }}</em></p>
                     <p>{{ pub.journal }}</p>
+                    {% if pub.urls %}
+                        {% for url in pub.urls %}
+                            <p><a href="{{ url }}">{{ url }}</a></p>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
