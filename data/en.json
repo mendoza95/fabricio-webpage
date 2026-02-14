@@ -2,10 +2,16 @@
     "about": {
         "title": "About Me",
         "intro": [
-            "I'm a Ph.D. candidate in Computing Science based in Glasgow, UK. My main research interests lie in foundational concepts of computing science, such as algorithms, graph theory, and linear algebra. I am also interested in how these concepts can be applied to real-world problems. As a researcher and software developer, I am passionate about designing and implementing algorithms to solve complex problems.",
-            "In the past 10 years I have been a math and algorithms tutor at high school and undergraduate level. I have also worked as a data mining analyst in the industry, where I have applied my knowledge of algorithms and data structures to extract insights from large datasets.",
+            "I am a Ph.D. candidate in Computing Science based in Glasgow, UK, with a strong interest in Data Science and Machine Learning. My research focuses on foundational concepts such as algorithms and graph theory. I am passionate about applying this theoretical knowledge to design efficient software solutions for complex, real-world problems.",
+            "I have more than 5 years of teaching experience in math and algorithms at undergraduate level. Furthermore, I have experience as Data Mining Analyst where I successfully implemented the mRMR feature selection algorithm using PySpark to optimize churn prediction models, demonstrating my ability to apply advanced algorithmic research to solve practical big data challenges.",
             "Outside the world of computing science, I enjoy playing football with friends and watching football matches, especially those of my favorite team, Olimpia, Paraguay.",
             "<b>I am actively seeking post-doctoral or industry positions to join after completing my Ph.D. Please get in touch if you would like to have a chat!</b>"
+        ],
+        "cv_title": "Curriculum Vitae",
+        "cv_intro": [
+            "I am a Ph.D. candidate in Computing Science based in Glasgow, UK, with a strong interest in Data Science and Machine Learning. My research focuses on foundational concepts such as algorithms and graph theory. I am passionate about applying this theoretical knowledge to design efficient software solutions for complex, real-world problems.",
+            "I have more than 5 years of teaching experience in math and algorithms at undergraduate level. Furthermore, I have experience as Data Mining Analyst where I successfully implemented the mRMR feature selection algorithm using PySpark to optimize churn prediction models, demonstrating my ability to apply advanced algorithmic research to solve practical big data challenges.",
+            "Outside the world of computing science, I enjoy playing football with friends and watching football matches, especially those of my favorite team, Olimpia, Paraguay."
         ],
         "cv_button": "Download CV",
         "cv_filename": "cv.pdf",
@@ -110,7 +116,7 @@
             "role": "Data Mining Analyst",
             "company": "Nucleo S.A., Paraguay",
             "location": "Asuncion, Paraguay",
-            "description": "I was in charge of implementing new techniques for performing feature selection in a churn prediction model. My weekly duties were reading articles about the subject and coding the proposed solutions in the Apache Spark cloud with PySpark. I was also in charge of researching out-of-the-box approaches to boost the current performance model. I mainly worked with a state-of-the-art algorithm for performing feature selection called Minimum Redundancy Maximum Relevance (mRMR). Details of the implementation can be found here: https://github.com/mendoza95/mRMR."
+            "description": "Implemented the Minimum Redundancy Maximum Relevance (mRMR) feature selection algorithm in PySpark to optimize a churn prediction model. Conducted research on state-of-the-art feature selection techniques and applied them to large-scale datasets using Apache Spark. Successfully enhanced model performance by identifying key predictive features. The implementation is open-source and available on GitHub."
         },
         {
             "id": "exp-una-ta",

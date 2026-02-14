@@ -111,7 +111,9 @@
     <div class="section" id="profile">
         <h2>Profile</h2>
         <div class="item">
-            <p>{{ about.intro[0] | safe }}</p>
+            {% for paragraph in about.intro %}
+                <p>{{ paragraph | safe }}</p>
+            {% endfor %}
         </div>
     </div>
 

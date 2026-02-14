@@ -2,8 +2,8 @@
     "about": {
         "title": "Sobre Mí",
         "intro": [
-            "Soy un candidato a Doctor en Ciencias de la Computación en Glasgow, Reino Unido. Mis principales intereses de investigación se centran en conceptos fundamentales de las ciencias de la computación, como algoritmos, teoría de grafos y álgebra lineal. También me interesa cómo estos conceptos pueden aplicarse a problemas del mundo real. Como investigador y desarrollador de software, me apasiona diseñar e implementar algoritmos para resolver problemas complejos.",
-            "En los últimos 10 años he sido tutor de matemáticas y algoritmos a nivel de secundaria y pregrado. También he trabajado como analista de minería de datos en la industria, donde he aplicado mis conocimientos de algoritmos y estructuras de datos para extraer información de grandes conjuntos de datos.",
+            "Soy candidato a Doctor en Ciencias de la Computación en Glasgow, Reino Unido, con un fuerte interés en la Ciencia de Datos y el Aprendizaje Automático. Mi investigación se centra en conceptos fundamentales como algoritmos y teoría de grafos. Me apasiona aplicar este conocimiento teórico para diseñar soluciones de software eficientes para problemas complejos del mundo real.",
+            "Tengo más de 5 años de experiencia docente en matemáticas y algoritmos a nivel de pregrado. Además, cuento con experiencia como Analista de Minería de Datos, donde implementé con éxito el algoritmo de selección de características mRMR utilizando PySpark para optimizar modelos de predicción de abandono, demostrando mi capacidad para aplicar investigación algorítmica avanzada para resolver desafíos prácticos de big data.",
             "Fuera del mundo de las ciencias de la computación, disfruto jugar al fútbol con amigos y ver partidos de fútbol, especialmente los de mi equipo favorito, Olimpia, de Paraguay.",
             "<b>Estoy buscando activamente posiciones post-doctorales o en la industria para incorporarme después de completar mi doctorado. ¡No dudes en contactarme si te gustaría que charlemos!</b>"
         ],
@@ -110,7 +110,7 @@
             "role": "Analista de Minería de Datos",
             "company": "Nucleo S.A., Paraguay",
             "location": "Asunción, Paraguay",
-            "description": "Fui responsable de implementar nuevas técnicas para realizar la selección de características en un modelo de predicción de abandono. Mis tareas semanales consistían en leer artículos sobre el tema y codificar las soluciones propuestas en la nube de Apache Spark con PySpark. También me encargaba de investigar enfoques innovadores para mejorar el rendimiento del modelo actual. Trabajé principalmente con un algoritmo de vanguardia para realizar la selección de características llamado Minimum Redundancy Maximum Relevance (mRMR). Los detalles de la implementación se pueden encontrar en mi GitHub."
+            "description": "Implementé el algoritmo de selección de características de Mínima Redundancia y Máxima Relevancia (mRMR) en PySpark para optimizar un modelo de predicción de abandono (churn). Realicé investigaciones sobre técnicas de selección de características de vanguardia y las apliqué a grandes conjuntos de datos utilizando Apache Spark. Mejoré con éxito el rendimiento del modelo identificando características predictivas clave. La implementación es de código abierto y está disponible en GitHub."
         },
         {
             "id": "exp-una-ta",

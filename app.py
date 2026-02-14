@@ -224,6 +224,12 @@ def generate_cv_pdf(lang):
     except FileNotFoundError:
         return f"Data file for language '{lang}' not found.", 404
 
+    # Use CV-specific profile text if available to ensure a professional tone
+    if 'cv_title' in site_data['about']:
+        site_data['about']['title'] = site_data['about']['cv_title']
+    if 'cv_intro' in site_data['about']:
+        site_data['about']['intro'] = site_data['about']['cv_intro']
+
     # Render the CV HTML template with the necessary data
     rendered_html = render_template('cv.html',
                                     lang=lang,
