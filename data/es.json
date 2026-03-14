@@ -72,6 +72,15 @@
             "github_urls": [
                 "https://github.com/mendoza95/mRMR.git"
             ]
+        },
+        {
+            "id": "project-three",
+            "name": "Algoritmos de coloreo b-cromático de grafos",
+            "description": "Durante mi doctorado, implementé varios algoritmos para el problema de coloreo b-cromático de grafos en Python. La implementación se puede encontrar en mi GitHub.",
+            "live_url": null,
+            "github_urls": [
+                "https://github.com/mendoza95/b_chromatic_colouring.git"
+            ]
         }
     ],
     "education": [

@@ -9,6 +9,11 @@
             "id": "project-two",
             "technologies": ["Python", "Pandas", "Plotly", "Dash"],
             "image": "img/project-two.png"
+        },
+        {
+            "id": "project-three",
+            "technologies": ["Python", "NetworkX", "Matplotlib"],
+            "image": "img/project-three.png"
         }
     ],
     "education": [
