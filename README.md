@@ -8,7 +8,6 @@ This is a personal portfolio and blog website built with Flask. It is designed t
 *   **Data-Driven Content**: Most of the site's content (like project descriptions, work experience, and education) is managed through simple JSON files in the `data/` directory, making updates easy without touching the code.
 *   **Markdown Blog**: A complete blog section powered by Flask-FlatPages, where posts are written in simple Markdown (`.md`) files.
 *   **Dynamic PDF CV Generation**: A standout feature that automatically generates a professional, up-to-date CV in PDF format from the website's data using the WeasyPrint library.
-*   **Contact Form**: A fully functional contact form that sends emails to the site owner upon submission.
 *   **Responsive Design**: The website is fully responsive and works seamlessly on desktops, tablets, and mobile devices.
 
 ## Tech Stack
@@ -19,14 +18,15 @@ This is a personal portfolio and blog website built with Flask. It is designed t
     *   Flask-FlatPages for the blog (Markdown files)
     *   JSON for structured site data
 *   **PDF Generation**: WeasyPrint
-*   **Forms**: Flask-WTF
 *   **Deployment**: Gunicorn
 
 ## Project Structure
 
 ```
 my-personal-webpage/
-├── app.py                  # Main Flask application logic
+├── app.py                  # Main Flask 
+├── helper.py               # Handle non-request/response functionality
+application logic
 ├── data/
 │   ├── en.json             # English site content
 │   ├── es.json             # Spanish site content
