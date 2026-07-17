@@ -9,7 +9,7 @@
         /* Basic CV Styles for PDF Generation */
         @page {
             size: A4;
-            margin: 1.5cm;
+            margin: 1.2cm;
         }
 
         body {
@@ -25,7 +25,7 @@
         }
 
         h1 {
-            font-size: 2.2em;
+            font-size: 2em;
             text-align: left;
             margin-bottom: 0;
         }
@@ -88,12 +88,13 @@
         }
 
         ul {
-            padding-left: 20px;
+            padding-left: 20px; /* Add left padding to the unordered list */
         }
     </style>
 </head>
 <body>
     <h1>Fabricio Mendoza Granada</h1>
+    <h3>Contact</h3>
     <div class="contact-info">
         {# Display Email on its own line for prominence #}
         {% for link in social_links if link.name == 'Email' %}
@@ -109,7 +110,7 @@
     </div>
 
     <div class="section" id="profile">
-        <h2>Profile</h2>
+        <h3>Profile</h3>
         <div class="item">
             {% for paragraph in about.intro %}
                 <p>{{ paragraph | safe }}</p>
@@ -117,74 +118,81 @@
         </div>
     </div>
 
-    {% if skills %}
-    <div class="section" id="skills">
-        <h2>{{ ui_text.skills_title | default('Skills') }}</h2>
-        <div class="item">
-            <p>{{ skills | join(', ') }}</p>
-        </div>
-    </div>
-    {% endif %}
+    
 
     <div class="section" id="education">
-        <h2>{{ ui_text.education_title }}</h2>
-        {% for item in education %}
-            <div class="item">
-                <div class="item-date">{{ item.start_year }} - {{ item.end_year }}</div>
-                <div class="item-content">
-                    <h3>{{ item.degree }}</h3>
-                    <p><em>{{ item.institution }}, {{ item.location }}</em></p>
+        <h3>{{ ui_text.education_title }}</h3>
+        <ul>
+            {% for item in education %}
+                <div class="item">
+                    <div class="item-content">
+                        <li>{{ item.degree }} | {{ item.institution }} | {{ item.location }} | {{item.start_year }} - {{ item.end_year }} </li>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </ul>
     </div>
 
     <div class="section" id="experience">
-        <h2>{{ ui_text.experience_title }}</h2>
+        <h3>{{ ui_text.experience_title }}</h3>
         {% for job in experience %}
             <div class="item">
-                <div class="item-date">{{ job.start_date }} - {{ job.end_date }}</div>
                 <div class="item-content">
-                    <h3>{{ job.role }}</h3>
-                    <p><em>{{ job.company }}, {{ job.location }}</em></p>
-                    <p>{{ job.description }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-
-    <div class="section" id="projects">
-        <h2>{{ ui_text.projects_title }}</h2>
-        {% for project in projects %}
-            <div class="item">
-                <div class="item-content">
-                    <h3>{{ project.name }}</h3>
-                    <p>{{ project.description }}</p>
-                    {% if project.github_urls and project.github_urls[0] %}
-                        <p>
-                        {% for url in project.github_urls %}
-                            <a href="{{ url }}" target="_blank">{{ url }}</a>
-                        {% endfor %}
-                        </p>
+                    {# Render the title with the desired format #}
+                    <h4>{{ job.role }} | {{ job.company }} | {{ job.location }} | {{ job.start_date }} - {{ job.end_date }}</h4>
+                    
+                    {# Render the description as a bulleted list #}
+                    {% if job.description_cv %}
+                        <ul>
+                            {% for point in job.description_cv %}
+                                <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
                     {% endif %}
                 </div>
             </div>
         {% endfor %}
     </div>
 
-    <div class="section" id="publications">
-        <h2>{{ ui_text.publications_title }}</h2>
-        {% for pub in publications %}
+    <div class="section" id="projects">
+        <h3>{{ ui_text.projects_title }}</h3>
+        {% for project in projects %}
             <div class="item">
-                <div class="item-date">{{ pub.year }}</div>
                 <div class="item-content">
-                    <h3>{{ pub.title }}</h3>
-                    <p><em>{{ pub.authors }}</em></p>
-                    <p>{{ pub.journal }}</p>
+                    <h4>{{ project.name }} | {{ project.technologies_cv }}</h4>
+                    {# Render the description as a bulleted list #}
+                    {% if project.description_cv %}
+                        <ul>
+                            {% for point in project.description_cv %}
+                                <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if skills %}
+    <div class="section" id="skills">
+        <h3>{{ ui_text.skills_title | default('Skills') }}</h3>
+        <div class="item">
+            <p>{{ skills | join(', ') }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="section" id="publications">
+        <h3>{{ ui_text.publications_title }}</h3>
+        <ul>
+        {% for pub in publications[:3] %}
+            <div class="item">
+                <div class="item-content">
+                    <li>{{ pub.title }} ({{ pub.year }}) <em>- {{ pub.journal }} - {{ pub.authors }}</em> </li>
                     {% if pub.urls %}
-                        {% for url in pub.urls %}
-                            <p><a href="{{ url }}">{{ url }}</a></p>
-                        {% endfor %}
+                        {% if pub.urls|length > 0 %}
+                            <a href="{{ pub.urls[0] }}">link</a>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

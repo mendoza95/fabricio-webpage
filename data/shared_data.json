@@ -44,7 +44,7 @@
             "id": "exp-uofg",
             "company_logo": "img/company_logo.png",
             "start_date": "Jan 2023",
-            "end_date": "Present",
+            "end_date": "May 2026",
             "company_url": "https://www.gla.ac.uk/"
         },
         {
@@ -63,6 +63,13 @@
         }
     ],
     "publications": [
+        {
+            "id":"pub-optimal-b-colouring",
+            "year":2026,
+            "urls":[
+                "https://arxiv.org/pdf/2603.26214"
+            ]
+        },
         {
             "id": "pub-b-chromatic",
             "year": 2025,

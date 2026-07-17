@@ -9,9 +9,10 @@
         ],
         "cv_title": "Curriculum Vitae",
         "cv_intro": [
-            "Soy candidato a doctor en Ciencias de la Computación con enfoque en desarrollo de algoritmos para problemas de optimización y aprendizaje automático. Poseo habilidades para traducir conceptos matemáticos abstractos en algoritmos eficientes para problemas computacionales complejos tales como scheduling, feature engineering, classification y clustering. Además de investigación teórica, me gusta aplicar mis conocimientos en tecnologías emergentes como aprendizaje automático (machine learning) e inteligencia artificial (AI), específicamente en la optimización de las estructuras de datos subyacentes que hacen funcionar los sistemas distribuidos a gran escala.",
-            "Poseo más de 5 años de experiencia enseñando matemáticas y algoritmos a nivel de grado. Además, tengo experiencia como Analista en Minería de Datos donde implementé de manera satisfactoria el algoritmo de selección de atributos mRMR utilizando PySpark para optimizar un modelo de predicción de Churn, demostrando así mi habilidad para aplicar investigación en algoritmos avanzados para resolver problemas prácticos en el área de aprendizaje automático.",
-            "Fuera del mundo de la computación, disfruto de jugar y mirar fútbol con mis amigos, especialmente aquellos partidos de mi equipo favorito, Olimpia de Paraguay."
+            "Candidato a doctor en Ciencias de la Computación especializado en optimización de algoritmos y aprendizaje automático. Experto en traducir conceptos matemáticos complejos en código eficiente.",
+            "Trayectoria comprobada escalando sistemas de aprendizaje automático a gran escala con PySpark y Python.",
+            "Más de 5 años enseñando cursos de matemáticas y algoritmos a nivel universitario."
+
         ],
         "cv_button": "Descargar CV",
         "cv_filename": "cv.pdf",
@@ -65,6 +66,10 @@
             "id": "project-one",
             "name": "Esparsificador Espectral de Grafos",
             "description": "Durante mi curso de maestría, implementé diferentes esparsificadores espectrales de grafos en Python y C++. Las implementaciones se pueden encontrar en mi GitHub.",
+            "description_cv":[
+                "Implementación de algoritmos de reducción de grafos (spectral sparsification) para mejorar la eficiencia en análisis de redes complejas."
+            ],
+            "technologies_cv":"Python, C++, Numpy, Eigen",
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/BSSSpectralSparsifier.git"
@@ -74,6 +79,10 @@
             "id": "project-two",
             "name": "Selección de Características mRMR",
             "description": "Durante mi año en la industria, implementé un algoritmo de selección de características llamado Mínima Redundancia Máxima Relevancia (mRMR) en PySpark para mejorar el rendimiento de un modelo de predicción de churn. La implementación se puede encontrar en mi GitHub.",
+            "description_cv":[
+                "Desarrollo de una librería de código abierto para la selección de características críticas en modelos de Machine Learning con datos a gran escala."
+            ],
+            "technologies_cv":"PySpark, Apache Spark",
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/mRMR.git"
@@ -83,6 +92,10 @@
             "id": "project-three",
             "name": "Algoritmos de coloreo b-cromático de grafos",
             "description": "Durante mi doctorado, implementé varios algoritmos para el problema de coloreo b-cromático de grafos en Python. La implementación se puede encontrar en mi GitHub.",
+            "description_cv":[
+                "Creación de algoritmos para resolver problemas complejos de coloración de grafos (coloreo b-cromático)."
+            ],
+            "technologies_cv":"Python, Networkx, Pulp",
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/b_chromatic_colouring.git"
@@ -118,24 +131,42 @@
             "role": "Asistente de Enseñanza Graduado",
             "company": "Escuela de Ciencias de la Computación, Universidad de Glasgow",
             "location": "Glasgow, Reino Unido",
-            "description": "Soy responsable de dirigir los tutoriales de laboratorio para los cursos de pregrado de Fundamentos Algorítmicos y Algoritmos y Estructuras de Datos. En Fundamentos Algorítmicos, los estudiantes aprenden sobre matemáticas discretas, métodos de prueba y teoría de grafos. En Algoritmos y Estructuras de Datos, los estudiantes aprenden sobre algoritmos de ordenamiento, análisis de complejidad y estructuras de datos como listas enlazadas y árboles."
+            "description": "Soy responsable de dirigir los tutoriales de laboratorio para los cursos de pregrado de Fundamentos Algorítmicos y Algoritmos y Estructuras de Datos. En Fundamentos Algorítmicos, los estudiantes aprenden sobre matemáticas discretas, métodos de prueba y teoría de grafos. En Algoritmos y Estructuras de Datos, los estudiantes aprenden sobre algoritmos de ordenamiento, análisis de complejidad y estructuras de datos como listas enlazadas y árboles.",
+            "description_cv":[
+                "Lideré clases prácticas para los cursos de Algorithmic Foundations y Algorithms and Data Structures.",
+                "Enseñé conceptos clave como matemática discreta, teoría de grafos, análisis de complejidad y estructuras de datos (árboles, listas enlazadas)."
+            ]
         },
         {
             "id": "exp-nucleo",
             "role": "Analista de Minería de Datos",
             "company": "Nucleo S.A., Paraguay",
             "location": "Asunción, Paraguay",
-            "description": "Implementé el algoritmo de selección de características de Mínima Redundancia y Máxima Relevancia (mRMR) en PySpark para optimizar un modelo de predicción de abandono (churn). Realicé investigaciones sobre técnicas de selección de características de vanguardia y las apliqué a grandes conjuntos de datos utilizando Apache Spark. Mejoré con éxito el rendimiento del modelo identificando características predictivas clave. La implementación es de código abierto y está disponible en GitHub."
+            "description": "Implementé el algoritmo de selección de características de Mínima Redundancia y Máxima Relevancia (mRMR) en PySpark para optimizar un modelo de predicción de abandono (churn). Realicé investigaciones sobre técnicas de selección de características de vanguardia y las apliqué a grandes conjuntos de datos utilizando Apache Spark. Mejoré con éxito el rendimiento del modelo identificando características predictivas clave. La implementación es de código abierto y está disponible en GitHub.",
+            "description_cv":[
+                "Diseñé e implementé el algoritmo de selección de atributos mRMR utilizando PySpark para optimizar un modelo de predicción de fuga de clientes (churn).",
+                "Investigué y apliqué técnicas avanzadas de selección de atributos en conjuntos de datos masivos con Apache Spark.",
+                "Mejoré el rendimiento del modelo identificando las variables predictivas clave y publiqué el código como código abierto en GitHub."
+            ]
         },
         {
             "id": "exp-una-ta",
             "role": "Asistente de Enseñanza",
             "company": "Universidad Nacional de Asunción, Facultad de Ingeniería, Paraguay",
             "location": "San Lorenzo, Paraguay",
-            "description": "He sido asistente de enseñanza en el curso de algoritmos del curso de pregrado de Ingeniería Mecatrónica. Mis tareas semanales consistían en preparar notas de clase sobre temas de pregrado como algoritmos de ordenamiento, algoritmos de divide y vencerás, algoritmos codiciosos, programación dinámica, programación lineal, algoritmos fundamentales de grafos y los algoritmos de árbol de juego y poda alfa-beta."
+            "description": "He sido asistente de enseñanza en el curso de algoritmos del curso de pregrado de Ingeniería Mecatrónica. Mis tareas semanales consistían en preparar notas de clase sobre temas de pregrado como algoritmos de ordenamiento, algoritmos de divide y vencerás, algoritmos codiciosos, programación dinámica, programación lineal, algoritmos fundamentales de grafos y los algoritmos de árbol de juego y poda alfa-beta.",
+            "description_cv":[
+                "Preparé material didáctico semanal sobre algoritmos de ordenamiento, programación dinámica, programación lineal y algoritmos de grafos para estudiantes de Ingeniería Mecatrónica."
+            ]
         }
     ],
     "publications": [
+        {
+            "id": "pub-optimal-b-colouring",
+            "title": "Optimal b-Colourings and Fall Colourings in H-Free Graphs",
+            "authors":"Jungho Ahn, Tala Eagling-Vose, Felicia Lucke, David Manlove, Fabricio Mendoza Granada and Daniël Paulusma",
+            "journal": "Proceedings of the 52nd International Workshop on Graph-Theoretic Concepts in Computer Science (WG)"
+        },
         {
             "id": "pub-b-chromatic",
             "title": "Total b-chromatic colouring of graphs",

@@ -9,9 +9,9 @@
         ],
         "cv_title": "Curriculum Vitae",
         "cv_intro": [
-            "I am a Ph.D. candidate in Computing Science, focusing on developing algorithms for optimisation and machine learning problems. I am adept at translating abstract mathematical concepts into efficient algorithms for complex computational problems such as scheduling, feature engineering, classification and clustering. Beyond theoretical research, I am keen to apply my algorithmic expertise to emerging technologies in Machine Learning and AI, specifically in optimising the underlying data structures and computational graphs that power large-scale distributed systems.",
-            "I have more than 5 years of teaching experience in math and algorithms at an undergraduate level. Furthermore, I have experience as a Data Mining Analyst where I successfully implemented the mRMR feature selection algorithm using PySpark to optimise churn prediction models, demonstrating my ability to apply advanced algorithmic research to solve practical big data challenges.",
-            "Outside the world of computing science, I enjoy playing football with friends and watching football matches, especially those of my favourite team, Olimpia, Paraguay."
+            "Ph.D. candidate in Computing Science specialising in algorithm optimisation and machine learning. Experienced in translating complex mathematical concepts into efficient code.",
+            "Proven track record of scaling large-scale machine learning systems using PySpark and Python.",
+            "Over 5 years lecturing university-level mathematics and algorithm courses."
         ],
         "cv_button": "Download CV",
         "cv_filename": "cv.pdf",
@@ -35,6 +35,7 @@
         "Linear Algebra",
         "Machine Learning",
         "Feature Selection",
+        "Integer Programming",
         "Clustering",
         "Unsupervised Learning",
         "Supervised Learning"
@@ -43,7 +44,7 @@
         "education_title": "Education",
         "experience_title": "Work Experience",
         "projects_title": "Projects",
-        "publications_title": "Publications",
+        "publications_title": "Latest Publications",
         "news_title": "Latest News",
         "contact_title": "Contact Me",
         "no_experience_message": "No work experience to display yet.",
@@ -65,6 +66,10 @@
             "id": "project-one",
             "name": "Graph Spectral Sparsifier",
             "description": "During my master's course, I implemented different graphs spectral sparsifiers in Python and C++. The implementations can be found on my GitHub.",
+            "description_cv":[
+                "Implemented graph spectral sparsification algorithms to improve efficiency in complex network analysis."
+            ],
+            "technologies_cv":"Python, C++, Numpy, Eigen",
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/BSSSpectralSparsifier.git"
@@ -74,6 +79,10 @@
             "id": "project-two",
             "name": "mRMR Feature Selection",
             "description": "During my year in the industry, I implemented a feature selection algorithm called Minimum Redundancy Maximum Relevance (mRMR) in PySpark to improve the performance of a churn prediction model. The implementation can be found on my GitHub.",
+            "description_cv":[
+                "Developed an open-source library for critical feature selection in machine learning models with large-scale datasets."
+            ],
+            "technologies_cv":"PySpark, Apache Spark",
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/mRMR.git"
@@ -83,6 +92,10 @@
             "id": "project-three",
             "name": "Algorithms for the b-chromatic colouring of graphs",
             "description": "During my Ph.D., I implemented several algorithms for the b-chromatic colouring problem in Python. The implementation can be found on my GitHub.",
+            "description_cv":[
+                "Created efficient algorithms to solve NP-complete graph coloring problems."
+            ],
+            "technologies_cv":"Python, Networkx, Pulp",
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/b_chromatic_colouring.git"
@@ -95,7 +108,7 @@
             "degree": "Ph.D. candidate in Computing Science",
             "institution": "University of Glasgow",
             "location": "Glasgow, United Kingdom",
-            "description": "Currently a Ph.D. candidate focusing on the complexity of the b-chromatic colouring problem and related problems. Since the b-chromatic colouring problem is NP-hard in general, my work involves looking for polynomial-time solutions in restricted graph classes, such as graphs with a maximum degree of 3 and graphs with forbidden induced subgraphs. I also work on other variants of the b-chromatic colouring problem, such as the fall colouring problem and the total b-chromatic colouring problem."
+            "description": "Currently a Ph.D. candidate focusing on the complexity of the b-chromatic colouring problem and related problems. Since the b-chromatic colouring problem is NP-hard in general, my work involves looking for polynomial-time solutions in restricted graph classes, such as graphs with a maximum degree of 3, graphs with forbidden induced subgraphs and integer programming models. I also work on other variants of the b-chromatic colouring problem, such as the fall colouring problem and the total b-chromatic colouring problem."
         },
         {
             "id": "edu-una-msc",
@@ -118,24 +131,43 @@
             "role": "Graduate Teaching Assistant",
             "company": "School of Computing Science, University of Glasgow",
             "location": "Glasgow, United Kingdom",
-            "description": "I am responsible for leading lab tutorials for the undergraduate courses Algorithmic Foundations and Algorithms and Data Structures. In Algorithmic Foundations, students learn about discrete mathematics, proof methods, and graph theory. In Algorithms and Data Structures, students learn about sorting algorithms, complexity analysis, and data structures like linked lists and trees."
+            "description": "I am responsible for leading lab tutorials for the undergraduate courses Algorithmic Foundations and Algorithms and Data Structures. In Algorithmic Foundations, students learn about discrete mathematics, proof methods, and graph theory. In Algorithms and Data Structures, students learn about sorting algorithms, complexity analysis, and data structures like linked lists and trees.",
+            "description_cv":[
+                "Led practical lab tutorials for the undergraduate courses Algorithmic Foundations and Algorithms and Data Structures.",
+                "Taught key concepts including discrete mathematics, graph theory, complexity analysis, and core data structures like trees and linked lists."
+            ]
         },
         {
             "id": "exp-nucleo",
             "role": "Data Mining Analyst",
             "company": "Nucleo S.A., Paraguay",
             "location": "Asuncion, Paraguay",
-            "description": "Implemented the Minimum Redundancy Maximum Relevance (mRMR) feature selection algorithm in PySpark to optimize a churn prediction model. Conducted research on state-of-the-art feature selection techniques and applied them to large-scale datasets using Apache Spark. Successfully enhanced model performance by identifying key predictive features. The implementation is open-source and available on GitHub."
+            "description": "Implemented the Minimum Redundancy Maximum Relevance (mRMR) feature selection algorithm in PySpark to optimize a churn prediction model. Conducted research on state-of-the-art feature selection techniques and applied them to large-scale datasets using Apache Spark. Successfully enhanced model performance by identifying key predictive features. The implementation is open-source and available on GitHub.",
+            "description_cv":[
+                "Designed and implemented the mRMR feature selection algorithm using PySpark to optimize a churn prediction model.",
+                "Researced and applied advanced feature selection techniques on large-scale datasets using Apache Spark.",
+                "Improved model performance by identifying key predictive features and published the implementation as open-source on GitHub."
+
+            ]
         },
         {
             "id": "exp-una-ta",
             "role": "Teaching Assistant",
             "company": "National University of Asunción, Engineering School, Paraguay",
             "location": "San Lorenzo, Paraguay",
-            "description": "I have been a teaching assistant on the course of algorithms on the undergraduate course of Mechatronic Engineering. My weekly duties were preparing classes notes on undergraduate topics such as sorting algorithms, divide and conquer algorithms, greedy algorithms, dynamic programming, linear programming, fundamental graph algorithms and the game tree and alpha-beta pruning algorithms."
+            "description": "I have been a teaching assistant on the course of algorithms on the undergraduate course of Mechatronic Engineering. My weekly duties were preparing classes notes on undergraduate topics such as sorting algorithms, divide and conquer algorithms, greedy algorithms, dynamic programming, linear programming, fundamental graph algorithms and the game tree and alpha-beta pruning algorithms.",
+            "description_cv":[
+                "Prepared weekly lecture notes on sorting algorithms, dynamic programming, linear programming, and graph algorithms for Mechatronic Engineering students."
+            ]
         }
     ],
     "publications": [
+        {
+            "id": "pub-optimal-b-colouring",
+            "title": "Optimal b-Colourings and Fall Colourings in H-Free Graphs",
+            "authors":"Jungho Ahn, Tala Eagling-Vose, Felicia Lucke, David Manlove, Fabricio Mendoza Granada and Daniël Paulusma",
+            "journal": "Proceedings of the 52nd International Workshop on Graph-Theoretic Concepts in Computer Science (WG)"
+        },
         {
             "id": "pub-b-chromatic",
             "title": "Total b-chromatic colouring of graphs",
