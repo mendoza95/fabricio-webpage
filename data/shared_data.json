@@ -14,6 +14,11 @@
             "id": "project-three",
             "technologies": ["Python", "NetworkX", "Matplotlib"],
             "image": "img/project-three.png"
+        },
+        {
+            "id": "project-four",
+            "technologies": ["Python", "Flask", "HTML", "CSS", "JavaScript", "JSON"],
+            "image": "img/project-four.png"
         }
     ],
     "education": [
@@ -81,9 +86,9 @@
             "id": "pub-distributed-spectral-sparsification",
             "year": 2020,
             "urls": [
+                "http://ctw2020.iasi.cnr.it/mendoza_320813/",
                 "https://www.springer.com/gp/book/9783030630713",
-                "https://arxiv.org/abs/2003.10612",
-                "http://ctw2020.iasi.cnr.it/mendoza_320813/"
+                "https://arxiv.org/abs/2003.10612"
             ]
         },
         {
@@ -111,8 +116,8 @@
     "social_media": [
         {
             "name": "Email",
-            "url": "mailto:f.mendoza-granada.1@research.gla.ac.uk",
-            "username": "f.mendoza-granada.1@research.gla.ac.uk",
+            "url": "mailto:fabromendoza95@gmail.com",
+            "username": "fabromendoza95@gmail.com",
             "icon_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z\"></path><polyline points=\"22,6 12,13 2,6\"></polyline></svg>"
         },
         {

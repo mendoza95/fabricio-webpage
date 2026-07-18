@@ -20,19 +20,18 @@
     },
     "skills": [
         "Python",
-        "C++",
-        "JavaScript",
-        "Flask",
-        "PySpark",
-        "Apache Spark",
-        "PostgreSQL",
+        "Scikit-learn",
         "Pandas",
         "NumPy",
         "SciPy",
+        "PySpark",
+        "Apache Spark",
+        "PostgreSQL",
+        "C++",
+        "JavaScript",
+        "Flask",
         "Algorithms",
         "Data Structures",
-        "Graph Theory",
-        "Linear Algebra",
         "Machine Learning",
         "Feature Selection",
         "Integer Programming",
@@ -44,7 +43,8 @@
         "education_title": "Education",
         "experience_title": "Work Experience",
         "projects_title": "Projects",
-        "publications_title": "Latest Publications",
+        "publications_title_cv": "Latest Scientific Publications",
+        "publications_title": "Scientific Publications",
         "news_title": "Latest News",
         "contact_title": "Contact Me",
         "no_experience_message": "No work experience to display yet.",
@@ -59,7 +59,11 @@
         "blog_title": "Blog",
         "publication_link_text": "Link to Publication",
         "all_posts_title": "All Posts",
-        "no_posts_found": "No posts found."
+        "no_posts_found": "No posts found.",
+        "languages_cv":"Languages",
+        "profile_cv": "Profile",
+        "contact_cv": "Contact",
+        "skills_cv": "Skills"
     },
     "projects": [
         {
@@ -69,7 +73,12 @@
             "description_cv":[
                 "Implemented graph spectral sparsification algorithms to improve efficiency in complex network analysis."
             ],
-            "technologies_cv":"Python, C++, Numpy, Eigen",
+            "technologies_cv":[
+                "Python", 
+                "C++", 
+                "NumPy", 
+                "Eigen"
+            ],
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/BSSSpectralSparsifier.git"
@@ -82,7 +91,10 @@
             "description_cv":[
                 "Developed an open-source library for critical feature selection in machine learning models with large-scale datasets."
             ],
-            "technologies_cv":"PySpark, Apache Spark",
+            "technologies_cv":[
+                "PySpark", 
+                "Apache Spark"
+            ],
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/mRMR.git"
@@ -95,10 +107,31 @@
             "description_cv":[
                 "Created efficient algorithms to solve NP-complete graph coloring problems."
             ],
-            "technologies_cv":"Python, Networkx, Pulp",
+            "technologies_cv":[
+                "Python", 
+                "NetworkX", 
+                "PulP"
+            ],
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/b_chromatic_colouring.git"
+            ]
+        },
+        {
+            "id": "project-four",
+            "name": "Personal Portfolio & Blog Website",
+            "description": "Personal website and blog built with Flask. Features include multilingual content (English and Spanish), dynamic content generation from JSON files, a Markdown-based blog, automated PDF resume generation, and a responsive design.",
+            "description_cv": ["Full-stack personal website and blog built with Flask. Features dynamic multilingual content (EN/ES) generated from JSON, a Markdown-based blog, and automated PDF resume generation with a fully responsive design."],
+            "technologies_cv": [
+                "Python", 
+                "Flask", "HTML", 
+                "CSS", 
+                "JavaScript", 
+                "JSON"
+            ],
+            "live_url":null,
+            "github_urls":[
+                "https://github.com/mendoza95/fabricio-webpage"
             ]
         }
     ],
@@ -145,7 +178,7 @@
             "description": "Implemented the Minimum Redundancy Maximum Relevance (mRMR) feature selection algorithm in PySpark to optimize a churn prediction model. Conducted research on state-of-the-art feature selection techniques and applied them to large-scale datasets using Apache Spark. Successfully enhanced model performance by identifying key predictive features. The implementation is open-source and available on GitHub.",
             "description_cv":[
                 "Designed and implemented the mRMR feature selection algorithm using PySpark to optimize a churn prediction model.",
-                "Researced and applied advanced feature selection techniques on large-scale datasets using Apache Spark.",
+                "Researched and applied advanced feature selection techniques on large-scale datasets using Apache Spark.",
                 "Improved model performance by identifying key predictive features and published the implementation as open-source on GitHub."
 
             ]
@@ -166,37 +199,60 @@
             "id": "pub-optimal-b-colouring",
             "title": "Optimal b-Colourings and Fall Colourings in H-Free Graphs",
             "authors":"Jungho Ahn, Tala Eagling-Vose, Felicia Lucke, David Manlove, Fabricio Mendoza Granada and Daniël Paulusma",
-            "journal": "Proceedings of the 52nd International Workshop on Graph-Theoretic Concepts in Computer Science (WG)"
+            "journal": "Proceedings of the 52nd International Workshop on Graph-Theoretic Concepts in Computer Science (WG)",
+            "journal_cv": "WG"
         },
         {
             "id": "pub-b-chromatic",
             "title": "Total b-chromatic colouring of graphs",
             "authors": "Fabricio Mendoza Granada and David Manlove",
-            "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)"
+            "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)",
+            "journal_cv": "LAGOS"
         },
         {
             "id": "pub-distributed-spectral-sparsification",
             "title": "A Distributed Algorithm for Spectral Sparsification of Graphs with Applications to Data Clustering",
             "authors": "Fabricio Mendoza Granada and Marcos Villagra",
-            "journal": "Proceedings of the 18th Cologne-Twente  Workshop on Graphs and Combinatorial  Optimization (CTW)"
+            "journal": "Proceedings of the 18th Cologne-Twente  Workshop on Graphs and Combinatorial  Optimization (CTW)",
+            "journal_cv": "CTW"
         },
         {
             "id": "pub-noh-forehead-communication-complexity",
             "title": "Number-On-Forehead Communication Complexity of Data Clustering with Sunflowers",
             "authors": "Fabricio Mendoza Granada and Marcos Villagra",
-            "journal": "Anais do IV Encontro de Teoria da Computação."
+            "journal": "Anais do IV Encontro de Teoria da Computação.",
+            "journal_cv": "ETC"
         },
         {
             "id": "pub-hard-easy-l-tromino-tilings",
             "title": "Hard and Easy Instances of L-Tromino Tilings",
             "authors": "Akagi, J. T., Gaona, C. F., Mendoza, F., Saikia, M. P., and Villagra, M.",
-            "journal": "International Workshop on Algorithms and Computation"
+            "journal": "International Workshop on Algorithms and Computation",
+            "journal_cv": "WALCOM"
         },
         {
             "id": "pub-spectral-sparsification-data-clustering",
             "title": "Distributed spectral clustering on the coordinator model",
             "authors": "Fabricio Mendoza Granada and Marcos Villagra",
-            "journal": "Proceeding Series of the Brazilian Society of Computational and Applied Mathematics"
+            "journal": "Proceeding Series of the Brazilian Society of Computational and Applied Mathematics",
+            "journal_cv": "CNMAC"
+        }
+    ],
+    "languages": [
+        {
+            "name": "English",
+            "level": "Advanced",
+            "note": "TOEFL certificate upon request"
+        },
+        {
+            "name": "Spanish",
+            "level": "Native",
+            "note": ""
+        },
+        {
+            "name": "Guarani",
+            "level": "Basic",
+            "note": ""
         }
     ]
 }

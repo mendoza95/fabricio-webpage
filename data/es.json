@@ -21,21 +21,21 @@
     },
     "skills": [
         "Python",
-        "C++",
-        "JavaScript",
-        "Flask",
-        "PySpark",
-        "Apache Spark",
-        "PostgreSQL",
+        "Scikit-learn",
         "Pandas",
         "NumPy",
         "SciPy",
+        "PySpark",
+        "Apache Spark",
+        "PostgreSQL",
+        "C++",
+        "JavaScript",
+        "Flask",
         "Algoritmos",
         "Estructuras de Datos",
-        "Teoría de Grafos",
-        "Álgebra Lineal",
         "Aprendizaje Automático",
-        "Selección de Atributos",
+        "Selección de características",
+        "Programación Lineal",
         "Clustering",
         "Aprendizaje No Supervisado",
         "Aprendizaje Supervisado"
@@ -44,7 +44,8 @@
         "education_title": "Educación",
         "experience_title": "Experiencia Laboral",
         "projects_title": "Proyectos",
-        "publications_title": "Publicaciones",
+        "publications_title_cv": "Ultimas Publicaciones Científicas",
+        "publications_title": "Publicaciones Científicas",
         "news_title": "Últimas Noticias",
         "contact_title": "Contáctame",
         "no_experience_message": "Aún no hay experiencia laboral para mostrar.",
@@ -59,7 +60,11 @@
         "blog_title": "Blog",
         "publication_link_text": "Enlace a la Publicación",
         "all_posts_title": "Todas las Publicaciones",
-        "no_posts_found": "No se encontraron publicaciones."
+        "no_posts_found": "No se encontraron publicaciones.",
+        "languages_cv":"Idiomas",
+        "profile_cv": "Acerca de mí",
+        "contact_cv": "Contacto",
+        "skills_cv": "Habilidades"
     },
     "projects": [
         {
@@ -67,9 +72,14 @@
             "name": "Esparsificador Espectral de Grafos",
             "description": "Durante mi curso de maestría, implementé diferentes esparsificadores espectrales de grafos en Python y C++. Las implementaciones se pueden encontrar en mi GitHub.",
             "description_cv":[
-                "Implementación de algoritmos de reducción de grafos (spectral sparsification) para mejorar la eficiencia en análisis de redes complejas."
+                "Implementé algoritmos de reducción de grafos (spectral sparsification) para mejorar la eficiencia en análisis de redes complejas."
             ],
-            "technologies_cv":"Python, C++, Numpy, Eigen",
+            "technologies_cv":[
+                "Python", 
+                "C++", 
+                "NumPy", 
+                "Eigen"
+            ],
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/BSSSpectralSparsifier.git"
@@ -80,9 +90,12 @@
             "name": "Selección de Características mRMR",
             "description": "Durante mi año en la industria, implementé un algoritmo de selección de características llamado Mínima Redundancia Máxima Relevancia (mRMR) en PySpark para mejorar el rendimiento de un modelo de predicción de churn. La implementación se puede encontrar en mi GitHub.",
             "description_cv":[
-                "Desarrollo de una librería de código abierto para la selección de características críticas en modelos de Machine Learning con datos a gran escala."
+                "Desarrollé una librería de código abierto para la selección de características críticas en modelos de Machine Learning con datos a gran escala."
             ],
-            "technologies_cv":"PySpark, Apache Spark",
+            "technologies_cv":[
+                "PySpark", 
+                "Apache Spark"
+            ],
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/mRMR.git"
@@ -93,12 +106,33 @@
             "name": "Algoritmos de coloreo b-cromático de grafos",
             "description": "Durante mi doctorado, implementé varios algoritmos para el problema de coloreo b-cromático de grafos en Python. La implementación se puede encontrar en mi GitHub.",
             "description_cv":[
-                "Creación de algoritmos para resolver problemas complejos de coloración de grafos (coloreo b-cromático)."
+                "Diseñé e implementé algoritmos para resolver problemas complejos de coloreo de grafos (coloreo b-cromático)."
             ],
-            "technologies_cv":"Python, Networkx, Pulp",
+            "technologies_cv":[
+                "Python", 
+                "NetworkX", 
+                "PulP"
+            ],
             "live_url": null,
             "github_urls": [
                 "https://github.com/mendoza95/b_chromatic_colouring.git"
+            ]
+        },
+        {
+            "id": "project-four",
+            "name": "Página web personal",
+            "description": "Sitio web personal y de blog construido con Flask. Ofrece funciones como contenido multilingüe (inglés y español), generación dinámica de contenido a partir de archivos JSON, blog escrito en Markdown, generación automática de CV en PDF y diseño responsivo.",
+            "description_cv": ["Desarrollé mi sitio web personal y blog full-stack utilizando Flask. Incluye contenido multilingüe (inglés/español) generado dinámicamente desde archivos JSON, un blog basado en Markdown y un sistema de generación automática de CV en formato PDF con un diseño totalmente responsivo."],
+            "technologies_cv": [
+                "Python", 
+                "Flask", "HTML", 
+                "CSS", 
+                "JavaScript", 
+                "JSON"
+            ],
+            "live_url":null,
+            "github_urls":[
+                "https://github.com/mendoza95/fabricio-webpage"
             ]
         }
     ],
@@ -128,12 +162,12 @@
     "experience": [
         {
             "id": "exp-uofg",
-            "role": "Asistente de Enseñanza Graduado",
+            "role": "Asistente de Enseñanza de Grado",
             "company": "Escuela de Ciencias de la Computación, Universidad de Glasgow",
             "location": "Glasgow, Reino Unido",
             "description": "Soy responsable de dirigir los tutoriales de laboratorio para los cursos de pregrado de Fundamentos Algorítmicos y Algoritmos y Estructuras de Datos. En Fundamentos Algorítmicos, los estudiantes aprenden sobre matemáticas discretas, métodos de prueba y teoría de grafos. En Algoritmos y Estructuras de Datos, los estudiantes aprenden sobre algoritmos de ordenamiento, análisis de complejidad y estructuras de datos como listas enlazadas y árboles.",
             "description_cv":[
-                "Lideré clases prácticas para los cursos de Algorithmic Foundations y Algorithms and Data Structures.",
+                "Lideré clases prácticas para los cursos de Fundamentos de Algoritmos y Algoritmos y Estructuras de Datos.",
                 "Enseñé conceptos clave como matemática discreta, teoría de grafos, análisis de complejidad y estructuras de datos (árboles, listas enlazadas)."
             ]
         },
@@ -144,8 +178,8 @@
             "location": "Asunción, Paraguay",
             "description": "Implementé el algoritmo de selección de características de Mínima Redundancia y Máxima Relevancia (mRMR) en PySpark para optimizar un modelo de predicción de abandono (churn). Realicé investigaciones sobre técnicas de selección de características de vanguardia y las apliqué a grandes conjuntos de datos utilizando Apache Spark. Mejoré con éxito el rendimiento del modelo identificando características predictivas clave. La implementación es de código abierto y está disponible en GitHub.",
             "description_cv":[
-                "Diseñé e implementé el algoritmo de selección de atributos mRMR utilizando PySpark para optimizar un modelo de predicción de fuga de clientes (churn).",
-                "Investigué y apliqué técnicas avanzadas de selección de atributos en conjuntos de datos masivos con Apache Spark.",
+                "Diseñé e implementé el algoritmo de selección de características mRMR utilizando PySpark para optimizar un modelo de predicción de fuga de clientes (churn).",
+                "Investigué y apliqué técnicas avanzadas de selección de características en conjuntos de datos masivos con Apache Spark.",
                 "Mejoré el rendimiento del modelo identificando las variables predictivas clave y publiqué el código como código abierto en GitHub."
             ]
         },
@@ -165,37 +199,60 @@
             "id": "pub-optimal-b-colouring",
             "title": "Optimal b-Colourings and Fall Colourings in H-Free Graphs",
             "authors":"Jungho Ahn, Tala Eagling-Vose, Felicia Lucke, David Manlove, Fabricio Mendoza Granada and Daniël Paulusma",
-            "journal": "Proceedings of the 52nd International Workshop on Graph-Theoretic Concepts in Computer Science (WG)"
+            "journal": "Proceedings of the 52nd International Workshop on Graph-Theoretic Concepts in Computer Science (WG)",
+            "journal_cv": "WG"
         },
         {
             "id": "pub-b-chromatic",
             "title": "Total b-chromatic colouring of graphs",
             "authors": "Fabricio Mendoza Granada y David Manlove",
-            "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)"
+            "journal": "Proceedings of the XIII Latin American Algorithms, Graphs and Optimization Symposium (LAGOS)",
+            "journal_cv": "LAGOS"
         },
         {
             "id": "pub-distributed-spectral-sparsification",
             "title": "A Distributed Algorithm for Spectral Sparsification of Graphs with Applications to Data Clustering",
             "authors": "Fabricio Mendoza Granada y Marcos Villagra",
-            "journal": "Proceedings of the 18th Cologne-Twente  Workshop on Graphs and Combinatorial  Optimization (CTW)"
+            "journal": "Proceedings of the 18th Cologne-Twente  Workshop on Graphs and Combinatorial  Optimization (CTW)",
+            "journal_cv": "CTW"
         },
         {
             "id": "pub-noh-forehead-communication-complexity",
             "title": "Number-On-Forehead Communication Complexity of Data Clustering with Sunflowers",
             "authors": "Fabricio Mendoza Granada y Marcos Villagra",
-            "journal": "Anais do IV Encontro de Teoria da Computação."
+            "journal": "Anais do IV Encontro de Teoria da Computação.",
+            "journal_cv": "ETC"
         },
         {
             "id": "pub-hard-easy-l-tromino-tilings",
             "title": "Hard and Easy Instances of L-Tromino Tilings",
             "authors": "Akagi, J. T., Gaona, C. F., Mendoza, F., Saikia, M. P., y Villagra, M.",
-            "journal": "International Workshop on Algorithms and Computation"
+            "journal": "International Workshop on Algorithms and Computation",
+            "journal_cv": "WALCOM"
         },
         {
             "id": "pub-spectral-sparsification-data-clustering",
             "title": "Distributed spectral clustering on the coordinator model",
             "authors": "Fabricio Mendoza Granada y Marcos Villagra",
-            "journal": "Proceeding Series of the Brazilian Society of Computational and Applied Mathematics"
+            "journal": "Proceeding Series of the Brazilian Society of Computational and Applied Mathematics",
+            "journal_cv": "CNMAC"
+        }
+    ],
+    "languages": [
+        {
+            "name":"Inglés",
+            "level": "Avanzado",
+            "note": "Certificado de TOEFL mediante pedido"
+        },
+        {
+            "name":"Español",
+            "level":"Nativo",
+            "note":""
+        },
+        {
+            "name":"Guaraní",
+            "level":"Básico",
+            "note":""
         }
     ]
 }

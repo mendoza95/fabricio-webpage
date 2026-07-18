@@ -14,18 +14,18 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.5;
+            line-height: 1.25;
             color: #333;
         }
 
         h1, h2, h3, h4 {
             color: #2E3D49;
-            margin-bottom: 0.5em;
+            margin-bottom: 0.1em;
             page-break-after: avoid;
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 1.5em;
             text-align: left;
             margin-bottom: 0;
         }
@@ -43,7 +43,7 @@
         }
 
         .section {
-            margin-bottom: 1.2em; /* Further reduced space between sections */
+            margin-bottom: 1em; /* Further reduced space between sections */
         }
 
         .section h2 {
@@ -57,7 +57,7 @@
         }
 
         .item {
-            margin-bottom: 1.2em;
+            margin-bottom: 1em;
             page-break-inside: avoid;
         }
 
@@ -94,8 +94,8 @@
 </head>
 <body>
     <h1>Fabricio Mendoza Granada</h1>
-    <h3>Contact</h3>
     <div class="contact-info">
+        <h3>{{ ui_text.contact_cv}}</h3>
         {# Display Email on its own line for prominence #}
         {% for link in social_links if link.name == 'Email' %}
             <p style="margin-bottom: 0.2em;"><a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a></p>
@@ -104,13 +104,13 @@
         <div>
             <a href="https://fabriciomg.pythonanywhere.com/{{ lang }}/">website: https://fabriciomg.pythonanywhere.com/{{ lang }}/</a>
             {% for link in social_links if link.name in ['LinkedIn', 'GitHub'] %}
-                 &bull; <a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a>
+                 | <a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a>
             {% endfor %}
         </div>
     </div>
 
     <div class="section" id="profile">
-        <h3>Profile</h3>
+        <h3>{{ ui_text.profile_cv}}</h3>
         <div class="item">
             {% for paragraph in about.intro %}
                 <p>{{ paragraph | safe }}</p>
@@ -118,7 +118,14 @@
         </div>
     </div>
 
-    
+    {% if skills %}
+    <div class="section" id="skills">
+        <h3>{{ ui_text.skills_cv | default('Skills') }}</h3>
+        <div class="item">
+            <p>{{ skills | join(', ') }}</p>
+        </div>
+    </div>
+    {% endif %}
 
     <div class="section" id="education">
         <h3>{{ ui_text.education_title }}</h3>
@@ -159,7 +166,11 @@
         {% for project in projects %}
             <div class="item">
                 <div class="item-content">
-                    <h4>{{ project.name }} | {{ project.technologies_cv }}</h4>
+                    <h4>{{ project.name }} | 
+                        {%for tech in project.technologies_cv %}
+                            <em>{{ tech }} </em> |
+                        {% endfor %}
+                        <a href="{{ project.github_urls[0] }}" target="_blank" rel="noopener noreferrer">GitHub</a></h4>
                     {# Render the description as a bulleted list #}
                     {% if project.description_cv %}
                         <ul>
@@ -173,30 +184,35 @@
         {% endfor %}
     </div>
 
-    {% if skills %}
-    <div class="section" id="skills">
-        <h3>{{ ui_text.skills_title | default('Skills') }}</h3>
-        <div class="item">
-            <p>{{ skills | join(', ') }}</p>
-        </div>
-    </div>
-    {% endif %}
 
     <div class="section" id="publications">
-        <h3>{{ ui_text.publications_title }}</h3>
+        <h3>{{ ui_text.publications_title_cv }}</h3>
         <ul>
         {% for pub in publications[:3] %}
             <div class="item">
                 <div class="item-content">
-                    <li>{{ pub.title }} ({{ pub.year }}) <em>- {{ pub.journal }} - {{ pub.authors }}</em> </li>
-                    {% if pub.urls %}
-                        {% if pub.urls|length > 0 %}
-                            <a href="{{ pub.urls[0] }}">link</a>
+                    <li>{{ pub.title }} ({{ pub.year }})
+                        {% if pub.urls %}
+                            {% if pub.urls|length > 0 %}
+                                <a href="{{ pub.urls[0] }}" target="_blank" rel="noopener noreferrer"> - {{ pub.journal_cv }}</a>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
+                    </li>
                 </div>
             </div>
         {% endfor %}
+    </div>
+    <div class="section" id="language-level">
+        <h3>{{ ui_text.languages_cv}}</h3>
+        <ul>
+        {% for lan in languages %}
+            <div class="item">
+                <div class="item-content">
+                    <li>{{ lan.name }}: {{ lan.level }}</li>
+                </div>
+            </div>
+        {% endfor %}
+        </ul>
     </div>
 
 </body>
