@@ -1,19 +1,39 @@
 import os
-from flask import Flask, render_template, redirect, session, url_for
+from flask import Flask, render_template, redirect, session, url_for, flash, request, get_flashed_messages
 import json
-import locale
-from flask_flatpages import FlatPages, pygments_style_defs
 from datetime import datetime, timezone # Keep datetime for inject_now and post sorting
 from dotenv import load_dotenv
 from weasyprint import HTML
+from flask_login import LoginManager
+from pymongo import MongoClient
+from bcrypt import checkpw
+from flask_flatpages import FlatPages, pygments_style_defs
+from bson.objectid import ObjectId
 
 # Import helper functions
 from helper import _parse_date_flexible, _set_locale, load_site_data
 
 load_dotenv(override=True)  # Force loading from .env, overriding existing env vars.
 
+# 1. IMPORTA el blueprint y la función de carga desde tu nuevo archivo
+from auth import auth_bp, load_user_from_db
+
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
+
+# Initialize LoginManager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth.login'  # <-- OJO: Ahora apunta a auth.login
+
+# 2. CONECTA el user_loader usando la función importada
+@login_manager.user_loader
+def load_user(user_id):
+    return load_user_from_db(user_id)
+
+# 3. REGISTRA el Blueprint en la aplicación
+app.register_blueprint(auth_bp)
+
 
 # Configuration for Flask-FlatPages
 app.config['FLATPAGES_EXTENSION'] = '.md'
