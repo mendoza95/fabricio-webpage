@@ -104,3 +104,37 @@ textarea.form-control {
 @media (max-width: 768px) {
     /* No special responsive styles needed for a centered layout */
 }
+
+/* Alinea el dropdown verticalmente con los otros enlaces en pantallas grandes */
+.primary-navigation {
+    align-items: center;
+}
+
+/* Evita que el contenedor del botón rompa la línea */
+.auth-dropdown-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Ajustes específicos para el diseño móvil */
+@media (max-width: 35em) { /* Ajusta este valor al breakpoint exacto de tu menú móvil */
+    .primary-navigation {
+        align-items: flex-start; /* Alinea a la izquierda en móvil */
+        flex-direction: column;
+    }
+    
+    .auth-dropdown-item {
+        width: 100%;
+        margin-top: 1rem; /* Separa el botón del cambiador de idioma en móvil */
+    }
+    
+    /* Hace que el menú desplegable no flote fuera de la pantalla en móviles */
+    .auth-dropdown-item .dropdown-menu {
+        position: static !important;
+        float: none;
+        width: 100%;
+        background-color: transparent; /* O el color de fondo de tu menú móvil */
+        border: none;
+        box-shadow: none;
+    }
+}
