@@ -13,3 +13,5 @@ webpage/
 # --- Temporary Test Files ---
 # As requested, ignore the connection test script
 test_connection.py
+migrar_datos.py
+.DS_Store

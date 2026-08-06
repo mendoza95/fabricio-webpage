@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, redirect, session, url_for, flash, request, get_flashed_messages
-import json
+
+from flask import Flask, render_template, redirect, session, url_for, flash, request, get_flashed_messages, jsonify
+from flask_login import login_required, current_user
 from datetime import datetime, timezone # Keep datetime for inject_now and post sorting
 from dotenv import load_dotenv
 from weasyprint import HTML
@@ -9,6 +10,7 @@ from pymongo import MongoClient
 from bcrypt import checkpw
 from flask_flatpages import FlatPages, pygments_style_defs
 from bson.objectid import ObjectId
+from auth import get_db_collection
 
 # Import helper functions
 from helper import _parse_date_flexible, _set_locale, load_site_data
@@ -138,15 +140,16 @@ def generate_cv_pdf(lang):
         'Content-Disposition': 'inline; filename="Fabricio_Mendoza_CV.pdf"'
     }
 
+
 @app.route('/<lang>/blog/')
 def blog(lang):
     session['lang'] = lang
-    _set_locale(app, lang) # Pass app instance
-    lang_data_path = os.path.join(app.root_path, 'data', f'{lang}.json')
-
-    with open(lang_data_path, 'r', encoding='utf-8') as f:
-        ui_text = json.load(f)['ui_text']
-    # Get all pages, filter by language, and sort by date from newest to oldest
+    _set_locale(app, lang)
+    
+    # Reemplazamos la apertura de archivo JSON local por load_site_data
+    site_data = load_site_data(app, lang)
+    ui_text = site_data['ui_text']
+    
     posts = [p for p in flatpages if p.path.startswith(lang + '/') and 'date' in p.meta]
     posts.sort(key=lambda item: item.meta['date'], reverse=True)
     return render_template('blog.html', lang=lang, posts=posts, ui_text=ui_text)
@@ -155,13 +158,12 @@ def blog(lang):
 @app.route('/<lang>/blog/<path:path>/')
 def post(lang, path):
     session['lang'] = lang
-    _set_locale(app, lang) # Pass app instance
-    lang_data_path = os.path.join(app.root_path, 'data', f'{lang}.json')
-
-    with open(lang_data_path, 'r', encoding='utf-8') as f:
-        ui_text = json.load(f)['ui_text']
-    # The path for a post is its filename (e.g., 'my-first-post')
-    # We need to construct the full path that FlatPages uses
+    _set_locale(app, lang)
+    
+    # Reemplazamos la apertura de archivo JSON local por load_site_data
+    site_data = load_site_data(app, lang)
+    ui_text = site_data['ui_text']
+    
     full_path = f'{lang}/{path}'
     post = flatpages.get_or_404(full_path)
     return render_template('post.html', lang=lang, post=post, ui_text=ui_text)
@@ -169,6 +171,65 @@ def post(lang, path):
 @app.route('/pygments.css')
 def pygments_css():
     return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
+
+@app.route('/api/update-portfolio', methods=['POST'])
+@login_required # Seguridad: Solo tú autenticado puedes ejecutar esta ruta
+def update_portfolio():
+    data = request.get_json()
+
+    collection_name = data.get('collection')
+    doc_id = data.get('id')
+    field = data.get('field')
+    lang = data.get('lang')
+    nuevo_texto = data.get('text')
+
+    if not collection_name or not field or not lang:
+        return jsonify({"status": "error", "message": "Datos incompletos"}), 400
+
+    # Obtener la conexión a la base de datos
+    db_users = get_db_collection()
+    db = db_users.database
+    collection = db[collection_name]
+
+    user_id = current_user.id # Asegurar que editamos los datos de TU usuario
+
+    try:
+        # CASO 1: Documento único por usuario (about_me, portfolio_global)
+        if collection_name in ['about_me', 'portfolio_global']:
+            campo_a_actualizar = f"translations.{lang}.{field}"
+            
+            # Para el título o intro de about_me
+            result = collection.update_one(
+                {"user_id": user_id},
+                {"$set": {campo_a_actualizar: nuevo_texto}}
+            )
+
+        # CASO 2: Documentos en colecciones con ID propio (projects, experience, education, publications)
+        else:
+            # Determinamos cuál es la clave identificadora según la colección
+            id_key_map = {
+                'projects': 'project_id',
+                'experience': 'experience_id',
+                'education': 'education_id',
+                'publications': 'publication_id'
+            }
+            
+            id_key = id_key_map.get(collection_name)
+            campo_a_actualizar = f"translations.{lang}.{field}"
+
+            result = collection.update_one(
+                {"user_id": user_id, id_key: doc_id},
+                {"$set": {campo_a_actualizar: nuevo_texto}}
+            )
+
+        if result.modified_count > 0 or result.matched_count > 0:
+            return jsonify({"status": "success", "message": "Actualizado correctamente"})
+        else:
+            return jsonify({"status": "error", "message": "No se encontró el registro para actualizar"}), 404
+
+    except Exception as e:
+        app.logger.error(f"Error actualizando la BD: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
