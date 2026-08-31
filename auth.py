@@ -1,30 +1,12 @@
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
 from flask_login import login_user, logout_user, login_required
-from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bcrypt import checkpw
-from dotenv import load_dotenv
 
-# Creamos el Blueprint
 auth_bp = Blueprint('auth', __name__)
 
-# 1. Cargar las variables de entorno del archivo .env
-load_dotenv(override=True)
-
-# 2. Leer la URI desde el entorno
-MONGO_URI = os.environ.get('MONGO_URI')
-
-if not MONGO_URI:
-    raise ValueError("¡ERROR CRÍTICO: La variable MONGO_URI no está definida en el archivo .env!")
-
-# 3. INSTANCIAR EL CLIENTE UNA SOLA VEZ (Mejor práctica / Connection Pooling)
-# PyMongo gestionará automáticamente un grupo de conexiones reutilizables hacia Atlas.
-client = MongoClient(MONGO_URI)
-db = client['personal_webpage']
-
-class User():
-    # Implementamos los métodos de UserMixin manualmente para no depender de la app central aquí
+class User:
     def __init__(self, id, username):
         self.id = id
         self.username = username
@@ -35,12 +17,10 @@ class User():
     def get_id(self): return str(self.id)
 
 def get_db_collection():
-    """
-    Retorna la colección de usuarios reutilizando la instancia del cliente global.
-    """
+    """Obtiene la colección 'users' desde la instancia dinámica de la app en ejecución."""
+    db = current_app.config['DB']
     return db['users']
 
-# El user_loader ahora vive aquí
 def load_user_from_db(user_id):
     if user_id == 'guest':
         return None
@@ -69,7 +49,6 @@ def login():
             return redirect(url_for('index', lang=session.get('lang', 'en')))
         else:
             flash('Invalid username or password.', 'danger')
-            # CAMBIA EL RENDER POR UNA REDIRECCIÓN:
             return redirect(url_for('index', lang=session.get('lang', 'en')))
 
     return render_template('login.html')

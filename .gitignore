@@ -14,4 +14,5 @@ webpage/
 # As requested, ignore the connection test script
 test_connection.py
 migrar_datos.py
+init_db.py
 .DS_Store
