@@ -1,4 +1,5 @@
 import os
+import certifi
 from datetime import datetime, timezone
 from flask import Flask, render_template, redirect, session, url_for, request, jsonify
 from flask_login import LoginManager, login_required, current_user
@@ -23,7 +24,12 @@ def create_app(test_config=None):
         mongo_uri = os.environ.get('MONGO_URI')
         if not mongo_uri:
             raise ValueError("¡ERROR CRÍTICO: MONGO_URI no configurada!")
-        client = MongoClient(mongo_uri)
+
+        app.config['MONGO_URI'] = mongo_uri
+        client = MongoClient(
+            app.config['MONGO_URI'],
+            tlsCAFile=certifi.where()
+        )
         app.config['DB'] = client['personal_webpage']
 
     # Inicializar LoginManager
