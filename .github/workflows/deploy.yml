@@ -18,38 +18,34 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install local dependencies & test syntax
+      - name: Install dependencies & test compilation
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           python -m compileall app.py
 
-      - name: Deploy to PythonAnywhere via API
+      - name: Trigger Web App Reload on PythonAnywhere
         env:
           PA_USERNAME: ${{ secrets.PYTHONANYWHERE_USERNAME }}
           PA_TOKEN: ${{ secrets.PYTHONANYWHERE_TOKEN }}
           DOMAIN_NAME: "fabriciomg.pythonanywhere.com"
         run: |
-          echo "Pulling latest code on PythonAnywhere..."
-          curl -X POST \
-            -H "Authorization: Token $PA_TOKEN" \
-            "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/consoles/shared_with_you/" || true
+          python -c "
+          import os, requests
 
-          # Trigger Git Pull via PythonAnywhere API command execution
-          echo "Executing git pull..."
-          curl -X POST \
-            -H "Authorization: Token $PA_TOKEN" \
-            -d "command=cd ~/fabricio-webpage && git pull origin main && source .venv/bin/activate && pip install -r requirements.txt" \
-            "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/cpu/" || true
+          username = os.environ['PA_USERNAME'].strip()
+          token = os.environ['PA_TOKEN'].strip()
+          domain = os.environ['DOMAIN_NAME'].strip()
 
-          echo "Reloading PythonAnywhere Web App..."
-          RELOAD_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-            -H "Authorization: Token $PA_TOKEN" \
-            "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/webapps/$DOMAIN_NAME/reload/")
+          headers = {'Authorization': f'Token {token}'}
 
-          if [ "$RELOAD_RESPONSE" -eq 200 ]; then
-            echo "✅ Web app reloaded successfully!"
-          else
-            echo "❌ Failed to reload web app. HTTP status: $RELOAD_RESPONSE"
-            exit 1
-          fi
+          url = f'https://www.pythonanywhere.com/api/v0/user/{username}/webapps/{domain}/reload/'
+          print(f'Sending reload request to: {url}')
+
+          response = requests.post(url, headers=headers)
+          if response.status_code == 200:
+              print('✅ Web app reloaded successfully!')
+          else:
+              print(f'❌ Reload failed with status {response.status_code}:', response.text)
+              exit(1)
+          "
