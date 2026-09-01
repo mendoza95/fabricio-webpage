@@ -30,7 +30,10 @@ def create_app(test_config=None):
             mongo_uri,
             tls=True,
             tlsCAFile=certifi.where(),
-            serverSelectionTimeoutMS=5000  # Fail fast (5s) instead of waiting 30s
+            connectTimeoutMS=30000,
+            socketTimeoutMS=None,
+            connect=False,  # Delay connection until actual read/write operation
+            maxPoolSize=1
         )
         app.config['DB'] = client['personal_webpage']
         app.config['CLIENT'] = client
