@@ -27,10 +27,13 @@ def create_app(test_config=None):
 
         app.config['MONGO_URI'] = mongo_uri
         client = MongoClient(
-            app.config['MONGO_URI'],
-            tlsCAFile=certifi.where()
+            mongo_uri,
+            tls=True,
+            tlsCAFile=certifi.where(),
+            serverSelectionTimeoutMS=5000  # Fail fast (5s) instead of waiting 30s
         )
         app.config['DB'] = client['personal_webpage']
+        app.config['CLIENT'] = client
 
     # Inicializar LoginManager
     login_manager = LoginManager()
