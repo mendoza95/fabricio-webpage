@@ -1,12 +1,16 @@
-name: Deploy to PythonAnywhere
+name: CI/CD Pipeline - Deploy to PythonAnywhere
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  lint-and-test:
+    name: 🧪 Quality Checks & Testing
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +22,44 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install dependencies & test compilation
+      - name: Install dependencies, testing & linting tools
         run: |
           python -m pip install --upgrade pip
+          pip install pytest ruff
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          python -m compileall app.py
+
+      - name: Linting with Ruff (Code Quality & Style)
+        run: |
+          # Revisa errores de sintaxis y violaciones de estilo
+          ruff check .
+
+      - name: Check Formatting with Ruff
+        run: |
+          # Verifica que el código cumpla con las reglas de formateo sin modificar archivos
+          ruff format --check .
+
+      - name: Run Tests with Pytest
+        env:
+          # Inyectamos una URI de pruebas o dummy si tus tests no se conectan a Atlas real
+          MONGO_URI: "mongodb://localhost:27017/test_db"
+        run: |
+          # Ejecuta pytest solo si existe la carpeta de pruebas o archivos test_*.py
+          pytest --maxfail=2 --disable-warnings -v
+
+  deploy:
+    name: 🚀 Deploy to PythonAnywhere
+    needs: lint-and-test # Solo se ejecuta si los tests y el linter pasan exitosamente
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
       - name: Trigger Web App Reload on PythonAnywhere
         env:
@@ -31,21 +68,31 @@ jobs:
           DOMAIN_NAME: "fabriciomg.pythonanywhere.com"
         run: |
           python -c "
-          import os, requests
+          import os, sys, urllib.request, urllib.error
 
-          username = os.environ['PA_USERNAME'].strip()
-          token = os.environ['PA_TOKEN'].strip()
-          domain = os.environ['DOMAIN_NAME'].strip()
+          username = os.environ.get('PA_USERNAME', '').strip()
+          token = os.environ.get('PA_TOKEN', '').strip()
+          domain = os.environ.get('DOMAIN_NAME', '').strip()
 
-          headers = {'Authorization': f'Token {token}'}
+          if not username or not token:
+              print('❌ ERROR: PYTHONANYWHERE_USERNAME o PYTHONANYWHERE_TOKEN no están configurados en GitHub Secrets.')
+              sys.exit(1)
 
           url = f'https://www.pythonanywhere.com/api/v0/user/{username}/webapps/{domain}/reload/'
-          print(f'Sending reload request to: {url}')
+          print(f'Enviando solicitud de recarga a: {url}')
 
-          response = requests.post(url, headers=headers)
-          if response.status_code == 200:
-              print('✅ Web app reloaded successfully!')
-          else:
-              print(f'❌ Reload failed with status {response.status_code}:', response.text)
-              exit(1)
+          req = urllib.request.Request(url, method='POST')
+          req.add_header('Authorization', f'Token {token}')
+
+          try:
+              with urllib.request.urlopen(req) as response:
+                  if response.status == 200:
+                      print('✅ ¡Web App recargada con éxito en PythonAnywhere!')
+          except urllib.error.HTTPError as e:
+              print(f'❌ Error al recargar. Código HTTP: {e.code}')
+              print(f'Detalles del servidor: {e.read().decode()}')
+              sys.exit(1)
+          except Exception as e:
+              print(f'❌ Error inesperado: {repr(e)}')
+              sys.exit(1)
           "
