@@ -1,15 +1,17 @@
 import os
-import certifi
 from datetime import datetime, timezone
-from flask import Flask, render_template, redirect, session, url_for, request, jsonify
-from flask_login import LoginManager, login_required, current_user
-from flask_flatpages import FlatPages, pygments_style_defs
-from pymongo import MongoClient
+
+import certifi
 from dotenv import load_dotenv
+from flask import Flask, jsonify, redirect, render_template, request, session, url_for
+from flask_flatpages import FlatPages, pygments_style_defs
+from flask_login import LoginManager, current_user, login_required
+from pymongo import MongoClient
+from pymongo.errors import PyMongoError
 from weasyprint import HTML
 
-from helper import _parse_date_flexible, _set_locale, load_site_data
 from auth import auth_bp, load_user_from_db
+from helper import _parse_date_flexible, _set_locale, load_site_data
 
 
 def create_app(test_config=None):
@@ -226,8 +228,8 @@ def create_app(test_config=None):
                     }
                 ), 404
 
-        except Exception as e:
-            app.logger.error(f"Error actualizando la BD: {str(e)}")
+        except PyMongoError as e:
+            app.logger.error(f"Error actualizando la BD: {e!s}")
             return jsonify({"status": "error", "message": str(e)}), 500
 
     return app

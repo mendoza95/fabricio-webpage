@@ -1,17 +1,17 @@
-import os
+from bcrypt import checkpw
+from bson.objectid import ObjectId
 from flask import (
     Blueprint,
+    current_app,
+    flash,
+    redirect,
     render_template,
     request,
-    redirect,
-    url_for,
-    flash,
     session,
-    current_app,
+    url_for,
 )
-from flask_login import login_user, logout_user, login_required
-from bson.objectid import ObjectId
-from bcrypt import checkpw
+from flask_login import login_required, login_user, logout_user
+from pymongo.errors import PyMongoError
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -48,7 +48,7 @@ def load_user_from_db(user_id):
         user = users_collection.find_one({"_id": ObjectId(user_id)})
         if user:
             return User(user["_id"], user["username"])
-    except Exception:
+    except PyMongoError:
         return None
     return None
 
