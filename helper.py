@@ -1,7 +1,9 @@
-import os
 import locale
 import logging
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+BOGOTA_TZ = ZoneInfo("America/Bogota")
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +20,11 @@ def _parse_date_flexible(d):
     ]
     for fmt in formats_to_try:
         try:
-            return datetime.strptime(date_str, fmt)
+            return datetime.strptime(date_str, fmt).replace(tzinfo=BOGOTA_TZ)
         except (ValueError, TypeError):
             continue
     logger.warning(f"Could not parse date '{date_str}'. Using default 1970-01-01.")
-    return datetime(1970, 1, 1)
+    return datetime(1970, 1, 1, tzinfo=BOGOTA_TZ)
 
 
 def _set_locale(lang: str):

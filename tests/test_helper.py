@@ -1,6 +1,11 @@
-import pytest
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+import pytest
+
 from helper import _parse_date_flexible, load_site_data
+
+BOGOTA_TZ = ZoneInfo("America/Bogota")
 
 
 def test_parse_date_flexible_valid_formats():
@@ -9,15 +14,15 @@ def test_parse_date_flexible_valid_formats():
     d2 = _parse_date_flexible("10-05-2024")
     d3 = _parse_date_flexible("May 10, 2024")
 
-    assert d1 == datetime(2024, 5, 10)
-    assert d2 == datetime(2024, 5, 10)
-    assert d3 == datetime(2024, 5, 10)
+    assert d1 == datetime(2024, 5, 10, tzinfo=BOGOTA_TZ)
+    assert d2 == datetime(2024, 5, 10, tzinfo=BOGOTA_TZ)
+    assert d3 == datetime(2024, 5, 10, tzinfo=BOGOTA_TZ)
 
 
 def test_parse_date_flexible_invalid_format():
     """Prueba que un formato inválido devuelva la fecha por defecto (1970-01-01) sin romper el programa."""
     invalid_date = _parse_date_flexible("fecha-invalida-123")
-    assert invalid_date == datetime(1970, 1, 1)
+    assert invalid_date == datetime(1970, 1, 1, tzinfo=BOGOTA_TZ)
 
 
 def test_load_site_data_empty_db_raises_error(mock_db):

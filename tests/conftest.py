@@ -1,5 +1,6 @@
-import pytest
 import mongomock
+import pytest
+
 from app import create_app
 
 
