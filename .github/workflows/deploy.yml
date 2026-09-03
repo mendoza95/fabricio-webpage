@@ -22,33 +22,17 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install dependencies, testing & linting tools
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest ruff
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Install dependencies via Makefile
+        run: make install
 
-      - name: Linting with Ruff (Code Quality & Style)
-        run: |
-          # Revisa errores de sintaxis y violaciones de estilo
-          ruff check .
-
-      - name: Check Formatting with Ruff
-        run: |
-          # Verifica que el código cumpla con las reglas de formateo sin modificar archivos
-          ruff format --check .
-
-      - name: Run Tests with Pytest
+      - name: Run Linting & Pytest via Makefile
         env:
-          # Inyectamos una URI de pruebas o dummy si tus tests no se conectan a Atlas real
           MONGO_URI: "mongodb://localhost:27017/test_db"
-        run: |
-          # Ejecuta pytest solo si existe la carpeta de pruebas o archivos test_*.py
-          pytest --maxfail=2 --disable-warnings -v
+        run: make check
 
   deploy:
     name: 🚀 Deploy to PythonAnywhere
-    needs: lint-and-test # Solo se ejecuta si los tests y el linter pasan exitosamente
+    needs: lint-and-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
 
