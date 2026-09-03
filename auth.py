@@ -4,13 +4,13 @@ from flask import (
     Blueprint,
     current_app,
     flash,
+    jsonify,
     redirect,
     request,
     session,
     url_for,
-    jsonify
 )
-from flask_login import login_required, logout_user, UserMixin, login_user
+from flask_login import UserMixin, login_required, login_user, logout_user
 from pymongo.errors import PyMongoError
 
 auth_bp = Blueprint("auth", __name__)

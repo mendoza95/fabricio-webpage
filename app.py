@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timezone
 
 import certifi
+from bson.objectid import ObjectId
 from dotenv import load_dotenv
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 from flask_flatpages import FlatPages, pygments_style_defs
@@ -9,9 +10,8 @@ from flask_login import LoginManager, current_user, login_required
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 from weasyprint import HTML
-from bson.objectid import ObjectId
 
-from auth import auth_bp, User
+from auth import User, auth_bp
 from helper import _parse_date_flexible, _set_locale, load_site_data
 
 
