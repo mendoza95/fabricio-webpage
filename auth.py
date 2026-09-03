@@ -5,21 +5,21 @@ from flask import (
     current_app,
     flash,
     redirect,
-    render_template,
     request,
     session,
     url_for,
+    jsonify
 )
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, logout_user, UserMixin, login_user
 from pymongo.errors import PyMongoError
 
 auth_bp = Blueprint("auth", __name__)
 
 
-class User:
-    def __init__(self, id, username):
-        self.id = id
-        self.username = username
+class User(UserMixin):
+    def __init__(self, user_data):
+        self.id = str(user_data["_id"])
+        self.username = user_data["username"]
 
     def is_authenticated(self):
         return True
@@ -45,7 +45,7 @@ def load_user_from_db(user_id):
         return None
     try:
         users_collection = get_db_collection()
-        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        user = users_collection().find_one({"_id": ObjectId(user_id)})
         if user:
             return User(user["_id"], user["username"])
     except PyMongoError:
@@ -53,25 +53,48 @@ def load_user_from_db(user_id):
     return None
 
 
-@auth_bp.route("/login", methods=["GET", "POST"])
+@auth_bp.route("/login", methods=["POST"])
 def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+    username = request.form.get("username", "").strip()
+    password = request.form.get("password", "")
 
-        users_collection = get_db_collection()
-        user = users_collection.find_one({"username": username})
+    users_collection = get_db_collection()
+    user_data = users_collection.find_one({"username": username})
 
-        if user and checkpw(password.encode(), user["password_hash"]):
-            user_obj = User(str(user["_id"]), user["username"])
-            login_user(user_obj)
-            flash("Logged in successfully.", "success")
-            return redirect(url_for("index", lang=session.get("lang", "en")))
-        else:
-            flash("Invalid username or password.", "danger")
-            return redirect(url_for("index", lang=session.get("lang", "en")))
+    if not user_data or "password_hash" not in user_data:
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "message": "Usuario o contraseña incorrectos.",
+                }
+            ),
+            401,
+        )
 
-    return render_template("login.html")
+    password_bytes = password.encode("utf-8")
+    stored_hash = user_data["password_hash"]
+    hash_bytes = (
+        stored_hash.encode("utf-8")
+        if isinstance(stored_hash, str)
+        else bytes(stored_hash)
+    )
+
+    if checkpw(password_bytes, hash_bytes):
+        # 1. Crear la instancia de usuario
+        user_obj = User(user_data)
+
+        # 2. Registrar la sesión en Flask-Login
+        login_user(user_obj, remember=True)
+
+        return jsonify({"success": True, "message": "Inicio de sesión exitoso."})
+
+    return (
+        jsonify(
+            {"success": False, "message": "Usuario o contraseña incorrectos."}
+        ),
+        401,
+    )
 
 
 @auth_bp.route("/logout")

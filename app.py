@@ -9,8 +9,9 @@ from flask_login import LoginManager, current_user, login_required
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 from weasyprint import HTML
+from bson.objectid import ObjectId
 
-from auth import auth_bp, load_user_from_db
+from auth import auth_bp, User
 from helper import _parse_date_flexible, _set_locale, load_site_data
 
 
@@ -48,7 +49,11 @@ def create_app(test_config=None):
 
     @login_manager.user_loader
     def load_user(user_id):
-        return load_user_from_db(user_id)
+        users_collection = app.config["DB"]["users"]
+        user_data = users_collection.find_one({"_id": ObjectId(user_id)})
+        if user_data:
+            return User(user_data)
+        return None
 
     # Registrar Blueprints
     app.register_blueprint(auth_bp)

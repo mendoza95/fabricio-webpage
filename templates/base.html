@@ -88,8 +88,10 @@
         <div class="modal-box">
             <h3>Iniciar Sesión</h3>
             
-            {# El formulario ahora apunta directamente a tu ruta de Flask #}
-            <form action="{{ url_for('auth.login') }}" method="POST">
+            <!-- Mensaje de error dinámico -->
+            <p id="login-error" style="color: #e74c3c; display: none; margin-bottom: 15px;"></p>
+
+            <form id="login-form">
                 <div class="form-group">
                     <label for="username">Usuario:</label>
                     <input type="text" id="username" name="username" required>
@@ -108,38 +110,80 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+        // --- 1. MODAL DE ÉXITO ---
         const closeBtn = document.getElementById('modal-close-btn');
         const modal = document.getElementById('success-modal');
 
         if (closeBtn && modal) {
-        closeBtn.addEventListener('click', function() {
-            // Opción A: Ocultar el modal visualmente cambiando su estilo
-            modal.style.display = 'none';
-            
-            // Opción B (Opcional): Si prefieres que la página se refresque 
-            // por completo para asegurar que el menú cambie al estado logueado:
-            // window.location.reload();
-        });
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
         }
 
-        // --- LÓGICA DEL NUEVO MODAL DE LOGIN ---
+        // --- 2. CONTROL VISUAL DEL MODAL DE LOGIN ---
         const openLoginBtn = document.getElementById('login-trigger-btn');
         const closeLoginBtn = document.getElementById('login-modal-close');
         const modalLogin = document.getElementById('login-modal');
 
-        // Al hacer clic en Login en el menú, mostramos el modal
         if (openLoginBtn && modalLogin) {
-        openLoginBtn.addEventListener('click', function(e) {
-            e.preventDefault(); // Evita que la página salte al inicio por el href="#"
-            modalLogin.style.display = 'flex'; // O 'block', dependiendo de cómo uses tu CSS
-        });
+            openLoginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                modalLogin.style.display = 'flex';
+            });
         }
 
-        // Al hacer clic en Cancelar, ocultamos el modal
         if (closeLoginBtn && modalLogin) {
-        closeLoginBtn.addEventListener('click', function() {
-            modalLogin.style.display = 'none';
-        });
+            closeLoginBtn.addEventListener('click', function() {
+                modalLogin.style.display = 'none';
+                // Ocultamos el mensaje de error si el usuario cierra el modal
+                const errorBox = document.getElementById('login-error');
+                if (errorBox) errorBox.style.display = 'none';
+            });
+        }
+
+        // --- 3. PROCESAMIENTO DEL FORMULARIO DE LOGIN (NUEVO) ---
+        const loginForm = document.querySelector('#login-modal form');
+        const errorBox = document.getElementById('login-error');
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); // Detiene el envío estándar del formulario
+
+                if (errorBox) errorBox.style.display = 'none';
+
+                const formData = new FormData(loginForm);
+
+                try {
+                    const response = await fetch("{{ url_for('auth.login') }}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        // Si el login es correcto, recargamos la página para actualizar la sesión y el menú
+                        window.location.reload();
+                    } else {
+                        // Si las credenciales son incorrectas, mostramos el mensaje en el modal
+                        if (errorBox) {
+                            errorBox.textContent = data.message || 'Usuario o contraseña incorrectos.';
+                            errorBox.style.display = 'block';
+                        } else {
+                            alert(data.message || 'Usuario o contraseña incorrectos.');
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error enviando la solicitud:', err);
+                    if (errorBox) {
+                        errorBox.textContent = 'Error de conexión con el servidor.';
+                        errorBox.style.display = 'block';
+                    }
+                }
+            });
         }
     });
     </script>
