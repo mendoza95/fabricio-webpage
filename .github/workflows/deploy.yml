@@ -45,6 +45,16 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Pull code on PythonAnywhere via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ssh.pythonanywhere.com
+          username: ${{ secrets.PYTHONANYWHERE_USERNAME }}
+          key: ${{ secrets.PA_SSH_KEY }}
+          script: |
+            cd /home/${{ secrets.PYTHONANYWHERE_USERNAME }}/my-personal-webpage
+            git pull origin main
+
       - name: Trigger Web App Reload on PythonAnywhere
         env:
           PA_USERNAME: ${{ secrets.PYTHONANYWHERE_USERNAME }}
