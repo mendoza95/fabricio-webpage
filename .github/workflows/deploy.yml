@@ -52,7 +52,7 @@ jobs:
           username: ${{ secrets.PYTHONANYWHERE_USERNAME }}
           key: ${{ secrets.PA_SSH_KEY }}
           script: |
-            cd /home/${{ secrets.PYTHONANYWHERE_USERNAME }}/my-personal-webpage
+            cd /home/${{ secrets.PYTHONANYWHERE_USERNAME }}/fabricio-webpage
             git pull origin main
 
       - name: Trigger Web App Reload on PythonAnywhere
