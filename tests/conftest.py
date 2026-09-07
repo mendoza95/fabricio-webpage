@@ -12,6 +12,29 @@ def mock_db():
     """
     client = mongomock.MongoClient()
     db = client["test_database"]
+    
+    # 👈 Insertar traducciones requeridas por la interfaz
+    db["ui_translations"].insert_one({
+        "translations": {
+            "en": {
+                "date_format": "%B %d, %Y",
+                "published_on_prefix": "Published on",
+                "education_title": "Education",
+                "experience_title": "Work Experience",
+                "projects_title": "Projects",
+                "publications_title": "Publications"
+            },
+            "es": {
+                "date_format": "%d de %B de %Y",
+                "published_on_prefix": "Publicado el",
+                "education_title": "Educación",
+                "experience_title": "Experiencia Laboral",
+                "projects_title": "Proyectos",
+                "publications_title": "Publicaciones"
+            }
+        }
+    })
+    
     return db
 
 

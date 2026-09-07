@@ -29,12 +29,6 @@ def test_index_route_success(client, mock_db):
     mock_db["portfolio_global"].insert_one(
         {
             "user_id": user_id,
-            "ui_text": {
-                "en": {
-                    "date_format": "%B %d, %Y",  # 👈 ¡ESTO ERA LO QUE FALTABA!
-                    "published_on_prefix": "Published on",
-                }
-            },
             "social_media": [],
             "skills": [],
         }
