@@ -145,8 +145,10 @@ def load_site_data(db, lang: str) -> dict:
     ui_translations = ui_doc.get("translations", {}) if ui_doc else {}
     ui_text_data = ui_translations.get(lang, {})  # lang suele ser 'es' o 'en'
     social_links_data = portfolio_global.get("social_media", [])
-    skills_data = portfolio_global.get("skills", [])
-    languages_data = about_doc.get("languages", [])
+    skills_data = [d[lang] for d in portfolio_global.get("skills", [])]
+    languages_data = [{"name":d["name"][lang], "level":d["level"][lang] } 
+                      for d in about_doc.get("languages", [])]
+    print(languages_data)
 
     return {
         "about": about_data,
