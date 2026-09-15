@@ -3,6 +3,7 @@ from app.core.config import settings
 from app.core.database import get_database
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from motor.motor_asyncio import AsyncIOMotorDatabase
 import jwt
 
 # Algoritmo de encriptación simétrica para el token
@@ -35,6 +36,7 @@ def create_access_token(
 
 async def get_current_user(
     auth: HTTPAuthorizationCredentials | None = Depends(security_scheme),
+    db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """Dependencia para proteger rutas administrativas.
 
@@ -71,7 +73,6 @@ async def get_current_user(
             detail="No se pudo validar las credenciales.",
         )
 
-    db = get_database()
     user = await db["users"].find_one({"username": username})
 
     if user is None:
