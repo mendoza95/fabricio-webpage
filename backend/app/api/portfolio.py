@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from bson import ObjectId
+from motor.motor_asyncio import AsyncIOMotorDatabase
+
 from app.core.database import get_database
 from app.core.security import get_current_user
 from app.models.portfolio import (
@@ -27,17 +29,17 @@ def format_doc(doc: dict) -> dict:
 # ==========================================
 
 @router.get("/projects", response_model=list[ProjectResponse])
-async def get_projects():
+async def get_projects(db: AsyncIOMotorDatabase = Depends(get_database)):
     """Obtiene la lista de proyectos públicos."""
-    db = get_database()
     projects = await db["projects"].find().to_list(100)
     return [format_doc(p) for p in projects]
 
 
 @router.post("/projects", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
-async def create_project(project: ProjectBase, current_user: dict = Depends(get_current_user)):
+async def create_project(project: ProjectBase, 
+                         current_user: dict = Depends(get_current_user),
+                         db: AsyncIOMotorDatabase = Depends(get_database)):
     """Crea un nuevo proyecto (Requiere Token)."""
-    db = get_database()
     doc = project.model_dump()
     doc["user_id"] = current_user["_id"]
     
@@ -47,9 +49,11 @@ async def create_project(project: ProjectBase, current_user: dict = Depends(get_
 
 
 @router.put("/projects/{project_id}", response_model=ProjectResponse)
-async def update_project(project_id: str, project_data: ProjectBase, current_user: dict = Depends(get_current_user)):
+async def update_project(project_id: str, 
+                         project_data: ProjectBase, 
+                         current_user: dict = Depends(get_current_user),
+                         db: AsyncIOMotorDatabase = Depends(get_database)):
     """Actualiza un proyecto existente (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(project_id):
         raise HTTPException(status_code=400, detail="ID de proyecto no válido")
     
@@ -67,9 +71,10 @@ async def update_project(project_id: str, project_data: ProjectBase, current_use
 
 
 @router.delete("/projects/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_project(project_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_project(project_id: str, 
+                         current_user: dict = Depends(get_current_user),
+                         db: AsyncIOMotorDatabase = Depends(get_database)):
     """Elimina un proyecto (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(project_id):
         raise HTTPException(status_code=400, detail="ID de proyecto no válido")
     
@@ -84,17 +89,17 @@ async def delete_project(project_id: str, current_user: dict = Depends(get_curre
 # ==========================================
 
 @router.get("/experience", response_model=list[ExperienceResponse])
-async def get_experience():
+async def get_experience(db: AsyncIOMotorDatabase = Depends(get_database)):
     """Obtiene la lista de experiencia laboral."""
-    db = get_database()
     experiences = await db["experience"].find().to_list(100)
     return [format_doc(e) for e in experiences]
 
 
 @router.post("/experience", response_model=ExperienceResponse, status_code=status.HTTP_201_CREATED)
-async def create_experience(experience: ExperienceBase, current_user: dict = Depends(get_current_user)):
+async def create_experience(experience: ExperienceBase, 
+                            current_user: dict = Depends(get_current_user),
+                            db: AsyncIOMotorDatabase = Depends(get_database)):
     """Crea una nueva experiencia laboral (Requiere Token)."""
-    db = get_database()
     doc = experience.model_dump()
     doc["user_id"] = current_user["_id"]
     
@@ -104,9 +109,10 @@ async def create_experience(experience: ExperienceBase, current_user: dict = Dep
 
 
 @router.put("/experience/{exp_id}", response_model=ExperienceResponse)
-async def update_experience(exp_id: str, exp_data: ExperienceBase, current_user: dict = Depends(get_current_user)):
+async def update_experience(exp_id: str, exp_data: ExperienceBase, 
+                            current_user: dict = Depends(get_current_user),
+                            db: AsyncIOMotorDatabase = Depends(get_database)):
     """Actualiza una experiencia laboral (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(exp_id):
         raise HTTPException(status_code=400, detail="ID de experiencia no válido")
     
@@ -124,9 +130,10 @@ async def update_experience(exp_id: str, exp_data: ExperienceBase, current_user:
 
 
 @router.delete("/experience/{exp_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_experience(exp_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_experience(exp_id: str, 
+                            current_user: dict = Depends(get_current_user),
+                            db: AsyncIOMotorDatabase = Depends(get_database)):
     """Elimina una experiencia laboral (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(exp_id):
         raise HTTPException(status_code=400, detail="ID no válido")
     
@@ -141,17 +148,17 @@ async def delete_experience(exp_id: str, current_user: dict = Depends(get_curren
 # ==========================================
 
 @router.get("/education", response_model=list[EducationResponse])
-async def get_education():
+async def get_education(db: AsyncIOMotorDatabase = Depends(get_database)):
     """Obtiene la lista de educación."""
-    db = get_database()
     education_list = await db["education"].find().to_list(100)
     return [format_doc(e) for e in education_list]
 
 
 @router.post("/education", response_model=EducationResponse, status_code=status.HTTP_201_CREATED)
-async def create_education(education: EducationBase, current_user: dict = Depends(get_current_user)):
+async def create_education(education: EducationBase, 
+                           current_user: dict = Depends(get_current_user),
+                           db: AsyncIOMotorDatabase = Depends(get_database)):
     """Agrega un registro de educación (Requiere Token)."""
-    db = get_database()
     doc = education.model_dump()
     doc["user_id"] = current_user["_id"]
     
@@ -161,9 +168,10 @@ async def create_education(education: EducationBase, current_user: dict = Depend
 
 
 @router.put("/education/{edu_id}", response_model=EducationResponse)
-async def update_education(edu_id: str, edu_data: EducationBase, current_user: dict = Depends(get_current_user)):
+async def update_education(edu_id: str, edu_data: EducationBase, 
+                           current_user: dict = Depends(get_current_user),
+                           db: AsyncIOMotorDatabase = Depends(get_database)):
     """Actualiza un registro de educación (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(edu_id):
         raise HTTPException(status_code=400, detail="ID no válido")
     
@@ -181,9 +189,10 @@ async def update_education(edu_id: str, edu_data: EducationBase, current_user: d
 
 
 @router.delete("/education/{edu_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_education(edu_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_education(edu_id: str, 
+                           current_user: dict = Depends(get_current_user),
+                           db: AsyncIOMotorDatabase = Depends(get_database)):
     """Elimina un registro de educación (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(edu_id):
         raise HTTPException(status_code=400, detail="ID no válido")
     
@@ -198,17 +207,17 @@ async def delete_education(edu_id: str, current_user: dict = Depends(get_current
 # ==========================================
 
 @router.get("/publications", response_model=list[PublicationResponse])
-async def get_publications():
+async def get_publications(db: AsyncIOMotorDatabase = Depends(get_database)):
     """Obtiene la lista de publicaciones."""
-    db = get_database()
     publications = await db["publications"].find().to_list(100)
     return [format_doc(p) for p in publications]
 
 
 @router.post("/publications", response_model=PublicationResponse, status_code=status.HTTP_201_CREATED)
-async def create_publication(publication: PublicationBase, current_user: dict = Depends(get_current_user)):
+async def create_publication(publication: PublicationBase, 
+                             current_user: dict = Depends(get_current_user),
+                             db: AsyncIOMotorDatabase = Depends(get_database)):
     """Crea una publicación (Requiere Token)."""
-    db = get_database()
     doc = publication.model_dump()
     doc["user_id"] = current_user["_id"]
     
@@ -218,9 +227,10 @@ async def create_publication(publication: PublicationBase, current_user: dict = 
 
 
 @router.put("/publications/{pub_id}", response_model=PublicationResponse)
-async def update_publication(pub_id: str, pub_data: PublicationBase, current_user: dict = Depends(get_current_user)):
+async def update_publication(pub_id: str, pub_data: PublicationBase, 
+                             current_user: dict = Depends(get_current_user),
+                             db: AsyncIOMotorDatabase = Depends(get_database)):
     """Actualiza una publicación (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(pub_id):
         raise HTTPException(status_code=400, detail="ID no válido")
     
@@ -238,9 +248,9 @@ async def update_publication(pub_id: str, pub_data: PublicationBase, current_use
 
 
 @router.delete("/publications/{pub_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_publication(pub_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_publication(pub_id: str, current_user: dict = Depends(get_current_user),
+                             db: AsyncIOMotorDatabase = Depends(get_database)):
     """Elimina una publicación (Requiere Token)."""
-    db = get_database()
     if not ObjectId.is_valid(pub_id):
         raise HTTPException(status_code=400, detail="ID no válido")
     
@@ -255,9 +265,9 @@ async def delete_publication(pub_id: str, current_user: dict = Depends(get_curre
 # ==========================================
 
 @router.get("/global", response_model=PortfolioGlobalResponse)
-async def get_portfolio_global(current_user: dict = Depends(get_current_user)):
+async def get_portfolio_global(current_user: dict = Depends(get_current_user),
+                               db: AsyncIOMotorDatabase = Depends(get_database)):
     """Obtiene habilidades y redes sociales (Requiere Token)."""
-    db = get_database()
     global_doc = await db["portfolio_global"].find_one()
     if not global_doc:
         raise HTTPException(status_code=404, detail="Configuración global no encontrada")
@@ -267,10 +277,10 @@ async def get_portfolio_global(current_user: dict = Depends(get_current_user)):
 @router.put("/global", response_model=PortfolioGlobalResponse)
 async def update_portfolio_global(
     global_data: PortfolioGlobalUpdate, 
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """Actualiza habilidades o redes sociales (Requiere Token)."""
-    db = get_database()
     update_fields = {k: v for k, v in global_data.model_dump().items() if v is not None}
     
     if not update_fields:
@@ -293,9 +303,8 @@ async def update_portfolio_global(
 # ==========================================
 
 @router.get("/ui-translations", response_model=UiTranslationsResponse)
-async def get_ui_translations():
+async def get_ui_translations(db: AsyncIOMotorDatabase = Depends(get_database)):
     """Obtiene las traducciones globales de la interfaz (Público, Solo Lectura)."""
-    db = get_database()
     ui_doc = await db["ui_translations"].find_one()
     if not ui_doc:
         raise HTTPException(status_code=404, detail="Traducciones no encontradas")
