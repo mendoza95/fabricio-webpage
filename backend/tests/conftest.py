@@ -21,6 +21,39 @@ async def mock_db():
         "is_active": True
     })
 
+    await db["projects"].insert_one({
+        "project_id": "12345",
+        "translations": {
+            "en": {
+                "name": "Personal Portfolio",
+                "description": "FastAPI Backend",
+            },
+            "es": {
+                "name": "Portafolio Personal",
+                "description": "Backend en FastAPI",
+            }
+        },
+        "technologies": ["FastAPI", "MongoDB", "React"],
+        "is_featured": True
+    })
+
+    await db["experience"].insert_one({
+        "experience_id": "123",
+        "company_logo": "",
+        "company_url": "",
+        "start_date": "",
+        "end_date": "",
+        "translations": {
+            "en":{
+                "role":"",
+                "company":"",
+                "location":"",
+                "description": [],
+                "description_cv":[]
+            }        
+        }
+    })
+
     # Poblar traducciones por defecto requeridas
     await db["ui_translations"].insert_one({
         "translations": {
@@ -69,7 +102,7 @@ import pytest
 
 @pytest.fixture
 def sample_project_payload():
-    """Returns a valid dictionary payload for project creation/updates."""
+    """Returns a valid dictionary payload for project CRUD operations."""
     return {
         "project_id": "12345",
         "translations": {
@@ -84,4 +117,22 @@ def sample_project_payload():
         },
         "technologies": ["FastAPI", "MongoDB", "React"],
         "is_featured": True
+    }
+
+@pytest.fixture
+def sample_portfolio_global_payload():
+    """Returns a valid dictionary payload for portfolio_global CRUD operations"""
+    return {
+        "skills":[
+            {
+                "en": "Fast API",
+                "es": "Fast API"
+            }
+        ],
+        "social_media":[
+            {
+                "username":"user@social.media",
+                "icon_svg":"some_image.png"
+            }
+        ]
     }
