@@ -23,7 +23,7 @@ class ExperienceTranslation(BaseModel):
     role: str = ""
     company: str = ""
     location: str = ""
-    description: str = ""
+    description: list[str] = Field(default_factory=list)
     description_cv: list[str] = Field(default_factory=list)  # 👈 Cambiado a list[str]
 
 class ExperienceBase(BaseModel):

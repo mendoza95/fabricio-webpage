@@ -265,13 +265,25 @@ async def delete_publication(pub_id: str, current_user: dict = Depends(get_curre
 # ==========================================
 
 @router.get("/global", response_model=PortfolioGlobalResponse)
-async def get_portfolio_global(current_user: dict = Depends(get_current_user),
-                               db: AsyncIOMotorDatabase = Depends(get_database)):
+async def get_portfolio_global(db: AsyncIOMotorDatabase = Depends(get_database)):
     """Obtiene habilidades y redes sociales (Requiere Token)."""
     global_doc = await db["portfolio_global"].find_one()
     if not global_doc:
         raise HTTPException(status_code=404, detail="Configuración global no encontrada")
     return format_doc(global_doc)
+
+@router.post("/global", response_model=PortfolioGlobalResponse,
+             status_code=status.HTTP_201_CREATED)
+async def post_portfolio_global(global_data: PortfolioGlobalUpdate,
+                                db: AsyncIOMotorDatabase = Depends(get_database),
+                                current_user: dict = Depends(get_current_user)):
+    """Crea un portfolio global"""
+    doc = global_data.model_dump()
+    doc["user_id"] = current_user["_id"]
+
+    result = await db["portfolio_global"].insert_one(doc)
+    created_global = await db["portfolio_global"].find_one({"_id":result.inserted_id})
+    return format_doc(created_global)
 
 
 @router.put("/global", response_model=PortfolioGlobalResponse)
@@ -297,6 +309,20 @@ async def update_portfolio_global(
     )
     return format_doc(result)
 
+
+@router.delete("/global", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_portfolio_global(global_id: str,
+                                  current_user: dict = Depends(get_current_user),
+                                  db: AsyncIOMotorDatabase = Depends(get_database)):
+    """Elimina la lista de skills y social media (require token)"""
+    if not ObjectId.is_valid(global_id):
+        raise HTTPException(status_code=400, detail="Id no valido")
+
+    result = await db["portfolio_global"].delete_one({"_id":ObjectId(global_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Portfolio Global no encontrado")
+
+    return None
 
 # ==========================================
 # 6. TRADUCCIONES DE LA INTERFAZ (SOLO LECTURA PÚBLICA)
