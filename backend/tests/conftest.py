@@ -14,6 +14,7 @@ async def mock_db():
     client = AsyncMongoMockClient()
     db = client["test_portfolio_db"]
 
+    #USERS test data
     await db["users"].insert_one({
         "_id": ObjectId("60c72b2f9b1e8a2a4c8b4567"),
         "username": "admin@example.com",
@@ -21,6 +22,7 @@ async def mock_db():
         "is_active": True
     })
 
+    #PROJECTS test data
     await db["projects"].insert_one({
         "project_id": "12345",
         "translations": {
@@ -37,6 +39,7 @@ async def mock_db():
         "is_featured": True
     })
 
+    #EXPERIENCE test data
     await db["experience"].insert_one({
         "experience_id": "123",
         "company_logo": "",
@@ -54,7 +57,45 @@ async def mock_db():
         }
     })
 
-    # Poblar traducciones por defecto requeridas
+    #EDUCATION test data
+    await db["education"].insert_one({
+        "education_id": "123",
+        "institution_logo": " ",
+        "institution_url": " ",
+        "start_year": "2022",
+        "end_year": "2026", 
+        "translations": {
+            "en":{
+                "degree": "Dh",
+                "institution":"",
+                "location":"",
+                "description":""
+            }
+        }
+    })
+
+    #PUBLICATIONS test data
+    await db["publications"].insert_one({
+        "publication_id": "123",
+        "authors": "",
+        "year":  "",
+        "urls": [],
+        "translations": {
+            "en":{
+                "title": "",
+                "journal": "",
+                "journal_cv": ""
+            }
+        }
+    })
+
+    #PORTFOLIO_GLOBAL test data
+    await db["portfolio_global"].insert_one({
+        "skills": [{"en": "FastAPI", "es": "FastAPI"}],
+        "social_media": [{"name": "GitHub", "url": "https://github.com", "username": "dev", "icon_svg": "<svg></svg>"}]
+    })
+
+    #UI_TRANSLATIONS test data
     await db["ui_translations"].insert_one({
         "translations": {
             "en": {
@@ -68,11 +109,7 @@ async def mock_db():
         }
     })
 
-    # Poblar configuración global
-    await db["portfolio_global"].insert_one({
-        "skills": [{"en": "FastAPI", "es": "FastAPI"}],
-        "social_media": [{"name": "GitHub", "url": "https://github.com", "username": "dev", "icon_svg": "<svg></svg>"}]
-    })
+    
 
     return db
 
