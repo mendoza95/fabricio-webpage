@@ -287,10 +287,9 @@ async def post_portfolio_global(global_data: PortfolioGlobalUpdate,
 
 
 @router.put("/global", response_model=PortfolioGlobalResponse)
-async def update_portfolio_global(
-    global_data: PortfolioGlobalUpdate, 
-    current_user: dict = Depends(get_current_user),
-    db: AsyncIOMotorDatabase = Depends(get_database)
+async def update_portfolio_global(global_data: PortfolioGlobalUpdate, 
+                                  current_user: dict = Depends(get_current_user),
+                                  db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """Actualiza habilidades o redes sociales (Requiere Token)."""
     update_fields = {k: v for k, v in global_data.model_dump().items() if v is not None}
@@ -310,15 +309,16 @@ async def update_portfolio_global(
     return format_doc(result)
 
 
-@router.delete("/global", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_portfolio_global(global_id: str,
-                                  current_user: dict = Depends(get_current_user),
+@router.delete("/global/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_portfolio_global(current_user: dict = Depends(get_current_user),
                                   db: AsyncIOMotorDatabase = Depends(get_database)):
     """Elimina la lista de skills y social media (require token)"""
-    if not ObjectId.is_valid(global_id):
-        raise HTTPException(status_code=400, detail="Id no valido")
 
-    result = await db["portfolio_global"].delete_one({"_id":ObjectId(global_id)})
+    global_doc = await db["portfolio_global"].find_one()
+    if not global_doc:
+        raise HTTPException(status_code=404, detail="Configuración global no encontrada")
+
+    result = await db["portfolio_global"].delete_one({"_id":global_doc["_id"]})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Portfolio Global no encontrado")
 
