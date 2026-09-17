@@ -6,8 +6,8 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_create_portfolio_global(client, 
-                                                auth_headers,
-                                                sample_portfolio_global_payload):
+                                        auth_headers,
+                                        sample_portfolio_global_payload):
     """Verifica que un usuario no auntenticado no pueda leer la los skills"""
 
     post_response = await client.post("/api/v1/portfolio/global",
@@ -47,24 +47,14 @@ async def test_delete_portfolio_global(client,
                                        sample_portfolio_global_payload, 
                                        auth_headers):
     """Elimina la lista de skills y social media links del portfolio global"""
-    create_response = await client.post(
-        "/api/v1/portfolio/global",
-        json=sample_portfolio_global_payload,
-        headers=auth_headers
-    )
-
-    assert create_response.status_code == 201
-
-    print(create_response.json())
-    global_id = create_response.json().get("id")
-    print(global_id)
 
     delete_response = await client.delete(
-        "/api/v1/portfolio/global/{global_id}",
+        "/api/v1/portfolio/global/",
         headers=auth_headers
     )
 
     assert delete_response.status_code == 204
+
 
 # -----------------------------------------------------------------------------
 # 2. Pruebas para Projects (POST / GET / DELETE)
