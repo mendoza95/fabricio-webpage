@@ -22,6 +22,41 @@ async def mock_db():
         "is_active": True
     })
 
+    # ABOUT ME test data
+    await db["about_me"].insert_one({
+            "profile_image": 'profile.jpg',
+            "profile_image_alt": {
+                "en": 'A profile photo of Fabricio Mendoza Granada',
+                "es": 'Una foto de perfil de Fabricio Mendoza Granada'
+            },
+            "cv_filename": 'cv.pdf',
+            "languages": [
+                {
+                    "name": {
+                        "en": 'English',
+                        "es": 'Inglés'
+                    },
+                    "level": {
+                        "en": 'Advanced',
+                        "es": 'Avanzado'
+                    },
+                    "note": {
+                        "en": 'TOEFL certificate upon request',
+                        "es": 'Certificado de TOEFL mediante pedido'
+                    }
+                }
+            ],
+            "translations": {
+                "en": {
+                    "title": 'About Me',
+                    "intro": [],
+                    "cv_title": 'Curriculum Vitae',
+                    "cv_intro": [],
+                    "cv_button": 'Download CV'
+                }
+            }
+    })
+
     #PROJECTS test data
     await db["projects"].insert_one({
         "project_id": "12345",
