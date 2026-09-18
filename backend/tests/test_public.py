@@ -1,6 +1,18 @@
 import pytest
 
 @pytest.mark.asyncio
+async def test_get_about_me(client):
+    """Testea el endpoing publico de About me"""
+    response = await client.get("/api/v1/portfolio/about_me")
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "languages" in data
+    assert "cv_intro" in data["translations"]["en"]
+
+
+@pytest.mark.asyncio
 async def test_get_projects(client):
     """Endpoint de proyectos"""
     response = await client.get("/api/v1/portfolio/projects")
