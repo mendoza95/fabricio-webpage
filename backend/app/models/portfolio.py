@@ -1,5 +1,39 @@
 from pydantic import BaseModel, Field
 
+from pydantic import BaseModel, Field
+
+# 1. Objeto Bilingüe reutilizable para name, level, note y profile_image_alt
+class LocalizedString(BaseModel):
+    en: str = ""
+    es: str = ""
+
+# 2. Traducción principal de la sección About Me
+class AboutMeTranslation(BaseModel):
+    title: str = ""
+    intro: list[str] = Field(default_factory=list)
+    cv_title: str = ""
+    cv_intro: list[str] = Field(default_factory=list)
+    cv_button: str = ""
+
+# 3. Estructura de cada Idioma en la lista
+class LanguageItem(BaseModel):
+    name: LocalizedString = Field(default_factory=LocalizedString)
+    level: LocalizedString = Field(default_factory=LocalizedString)
+    note: LocalizedString = Field(default_factory=LocalizedString)
+
+# 4. Modelo Base
+class AboutMeBase(BaseModel):
+    profile_image: str = ""
+    profile_image_alt: LocalizedString = Field(default_factory=LocalizedString)
+    cv_filename: str = ""
+    languages: list[LanguageItem] = Field(default_factory=list)
+    translations: dict[str, AboutMeTranslation] = Field(default_factory=dict)
+
+# 5. Modelo de Respuesta para FastAPI
+class AboutMeResponse(AboutMeBase):
+    id: str | None = None
+    user_id: str | None = None
+    
 # --- PROYECTOS ---
 class ProjectTranslation(BaseModel):
     name: str = ""
