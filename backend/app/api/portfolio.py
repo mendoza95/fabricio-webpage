@@ -5,6 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.core.database import get_database
 from app.core.security import get_current_user
 from app.models.portfolio import (
+    AboutMeBase, AboutMeResponse,
     ProjectBase, ProjectResponse,
     ExperienceBase, ExperienceResponse,
     EducationBase, EducationResponse,
@@ -22,6 +23,15 @@ def format_doc(doc: dict) -> dict:
     if "user_id" in doc:
         doc["user_id"] = str(doc["user_id"])
     return doc
+
+# ==========================================
+# 1. ABOUT ME
+# ==========================================
+@router.get("/about_me", response_model=AboutMeResponse)
+async def get_aboout_me(db: AsyncIOMotorDatabase = Depends(get_database)):
+    """Obtiene los datos del documento About me"""
+    about_me = await db["about_me"].find().to_list(1)
+    return format_doc(about_me[0])
 
 
 # ==========================================
