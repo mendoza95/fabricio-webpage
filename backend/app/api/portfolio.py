@@ -25,7 +25,7 @@ def format_doc(doc: dict) -> dict:
     return doc
 
 # ==========================================
-# 1. ABOUT ME
+# 1. ABOUT ME (GET / POST / PUT / DELETE)
 # ==========================================
 @router.get("/about_me", response_model=AboutMeResponse)
 async def get_aboout_me(db: AsyncIOMotorDatabase = Depends(get_database)):
@@ -33,9 +33,60 @@ async def get_aboout_me(db: AsyncIOMotorDatabase = Depends(get_database)):
     about_me = await db["about_me"].find().to_list(1)
     return format_doc(about_me[0])
 
+@router.post("/about_me", response_model=AboutMeResponse,
+             status_code=status.HTTP_201_CREATED)
+async def create_about_me(aboutme: AboutMeBase,
+                          current_user: dict = Depends(get_current_user),
+                          db: AsyncIOMotorDatabase = Depends(get_database)):
+    """Crea un el perfil 'About me' del usuario"""
+    doc = aboutme.model_dump()
+    doc["user_id"] = current_user["_id"]
+
+    result = await db["about_me"].insert_one(doc)
+    created_about_me = await db["about_me"].find_one({"_id": result.inserted_id})
+
+    return format_doc(created_about_me)
+
+
+@router.put("/about_me/{aboutme_id}", response_model=AboutMeResponse,
+            status_code=status.HTTP_200_OK)
+async def update_about_me(aboutme_id:str,
+                          aboutme=AboutMeBase,
+                          current_user: dict=Depends(get_current_user),
+                          db: AsyncIOMotorDatabase=Depends(get_database)):
+    """Update the 'About Me' data"""
+    if not ObjectId.is_valid(aboutme_id):
+            raise HTTPException(status_code=400, detail="ID de 'About Me' no válido")
+        
+    update_data = {k: v for k, v in aboutme.model_dump().items() if v is not None}
+    
+    result = await db["about_me"].find_one_and_update(
+        {"_id": ObjectId(aboutme_id)},
+        {"$set": update_data},
+        return_document=True
+    )
+    if not result:
+        raise HTTPException(status_code=404, detail="'About Me' info no encontrada")
+        
+    return format_doc(result)
+
+
+@router.delete("/about_me/{aboutme_id}",
+               status_code=status.HTTP_204_NO_CONTENT)
+async def delete_about_me(aboutme_id: str, 
+                          current_user: dict = Depends(get_current_user),
+                          db: AsyncIOMotorDatabase = Depends(get_database)):
+    """Elimina un proyecto (Requiere Token)."""
+    if not ObjectId.is_valid(aboutme_id):
+        raise HTTPException(status_code=400, detail="ID de proyecto no válido")
+    
+    result = await db["projects"].delete_one({"_id": ObjectId(aboutme_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Proyecto no encontrado")
+    return None
 
 # ==========================================
-# 1. PROYECTOS
+# 1. PROYECTOS (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/projects", response_model=list[ProjectResponse])
@@ -58,7 +109,8 @@ async def create_project(project: ProjectBase,
     return format_doc(created_project)
 
 
-@router.put("/projects/{project_id}", response_model=ProjectResponse)
+@router.put("/projects/{project_id}", response_model=ProjectResponse,
+            status_code=status.HTTP_200_OK)
 async def update_project(project_id: str, 
                          project_data: ProjectBase, 
                          current_user: dict = Depends(get_current_user),
@@ -95,7 +147,7 @@ async def delete_project(project_id: str,
 
 
 # ==========================================
-# 2. EXPERIENCIA
+# 2. EXPERIENCIA (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/experience", response_model=list[ExperienceResponse])
@@ -105,7 +157,8 @@ async def get_experience(db: AsyncIOMotorDatabase = Depends(get_database)):
     return [format_doc(e) for e in experiences]
 
 
-@router.post("/experience", response_model=ExperienceResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/experience", response_model=ExperienceResponse, 
+             status_code=status.HTTP_201_CREATED)
 async def create_experience(experience: ExperienceBase, 
                             current_user: dict = Depends(get_current_user),
                             db: AsyncIOMotorDatabase = Depends(get_database)):
@@ -118,7 +171,8 @@ async def create_experience(experience: ExperienceBase,
     return format_doc(created_exp)
 
 
-@router.put("/experience/{exp_id}", response_model=ExperienceResponse)
+@router.put("/experience/{exp_id}", response_model=ExperienceResponse,
+            status_code=status.HTTP_200_OK)
 async def update_experience(exp_id: str, exp_data: ExperienceBase, 
                             current_user: dict = Depends(get_current_user),
                             db: AsyncIOMotorDatabase = Depends(get_database)):
@@ -154,7 +208,7 @@ async def delete_experience(exp_id: str,
 
 
 # ==========================================
-# 3. EDUCACIÓN
+# 3. EDUCACIÓN (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/education", response_model=list[EducationResponse])
@@ -213,7 +267,7 @@ async def delete_education(edu_id: str,
 
 
 # ==========================================
-# 4. PUBLICACIONES
+# 4. PUBLICACIONES (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/publications", response_model=list[PublicationResponse])
@@ -271,7 +325,7 @@ async def delete_publication(pub_id: str, current_user: dict = Depends(get_curre
 
 
 # ==========================================
-# 5. PORTAFOLIO GLOBAL (PROTEGIDO)
+# 5. PORTAFOLIO GLOBAL (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/global", response_model=PortfolioGlobalResponse)
