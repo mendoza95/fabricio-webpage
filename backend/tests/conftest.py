@@ -169,8 +169,42 @@ def auth_headers():
     token = create_access_token(data={"sub": "admin@example.com"})
     return {"Authorization": f"Bearer {token}"}
 
-# tests/conftest.py
-import pytest
+@pytest.fixture
+def sample_aboutme_payload():
+    """Returns a valid dictionary payload for an 'About Me' CRUD operations"""
+    return {
+        "profile_image": 'profile.jpg',
+        "profile_image_alt": {
+            "en": 'A profile photo of Fabricio Mendoza Granada',
+            "es": 'Una foto de perfil de Fabricio Mendoza Granada'
+        },
+        "cv_filename": 'cv2.pdf',
+        "languages": [
+            {
+                "name": {
+                    "en": 'Spanish',
+                    "es": 'Español'
+                },
+                "level": {
+                    "en": 'Advanced',
+                    "es": 'Avanzado'
+                },
+                "note": {
+                    "en": "",
+                    "es": ""
+                }
+            }
+        ],
+        "translations": {
+            "es": {
+                "title": 'Acerca de Mí',
+                "intro": ["Esta es una introduccion de mi."],
+                "cv_title": 'Curriculum Vitae',
+                "cv_intro": [],
+                "cv_button": 'Descargar CV'
+            }
+        }
+    }
 
 @pytest.fixture
 def sample_project_payload():
