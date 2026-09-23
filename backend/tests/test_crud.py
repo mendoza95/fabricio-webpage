@@ -42,20 +42,21 @@ async def test_create_aboutme_invalid(client, auth_headers):
 async def test_update_aboutme(client, auth_headers):
     """Prueba una actualizacion de un objecto 'About Me'"""
 
+    # 1. Lee el unico objeto en el documento 'About Me'
     aboutme_response = await client.get(
         "/api/v1/portfolio/about_me"
     )
 
     assert aboutme_response.status_code == 200
 
+    # 2. Obtenemos el objecto json
     aboutme_data = aboutme_response.json()
-    print(aboutme_data)
     assert "languages" in aboutme_data
-    #assert "_id" in aboutme_data
 
+    # 3. Obtenemos el ID
     aboutme_id = aboutme_data.get("_id")
-    print(aboutme_id)
 
+    # 4. Realizamos una actualizacion al objecto
     aboutme_data["languages"].append(
         {
             "name": {
@@ -72,6 +73,8 @@ async def test_update_aboutme(client, auth_headers):
             }
         }
     )
+
+    # 5. Realizamos el update en la base de datos mock mediante el endpoint
     aboutme_update = await client.put(
         f"/api/v1/portfolio/about_me/{aboutme_id}",
         json=aboutme_data,
@@ -119,25 +122,24 @@ async def test_create_project_invalid_payload(client, auth_headers):
 
 #UPDATE VALID
 @pytest.mark.asyncio
-async def test_create_and_update_project(client, auth_headers, sample_project_payload):
+async def test_update_project(client, auth_headers):
     """Prueba la eliminacion de un nuevo proyecto"""
     
     # 1. Crear el proyecto (Protegido)
-    create_response = await client.post(
-        "/api/v1/portfolio/projects", 
-        json=sample_project_payload, 
-        headers=auth_headers
+    create_response = await client.get(
+        "/api/v1/portfolio/projects"
     )
-    assert create_response.status_code in [200, 201]
+    assert create_response.status_code == 200
 
-    # Extraer el ID real generado por MongoDB (usualmente mapeado como "id" o "_id")
-    project_id = create_response.json().get("id")
+    # 2. Extrae el unico objeto en la lista de proyectos y su ID 
+    updated_project = create_response.json()[0]
+    project_id = updated_project.get("_id")
 
-    updated_project = sample_project_payload
+    # 3. Realizamos una actualizacion del objecto
     updated_project["translations"]["en"]["description"] = "FastAPI and GPT Backend"
     updated_project["translations"]["es"]["description"] = "Backend en FastAPI y GPT"
 
-    # 2. Eliminar usando el ObjectId real de MongoDB
+    # 2. Realizamos el update del objecto en la base de datos mock
     update_response = await client.put(
         f"/api/v1/portfolio/projects/{project_id}",
         json=updated_project,
@@ -149,21 +151,19 @@ async def test_create_and_update_project(client, auth_headers, sample_project_pa
 
 # DELETE VALID
 @pytest.mark.asyncio
-async def test_create_and_delete_project(client, auth_headers, sample_project_payload):
+async def test_delete_project(client, auth_headers):
     """Prueba la eliminacion de un nuevo proyecto"""
     
-    # 1. Crear el proyecto (Protegido)
-    create_response = await client.post(
-        "/api/v1/portfolio/projects", 
-        json=sample_project_payload, 
-        headers=auth_headers
+    # 1. Lee el proyecto
+    create_response = await client.get(
+        "/api/v1/portfolio/projects"
     )
-    assert create_response.status_code in [200, 201]
+    assert create_response.status_code == 200
 
-    # Extraer el ID real generado por MongoDB (usualmente mapeado como "id" o "_id")
-    project_id = create_response.json().get("id")
+    # 2. Extraemos el _id del unico objecto en la lista de proyectos de la base de datos mock
+    project_id = create_response.json()[0].get("_id")
 
-    # 2. Eliminar usando el ObjectId real de MongoDB
+    # 3. Eliminar usando el ObjectId de MongoDB
     delete_response = await client.delete(
         f"/api/v1/portfolio/projects/{project_id}",
         headers=auth_headers
@@ -214,13 +214,12 @@ async def test_update_portfolio_global_success(client, auth_headers):
     assert len(data["social_media"]) == 1
 
 @pytest.mark.asyncio
-async def test_delete_portfolio_global(client,
-                                       sample_portfolio_global_payload, 
+async def test_delete_portfolio_global(client, 
                                        auth_headers):
     """Elimina la lista de skills y social media links del portfolio global"""
 
     delete_response = await client.delete(
-        "/api/v1/portfolio/global/",
+        "/api/v1/portfolio/global",
         headers=auth_headers
     )
 
