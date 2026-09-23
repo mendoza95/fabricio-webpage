@@ -2,6 +2,8 @@ from pydantic import BaseModel, Field
 
 from pydantic import BaseModel, Field
 
+# --- ABOUT ME ---
+
 # 1. Objeto Bilingüe reutilizable para name, level, note y profile_image_alt
 class LocalizedString(BaseModel):
     en: str = ""
@@ -31,8 +33,8 @@ class AboutMeBase(BaseModel):
 
 # 5. Modelo de Respuesta para FastAPI
 class AboutMeResponse(AboutMeBase):
-    id: str | None = None
-    user_id: str | None = None
+    id: str | None = Field(default=None, alias="_id")
+    user_id: str | None = Field(default=None, alias="user_id")
     
 # --- PROYECTOS ---
 class ProjectTranslation(BaseModel):
@@ -49,8 +51,8 @@ class ProjectBase(BaseModel):
     translations: dict[str, ProjectTranslation] = Field(default_factory=dict)
 
 class ProjectResponse(ProjectBase):
-    id: str | None = None
-    user_id: str | None = None
+    id: str | None = Field(default=None, alias="_id")
+    user_id: str | None = Field(default=None, alias="user_id")
 
 # --- EXPERIENCIA ---
 class ExperienceTranslation(BaseModel):
@@ -69,8 +71,8 @@ class ExperienceBase(BaseModel):
     translations: dict[str, ExperienceTranslation] = Field(default_factory=dict)
 
 class ExperienceResponse(ExperienceBase):
-    id: str | None = None
-    user_id: str | None = None
+    id: str | None = Field(default=None, alias="_id")
+    user_id: str | None = Field(default=None, alias="user_id")
 
 # --- EDUCACIÓN ---
 class EducationTranslation(BaseModel):
@@ -88,8 +90,8 @@ class EducationBase(BaseModel):
     translations: dict[str, EducationTranslation] = Field(default_factory=dict)
 
 class EducationResponse(EducationBase):
-    id: str | None = None
-    user_id: str | None = None
+    id: str | None = Field(default=None, alias="_id")
+    user_id: str | None = Field(default=None, alias="user_id")
 
 # --- PUBLICACIONES ---
 class PublicationTranslation(BaseModel):
@@ -105,8 +107,8 @@ class PublicationBase(BaseModel):
     translations: dict[str, PublicationTranslation] = Field(default_factory=dict)
 
 class PublicationResponse(PublicationBase):
-    id: str | None = None
-    user_id: str | None = None
+    id: str | None = Field(default=None, alias="_id")
+    user_id: str | None = Field(default=None, alias="user_id")
     
 
 # --- PORTAFOLIO GLOBAL (portfolio_global) ---
@@ -121,15 +123,14 @@ class SocialMediaItem(BaseModel):
     username: str = ""
     icon_svg: str = ""
 
-class PortfolioGlobalResponse(BaseModel):
-    id: str | None = None
-    user_id: str | None = None
+class PortfolioGlobalBase(BaseModel):
     skills: list[SkillItem] = Field(default_factory=list)
     social_media: list[SocialMediaItem] = Field(default_factory=list)
 
-class PortfolioGlobalUpdate(BaseModel):
-    skills: list[SkillItem] | None = None
-    social_media: list[SocialMediaItem] | None = None
+class PortfolioGlobalResponse(PortfolioGlobalBase):
+    id: str | None = Field(default=None, alias="_id")
+    user_id: str | None = Field(default=None, alias="user_id")
+    
 
 
 # --- TRADUCCIONES DE LA INTERFAZ (ui_translations) ---
