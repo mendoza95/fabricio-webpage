@@ -10,7 +10,7 @@ from app.models.portfolio import (
     ExperienceBase, ExperienceResponse,
     EducationBase, EducationResponse,
     PublicationBase, PublicationResponse,
-    PortfolioGlobalUpdate, PortfolioGlobalResponse, 
+    PortfolioGlobalBase, PortfolioGlobalResponse, 
     UiTranslationsResponse
 )
 
@@ -18,11 +18,23 @@ router = APIRouter(prefix="/portfolio", tags=["Portafolio"])
 
 
 # Helper para convertir ObjectId a String de forma limpia
-def format_doc(doc: dict) -> dict:
-    doc["id"] = str(doc["_id"])
-    if "user_id" in doc:
-        doc["user_id"] = str(doc["user_id"])
-    return doc
+def format_doc(doc: dict | None) -> dict | None:
+    """Convierte los BSON ObjectId de MongoDB a strings para compatibilidad con Pydantic."""
+    if not doc:
+        return None
+    
+    # Hacemos una copia para no mutar el diccionario original inesperadamente
+    formatted = doc.copy()
+    
+    # Convertimos _id si existe
+    if "_id" in formatted and isinstance(formatted["_id"], ObjectId):
+        formatted["_id"] = str(formatted["_id"])
+        
+    # Convertimos user_id si existe
+    if "user_id" in formatted and isinstance(formatted["user_id"], ObjectId):
+        formatted["user_id"] = str(formatted["user_id"])
+        
+    return formatted
 
 # ==========================================
 # 1. ABOUT ME (GET / POST / PUT / DELETE)
@@ -39,7 +51,7 @@ async def create_about_me(aboutme: AboutMeBase,
                           current_user: dict = Depends(get_current_user),
                           db: AsyncIOMotorDatabase = Depends(get_database)):
     """Crea un el perfil 'About me' del usuario"""
-    doc = aboutme.model_dump()
+    doc = aboutme.model_dump(by_alias=True)
     doc["user_id"] = current_user["_id"]
 
     result = await db["about_me"].insert_one(doc)
@@ -51,14 +63,15 @@ async def create_about_me(aboutme: AboutMeBase,
 @router.put("/about_me/{aboutme_id}", response_model=AboutMeResponse,
             status_code=status.HTTP_200_OK)
 async def update_about_me(aboutme_id:str,
-                          aboutme=AboutMeBase,
+                          aboutme:AboutMeBase,
                           current_user: dict=Depends(get_current_user),
                           db: AsyncIOMotorDatabase=Depends(get_database)):
     """Update the 'About Me' data"""
     if not ObjectId.is_valid(aboutme_id):
             raise HTTPException(status_code=400, detail="ID de 'About Me' no válido")
         
-    update_data = {k: v for k, v in aboutme.model_dump().items() if v is not None}
+    update_data = {k: v for k, v in 
+                   aboutme.model_dump(by_alias=True).items() if v is not None}
     
     result = await db["about_me"].find_one_and_update(
         {"_id": ObjectId(aboutme_id)},
@@ -101,7 +114,7 @@ async def create_project(project: ProjectBase,
                          current_user: dict = Depends(get_current_user),
                          db: AsyncIOMotorDatabase = Depends(get_database)):
     """Crea un nuevo proyecto (Requiere Token)."""
-    doc = project.model_dump()
+    doc = project.model_dump(by_alias=True)
     doc["user_id"] = current_user["_id"]
     
     result = await db["projects"].insert_one(doc)
@@ -119,7 +132,8 @@ async def update_project(project_id: str,
     if not ObjectId.is_valid(project_id):
         raise HTTPException(status_code=400, detail="ID de proyecto no válido")
     
-    update_data = {k: v for k, v in project_data.model_dump().items() if v is not None}
+    update_data = {k: v for k, v in 
+                   project_data.model_dump(by_alias=True).items() if v is not None}
     
     result = await db["projects"].find_one_and_update(
         {"_id": ObjectId(project_id)},
@@ -163,7 +177,7 @@ async def create_experience(experience: ExperienceBase,
                             current_user: dict = Depends(get_current_user),
                             db: AsyncIOMotorDatabase = Depends(get_database)):
     """Crea una nueva experiencia laboral (Requiere Token)."""
-    doc = experience.model_dump()
+    doc = experience.model_dump(by_alias=True)
     doc["user_id"] = current_user["_id"]
     
     result = await db["experience"].insert_one(doc)
@@ -180,7 +194,7 @@ async def update_experience(exp_id: str, exp_data: ExperienceBase,
     if not ObjectId.is_valid(exp_id):
         raise HTTPException(status_code=400, detail="ID de experiencia no válido")
     
-    update_data = {k: v for k, v in exp_data.model_dump().items() if v is not None}
+    update_data = {k: v for k, v in exp_data.model_dump(by_alias=True).items() if v is not None}
     
     result = await db["experience"].find_one_and_update(
         {"_id": ObjectId(exp_id)},
@@ -223,7 +237,7 @@ async def create_education(education: EducationBase,
                            current_user: dict = Depends(get_current_user),
                            db: AsyncIOMotorDatabase = Depends(get_database)):
     """Agrega un registro de educación (Requiere Token)."""
-    doc = education.model_dump()
+    doc = education.model_dump(by_alias=True)
     doc["user_id"] = current_user["_id"]
     
     result = await db["education"].insert_one(doc)
@@ -232,14 +246,15 @@ async def create_education(education: EducationBase,
 
 
 @router.put("/education/{edu_id}", response_model=EducationResponse)
-async def update_education(edu_id: str, edu_data: EducationBase, 
+async def update_education(edu_id: str, 
+                           edu_data: EducationBase, 
                            current_user: dict = Depends(get_current_user),
                            db: AsyncIOMotorDatabase = Depends(get_database)):
     """Actualiza un registro de educación (Requiere Token)."""
     if not ObjectId.is_valid(edu_id):
         raise HTTPException(status_code=400, detail="ID no válido")
     
-    update_data = {k: v for k, v in edu_data.model_dump().items() if v is not None}
+    update_data = {k: v for k, v in edu_data.model_dump(by_alias=True).items() if v is not None}
     
     result = await db["education"].find_one_and_update(
         {"_id": ObjectId(edu_id)},
@@ -277,12 +292,13 @@ async def get_publications(db: AsyncIOMotorDatabase = Depends(get_database)):
     return [format_doc(p) for p in publications]
 
 
-@router.post("/publications", response_model=PublicationResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/publications", response_model=PublicationResponse, 
+             status_code=status.HTTP_201_CREATED)
 async def create_publication(publication: PublicationBase, 
                              current_user: dict = Depends(get_current_user),
                              db: AsyncIOMotorDatabase = Depends(get_database)):
     """Crea una publicación (Requiere Token)."""
-    doc = publication.model_dump()
+    doc = publication.model_dump(by_alias=True)
     doc["user_id"] = current_user["_id"]
     
     result = await db["publications"].insert_one(doc)
@@ -291,14 +307,15 @@ async def create_publication(publication: PublicationBase,
 
 
 @router.put("/publications/{pub_id}", response_model=PublicationResponse)
-async def update_publication(pub_id: str, pub_data: PublicationBase, 
+async def update_publication(pub_id: str, 
+                             pub_data: PublicationBase, 
                              current_user: dict = Depends(get_current_user),
                              db: AsyncIOMotorDatabase = Depends(get_database)):
     """Actualiza una publicación (Requiere Token)."""
     if not ObjectId.is_valid(pub_id):
         raise HTTPException(status_code=400, detail="ID no válido")
     
-    update_data = {k: v for k, v in pub_data.model_dump().items() if v is not None}
+    update_data = {k: v for k, v in pub_data.model_dump(by_alias=True).items() if v is not None}
     
     result = await db["publications"].find_one_and_update(
         {"_id": ObjectId(pub_id)},
@@ -338,11 +355,11 @@ async def get_portfolio_global(db: AsyncIOMotorDatabase = Depends(get_database))
 
 @router.post("/global", response_model=PortfolioGlobalResponse,
              status_code=status.HTTP_201_CREATED)
-async def post_portfolio_global(global_data: PortfolioGlobalUpdate,
+async def post_portfolio_global(global_data: PortfolioGlobalBase,
                                 db: AsyncIOMotorDatabase = Depends(get_database),
                                 current_user: dict = Depends(get_current_user)):
     """Crea un portfolio global"""
-    doc = global_data.model_dump()
+    doc = global_data.model_dump(by_alias=True)
     doc["user_id"] = current_user["_id"]
 
     result = await db["portfolio_global"].insert_one(doc)
@@ -351,12 +368,12 @@ async def post_portfolio_global(global_data: PortfolioGlobalUpdate,
 
 
 @router.put("/global", response_model=PortfolioGlobalResponse)
-async def update_portfolio_global(global_data: PortfolioGlobalUpdate, 
+async def update_portfolio_global(global_data: PortfolioGlobalBase, 
                                   current_user: dict = Depends(get_current_user),
                                   db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """Actualiza habilidades o redes sociales (Requiere Token)."""
-    update_fields = {k: v for k, v in global_data.model_dump().items() if v is not None}
+    update_fields = {k: v for k, v in global_data.model_dump(by_alias=True).items() if v is not None}
     
     if not update_fields:
         raise HTTPException(status_code=400, detail="Debe proporcionar 'skills' o 'social_media'")
@@ -373,7 +390,7 @@ async def update_portfolio_global(global_data: PortfolioGlobalUpdate,
     return format_doc(result)
 
 
-@router.delete("/global/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/global", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_portfolio_global(current_user: dict = Depends(get_current_user),
                                   db: AsyncIOMotorDatabase = Depends(get_database)):
     """Elimina la lista de skills y social media (require token)"""
