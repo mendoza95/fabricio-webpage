@@ -1,4 +1,6 @@
 import bcrypt
+from fastapi import APIRouter, Depends, HTTPException, status
+
 from app.core.database import get_database
 from app.core.security import create_access_token, get_current_user
 from app.models.user import (
@@ -7,7 +9,6 @@ from app.models.user import (
     TokenResponse,
     UserResponse,
 )
-from fastapi import APIRouter, Depends, HTTPException, status
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
 

@@ -1,7 +1,5 @@
 from pydantic import BaseModel, Field
 
-from pydantic import BaseModel, Field
-
 # --- ABOUT ME ---
 
 # 1. Objeto Bilingüe reutilizable para name, level, note y profile_image_alt

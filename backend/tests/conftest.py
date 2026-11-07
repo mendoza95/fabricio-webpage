@@ -1,11 +1,14 @@
 import pytest
-from httpx import AsyncClient, ASGITransport
-from mongomock_motor import AsyncMongoMockClient
-from bson import ObjectId
-
+from app.core.database import (
+    get_database,  # Ajusta esta importación según donde obtienes tu cliente de BD
+)
+from app.core.security import (
+    create_access_token,  # Ajusta la ruta a tu generador de tokens JWT
+)
 from app.main import app
-from app.core.database import get_database  # Ajusta esta importación según donde obtienes tu cliente de BD
-from app.core.security import create_access_token  # Ajusta la ruta a tu generador de tokens JWT
+from bson import ObjectId
+from httpx import ASGITransport, AsyncClient
+from mongomock_motor import AsyncMongoMockClient
 
 
 @pytest.fixture
@@ -241,4 +244,71 @@ def sample_portfolio_global_payload():
                 "icon_svg":"some_image.png"
             }
         ]
+    }
+
+@pytest.fixture
+def sample_experience_payload():
+    """Returns a valid dictionary payload for experience CRUD operations"""
+    return {
+        "experience_id": "456",
+        "company_logo": "",
+        "company_url": "",
+        "start_date": "",
+        "end_date": "",
+        "translations": {
+            "en":{
+                "role":"Algorithm Engineer",
+                "company":"Empresa X",
+                "location":"Glasgow",
+                "description": [],
+                "description_cv":[]
+            }        
+        }
+    }
+
+@pytest.fixture
+def sample_education_payload():
+    """Returns a valid dictionary payload for education CRUD operations"""
+    return {
+        "education_id": "456",
+        "institution_logo": "institution_logo.jpg",
+        "institution_url": "https://institution.com",
+        "start_year": "2020",
+        "end_year": "2024",
+        "translations": {
+            "en": {
+                "degree": "Bachelor in Computer Science",
+                "institution": "University of Glasgow",
+                "location": "Glasgow, UK",
+                "description": "Graduated with honors"
+            },
+            "es": {
+                "degree": "Licenciatura en Ciencias de la Computación",
+                "institution": "Universidad de Glasgow",
+                "location": "Glasgow, Reino Unido",
+                "description": "Graduado con honores"
+            }
+        }
+    }
+
+@pytest.fixture
+def sample_publications_payload():
+    """Returns a valid dictionary payload for publications CRUD operations"""
+    return {
+        "publication_id": "456",
+        "authors": "John Doe and Jane Doe",
+        "year": "2020",
+        "urls": ["https://publication.com"],
+        "translations": {
+            "en": {
+                "title": "Title of Publication",
+                "journal": "Journal of Computer Science",
+                "journal_cv": "Journal of Computer Science (CV)"
+            },
+            "es": {
+                "title": "Título de la publicación",
+                "journal": "Revista de Ciencias de la Computación",
+                "journal_cv": "Revista de Ciencias de la Computación (CV)"
+            }
+        }
     }

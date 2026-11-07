@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.asyncio
 async def test_get_about_me(client):
     """Testea el endpoing publico de About me"""

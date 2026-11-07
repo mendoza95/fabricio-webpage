@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta, timezone
-from app.core.config import settings
-from app.core.database import get_database
+
+import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from motor.motor_asyncio import AsyncIOMotorDatabase
-import jwt
+
+from app.core.config import settings
+from app.core.database import get_database
 
 # Algoritmo de encriptación simétrica para el token
 ALGORITHM = "HS256"

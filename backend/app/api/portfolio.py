@@ -1,17 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, status
 from bson import ObjectId
+from fastapi import APIRouter, Depends, HTTPException, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from app.core.database import get_database
 from app.core.security import get_current_user
 from app.models.portfolio import (
-    AboutMeBase, AboutMeResponse,
-    ProjectBase, ProjectResponse,
-    ExperienceBase, ExperienceResponse,
-    EducationBase, EducationResponse,
-    PublicationBase, PublicationResponse,
-    PortfolioGlobalBase, PortfolioGlobalResponse, 
-    UiTranslationsResponse
+    AboutMeBase,
+    AboutMeResponse,
+    EducationBase,
+    EducationResponse,
+    ExperienceBase,
+    ExperienceResponse,
+    PortfolioGlobalBase,
+    PortfolioGlobalResponse,
+    ProjectBase,
+    ProjectResponse,
+    PublicationBase,
+    PublicationResponse,
+    UiTranslationsResponse,
 )
 
 router = APIRouter(prefix="/portfolio", tags=["Portafolio"])
@@ -93,13 +99,12 @@ async def delete_about_me(aboutme_id: str,
     if not ObjectId.is_valid(aboutme_id):
         raise HTTPException(status_code=400, detail="ID de proyecto no válido")
     
-    result = await db["projects"].delete_one({"_id": ObjectId(aboutme_id)})
+    result = await db["about_me"].delete_one({"_id": ObjectId(aboutme_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Proyecto no encontrado")
-    return None
 
 # ==========================================
-# 1. PROYECTOS (GET / POST / PUT / DELETE)
+# 2. PROYECTOS (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/projects", response_model=list[ProjectResponse])
@@ -157,11 +162,10 @@ async def delete_project(project_id: str,
     result = await db["projects"].delete_one({"_id": ObjectId(project_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Proyecto no encontrado")
-    return None
 
 
 # ==========================================
-# 2. EXPERIENCIA (GET / POST / PUT / DELETE)
+# 3. EXPERIENCIA (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/experience", response_model=list[ExperienceResponse])
@@ -218,11 +222,10 @@ async def delete_experience(exp_id: str,
     result = await db["experience"].delete_one({"_id": ObjectId(exp_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Experiencia no encontrada")
-    return None
 
 
 # ==========================================
-# 3. EDUCACIÓN (GET / POST / PUT / DELETE)
+# 4. EDUCACIÓN (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/education", response_model=list[EducationResponse])
@@ -278,11 +281,10 @@ async def delete_education(edu_id: str,
     result = await db["education"].delete_one({"_id": ObjectId(edu_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Registro de educación no encontrado")
-    return None
 
 
 # ==========================================
-# 4. PUBLICACIONES (GET / POST / PUT / DELETE)
+# 5. PUBLICACIONES (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/publications", response_model=list[PublicationResponse])
@@ -338,11 +340,10 @@ async def delete_publication(pub_id: str, current_user: dict = Depends(get_curre
     result = await db["publications"].delete_one({"_id": ObjectId(pub_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Publicación no encontrada")
-    return None
 
 
 # ==========================================
-# 5. PORTAFOLIO GLOBAL (GET / POST / PUT / DELETE)
+# 6. PORTAFOLIO GLOBAL (GET / POST / PUT / DELETE)
 # ==========================================
 
 @router.get("/global", response_model=PortfolioGlobalResponse)
@@ -403,7 +404,6 @@ async def delete_portfolio_global(current_user: dict = Depends(get_current_user)
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Portfolio Global no encontrado")
 
-    return None
 
 # ==========================================
 # 6. TRADUCCIONES DE LA INTERFAZ (SOLO LECTURA PÚBLICA)

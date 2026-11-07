@@ -1,5 +1,4 @@
 import pytest
-from bson import ObjectId
 
 # -----------------------------------------------------------------------------
 # 1. Pruebas para About Me (POST / PUT / DELETE)
@@ -37,7 +36,7 @@ async def test_create_aboutme_invalid(client, auth_headers):
     assert create_response.status_code == 422
 
 
-# PUT
+# PUT VALID
 @pytest.mark.asyncio
 async def test_update_aboutme(client, auth_headers):
     """Prueba una actualizacion de un objecto 'About Me'"""
@@ -82,6 +81,31 @@ async def test_update_aboutme(client, auth_headers):
     )
 
     assert aboutme_update.status_code == 200
+
+# DELETE VALID
+@pytest.mark.asyncio
+async def test_delete_aboutme(client, auth_headers):
+    """Prueba la eliminación de un objeto 'About Me'"""
+    
+    # 1. Lee el único objeto en el documento 'About Me'
+    aboutme_response = await client.get(
+        "/api/v1/portfolio/about_me"
+    )
+
+    assert aboutme_response.status_code == 200
+
+    print(aboutme_response.json())
+
+    # 2. Extraemos el ID del objeto
+    aboutme_id = aboutme_response.json().get("_id")
+
+    # 3. Eliminar usando el ObjectId de MongoDB
+    delete_response = await client.delete(
+        f"/api/v1/portfolio/about_me/{aboutme_id}",
+        headers=auth_headers
+    )
+
+    assert delete_response.status_code == 204
 
 # -----------------------------------------------------------------------------
 # 2. Pruebas para Projects (POST / PUT / DELETE)
@@ -172,7 +196,267 @@ async def test_delete_project(client, auth_headers):
     assert delete_response.status_code == 204
 
 # -----------------------------------------------------------------------------
-# 6. Pruebas para Portfolio Global (GET, PUT)
+# 3. Pruebas para Experience (POST /  PUT / DELETE)
+# -----------------------------------------------------------------------------
+
+
+# POST VALID
+@pytest.mark.asyncio
+async def test_create_experience(client, 
+                                 auth_headers, 
+                                 sample_experience_payload):
+    """Prueba la creación de un nuevo proyecto y su posterior consulta."""
+
+    # 1. Crear el proyecto (Protegido)
+    create_response = await client.post(
+        "/api/v1/portfolio/experience",
+        json=sample_experience_payload,
+        headers=auth_headers
+    )
+    assert create_response.status_code in [200, 201]
+    created_data = create_response.json()
+    assert created_data["translations"]["en"]["company"] == "Empresa X"
+    assert "id" in created_data or "_id" in created_data
+
+# POST INVALID
+@pytest.mark.asyncio
+async def test_create_experience_invalid_payload(client, auth_headers):
+    """Verifica que Pydantic rechace la creación si faltan campos obligatorios."""
+    bad_payload = {
+        "translations": "No valid input"
+    }
+    response = await client.post(
+        "/api/v1/portfolio/experience",
+        json=bad_payload,
+        headers=auth_headers
+    )
+    # Debe retornar 422 Unprocessable Entity por falla de validación de Pydantic
+    assert response.status_code == 422
+
+# UPDATE VALID
+@pytest.mark.asyncio
+async def test_update_experience(client, auth_headers):
+    """Prueba la actualización de un nuevo proyecto"""
+
+    # 1. Crear el proyecto (Protegido)
+    create_response = await client.get(
+        "/api/v1/portfolio/experience"
+    )
+    assert create_response.status_code == 200
+
+    # 2. Extrae el unico objeto en la lista de proyectos y su ID
+    updated_experience = create_response.json()[0]
+    experience_id = updated_experience.get("_id")
+
+    # 3. Realizamos una actualización del objeto
+    updated_experience["translations"]["en"]["company"] = "Independiente"
+    updated_experience["translations"]["en"]["job"] = "Programador Python"
+
+    # 2. Realizamos el update del objeto en la base de datos mock
+    update_response = await client.put(
+        f"/api/v1/portfolio/experience/{experience_id}",
+        json=updated_experience,
+        headers=auth_headers
+    )
+
+    assert update_response.status_code == 200
+
+# DELETE VALID
+@pytest.mark.asyncio
+async def test_delete_experience(client, auth_headers):
+    """Prueba la eliminación de un nuevo proyecto"""
+
+    # 1. Lee el proyecto
+    create_response = await client.get(
+        "/api/v1/portfolio/experience"
+    )
+    assert create_response.status_code == 200
+
+    # 2. Extraemos el _id del unico objeto en la lista de proyectos de la base de datos mock
+    experience_id = create_response.json()[0].get("_id")
+
+    # 3. Eliminar usando el ObjectId de MongoDB
+    delete_response = await client.delete(
+        f"/api/v1/portfolio/experience/{experience_id}",
+        headers=auth_headers
+    )
+
+    assert delete_response.status_code == 204
+
+# -----------------------------------------------------------------------------
+# 4. Pruebas para Education (POST /  PUT / DELETE)
+# -----------------------------------------------------------------------------
+
+# POST VALID
+@pytest.mark.asyncio
+async def test_create_education(client, 
+                                auth_headers, 
+                                sample_education_payload):
+    """Prueba la creación de un nuevo proyecto y su posterior consulta."""
+
+    # 1. Crear el proyecto (Protegido)
+    create_response = await client.post(
+        "/api/v1/portfolio/education",
+        json=sample_education_payload,
+        headers=auth_headers
+    )
+    assert create_response.status_code in [200, 201]
+    created_data = create_response.json()
+    assert created_data["translations"]["en"]["degree"] == "Bachelor in Computer Science"
+    assert "id" in created_data or "_id" in created_data
+
+# POST INVALID
+@pytest.mark.asyncio
+async def test_create_education_invalid_payload(client, auth_headers):
+    """Verifica que Pydantic rechace la creación si faltan campos obligatorios."""
+    bad_payload = {
+        "translations": "No valid input"
+    }
+    response = await client.post(
+        "/api/v1/portfolio/education",
+        json=bad_payload,
+        headers=auth_headers
+    )
+    # Debe retornar 422 Unprocessable Entity por falla de validación de Pydantic
+    assert response.status_code == 422
+
+# UPDATE VALID
+@pytest.mark.asyncio
+async def test_update_education(client, auth_headers):
+    """Prueba la actualización de un nuevo proyecto"""
+
+    # 1. Crear el proyecto (Protegido)
+    create_response = await client.get(
+        "/api/v1/portfolio/education"
+    )
+    assert create_response.status_code == 200
+
+    # 2. Extrae el unico objeto en la lista de proyectos y su ID
+    updated_education = create_response.json()[0]
+    education_id = updated_education.get("_id")
+
+    # 3. Realizamos una actualización del objeto
+    updated_education["translations"]["en"]["degree"] = "Master of Science in Computer Science"
+    updated_education["translations"]["en"]["institution"] = "University of Glasgow"
+
+    # 2. Realizamos el update del objeto en la base de datos mock
+    update_response = await client.put(
+        f"/api/v1/portfolio/education/{education_id}",
+        json=updated_education,
+        headers=auth_headers
+    )
+
+    assert update_response.status_code == 200
+
+# DELETE VALID
+@pytest.mark.asyncio
+async def test_delete_education(client, auth_headers):
+    """Prueba la eliminación de un nuevo proyecto"""
+
+    # 1. Lee el proyecto
+    create_response = await client.get(
+        "/api/v1/portfolio/education"
+    )
+    assert create_response.status_code == 200
+
+    # 2. Extraemos el _id del unico objeto en la lista de proyectos de la base de datos mock
+    education_id = create_response.json()[0].get("_id")
+
+    # 3. Eliminar usando el ObjectId de MongoDB
+    delete_response = await client.delete(
+        f"/api/v1/portfolio/education/{education_id}",
+        headers=auth_headers
+    )
+
+    assert delete_response.status_code == 204
+
+# -----------------------------------------------------------------------------
+# 5. Pruebas para Publications (POST /  PUT / DELETE)
+# -----------------------------------------------------------------------------
+
+# POST VALID
+@pytest.mark.asyncio
+async def test_create_publication(client, auth_headers, sample_publications_payload):
+    """Prueba la creación de un nuevo proyecto y su posterior consulta."""
+
+    # 1. Crear el proyecto (Protegido)
+    create_response = await client.post(
+        "/api/v1/portfolio/publications",
+        json=sample_publications_payload,
+        headers=auth_headers
+    )
+    assert create_response.status_code in [200, 201]
+    created_data = create_response.json()
+    assert created_data["translations"]["en"]["title"] == "Title of Publication"
+    assert "id" in created_data or "_id" in created_data
+
+# POST INVALID
+@pytest.mark.asyncio
+async def test_create_publication_invalid_payload(client, auth_headers):
+    """Verifica que Pydantic rechace la creación si faltan campos obligatorios."""
+    bad_payload = {
+        "translations": "No valid input"
+    }
+    response = await client.post(
+        "/api/v1/portfolio/publications",
+        json=bad_payload,
+        headers=auth_headers
+    )
+    # Debe retornar 422 Unprocessable Entity por falla de validación de Pydantic
+    assert response.status_code == 422
+
+# UPDATE VALID
+@pytest.mark.asyncio
+async def test_update_publication(client, auth_headers):
+    """Prueba la actualización de un nuevo proyecto"""
+
+    # 1. Crear el proyecto (Protegido)
+    create_response = await client.get(
+        "/api/v1/portfolio/publications"
+    )
+    assert create_response.status_code == 200
+
+    # 2. Extrae el unico objeto en la lista de proyectos y su ID
+    updated_publication = create_response.json()[0]
+    publication_id = updated_publication.get("_id")
+
+    # 3. Realizamos una actualización del objeto
+    updated_publication["translations"]["en"]["title"] = "New Title of Publication"
+    updated_publication["translations"]["en"]["journal"] = "New Journal of Computer Science"
+
+    # 2. Realizamos el update del objeto en la base de datos mock
+    update_response = await client.put(
+        f"/api/v1/portfolio/publications/{publication_id}",
+        json=updated_publication,
+        headers=auth_headers
+    )
+
+    assert update_response.status_code == 200
+
+# DELETE VALID
+@pytest.mark.asyncio
+async def test_delete_publication(client, auth_headers):
+    """Prueba la eliminación de un nuevo proyecto"""
+
+    # 1. Lee el proyecto
+    create_response = await client.get(
+        "/api/v1/portfolio/publications"
+    )
+    assert create_response.status_code == 200
+
+    # 2. Extraemos el _id del unico objeto en la lista de proyectos de la base de datos mock
+    publication_id = create_response.json()[0].get("_id")
+
+    # 3. Eliminar usando el ObjectId de MongoDB
+    delete_response = await client.delete(
+        f"/api/v1/portfolio/publications/{publication_id}",
+        headers=auth_headers
+    )
+
+    assert delete_response.status_code == 204
+
+# -----------------------------------------------------------------------------
+# 6. Pruebas para Portfolio Global (POST / PUT / DELETE)
 # -----------------------------------------------------------------------------
 
 @pytest.mark.asyncio
