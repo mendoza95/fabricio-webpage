@@ -89,7 +89,7 @@ async def mock_db():
                 "role":"",
                 "company":"",
                 "location":"",
-                "description": [],
+                "description": "",
                 "description_cv":[]
             }        
         }
@@ -107,7 +107,8 @@ async def mock_db():
                 "degree": "Dh",
                 "institution":"",
                 "location":"",
-                "description":""
+                "description":"",
+                "description_cv": []
             }
         }
     })
@@ -260,7 +261,7 @@ def sample_experience_payload():
                 "role":"Algorithm Engineer",
                 "company":"Empresa X",
                 "location":"Glasgow",
-                "description": [],
+                "description": "",
                 "description_cv":[]
             }        
         }
@@ -280,13 +281,15 @@ def sample_education_payload():
                 "degree": "Bachelor in Computer Science",
                 "institution": "University of Glasgow",
                 "location": "Glasgow, UK",
-                "description": "Graduated with honors"
+                "description": "Graduated with honors",
+                "description_cv": []
             },
             "es": {
                 "degree": "Licenciatura en Ciencias de la Computación",
                 "institution": "Universidad de Glasgow",
                 "location": "Glasgow, Reino Unido",
-                "description": "Graduado con honores"
+                "description": "Graduado con honores",
+                "description_cv": []
             }
         }
     }
