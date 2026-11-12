@@ -11,9 +11,11 @@ import {
   EducationResponse, 
   PublicationResponse 
 } from '@/types/portfolio';
+import AboutMeModal from '@/components/AboutMeModal';
 import ProjectModal from '@/components/ProjectModal';
 import ExperienceModal from '@/components/ExperienceModal';
 import EducationModal from '@/components/EducationModal';
+import PublicationModal from '@/components/PublicationModal';
 
 type ActiveTab = 'aboutme' | 'projects' | 'experience' | 'education' | 'publications';
 
@@ -31,6 +33,8 @@ export default function AdminDashboard() {
   const [publications, setPublications] = useState<PublicationResponse[]>([]);
 
   // Estados de Modales
+  const [isAboutMeModalOpen, setIsAboutMeModalOpen] = useState(false);
+
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectResponse | null>(null);
 
@@ -39,6 +43,9 @@ export default function AdminDashboard() {
 
   const [isEduModalOpen, setIsEduModalOpen] = useState(false);
   const [selectedEducation, setSelectedEducation] = useState<EducationResponse | null>(null);
+
+  const [isPubModalOpen, setIsPubModalOpen] = useState(false);
+  const [selectedPublication, setSelectedPublication] = useState<PublicationResponse | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -124,11 +131,11 @@ export default function AdminDashboard() {
         {/* Pestañas de navegación */}
         <div className="flex gap-2 border-b border-slate-800 pb-3 overflow-x-auto">
           {[
-            { id: 'projects', label: `Proyectos (${projects.length})` },
+            { id: 'aboutme', label: 'About Me' },
             { id: 'experience', label: `Experiencia (${experiences.length})` },
             { id: 'education', label: `Educación (${educations.length})` },
+            { id: 'projects', label: `Proyectos (${projects.length})` },
             { id: 'publications', label: `Publicaciones (${publications.length})` },
-            { id: 'aboutme', label: 'About Me' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -146,40 +153,34 @@ export default function AdminDashboard() {
           <p className="text-center py-12 text-slate-400 animate-pulse">Cargando datos del servidor...</p>
         ) : (
           <>
-            {/* 1. PROYECTOS */}
-            {activeTab === 'projects' && (
-              <div className="space-y-4">
+            {/* 1. ABOUT ME */}
+            {activeTab === 'aboutme' && (
+              <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-bold text-white">Proyectos</h2>
-                  <button 
-                    onClick={() => { setSelectedProject(null); setIsProjectModalOpen(true); }}
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition"
-                  >
-                    + Nuevo Proyecto
-                  </button>
+                <div>
+                    <h2 className="text-xl font-bold text-white">Información General (About Me)</h2>
+                    <p className="text-sm text-slate-400 mt-1">Biografía principal y configuración de CV.</p>
                 </div>
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-                  <table className="w-full text-left text-sm text-slate-300">
-                    <thead className="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
-                      <tr>
-                        <th className="p-4">Título</th>
-                        <th className="p-4">Tecnologías</th>
-                        <th className="p-4 text-right">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800">
-                      {projects.map((proj) => (
-                        <tr key={proj.id} className="hover:bg-slate-800/40">
-                          <td className="p-4 font-semibold text-white">{proj.translations?.es?.name || proj.translations?.en?.name}</td>
-                          <td className="p-4">{proj.technologies?.join(', ')}</td>
-                          <td className="p-4 text-right space-x-2">
-                            <button onClick={() => { setSelectedProject(proj); setIsProjectModalOpen(true); }} className="px-3 py-1 bg-slate-800 text-xs rounded text-slate-200 hover:bg-slate-700">Editar</button>
-                            <button onClick={() => handleDelete('projects', proj.id)} className="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded hover:bg-red-600/30">Eliminar</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <button 
+                    onClick={() => setIsAboutMeModalOpen(true)}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition"
+                >
+                    Editar About Me
+                </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
+                    <h3 className="text-indigo-400 font-bold text-sm">Español (ES)</h3>
+                    <p className="text-white font-semibold text-lg">{aboutMe?.translations?.es?.title || 'Sin título'}</p>
+                    <p className="text-xs text-slate-400 line-clamp-3">{aboutMe?.translations?.es?.intro?.[0]}</p>
+                </div>
+
+                <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
+                    <h3 className="text-indigo-400 font-bold text-sm">English (EN)</h3>
+                    <p className="text-white font-semibold text-lg">{aboutMe?.translations?.en?.title || 'No title'}</p>
+                    <p className="text-xs text-slate-400 line-clamp-3">{aboutMe?.translations?.en?.intro?.[0]}</p>
+                </div>
                 </div>
               </div>
             )}
@@ -197,18 +198,21 @@ export default function AdminDashboard() {
                   </button>
                 </div>
                 <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-                  <table className="w-full text-left text-sm text-slate-300">
+                  <table className="w-full text-left text-sm text-slate-300 table-auto">
                     <thead className="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
                       <tr>
-                        <th className="p-4">Rol / Empresa</th>
-                        <th className="p-4">Periodo</th>
-                        <th className="p-4 text-right">Acciones</th>
+                        <th className="p-4 w-3/5">Rol / Empresa</th>
+                        <th className="p-4 w-1/5">Periodo</th>
+                        <th className="p-4 w-1/5 text-right">Acciones</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800">
-                      {experiences.map((exp) => (
-                        <tr key={exp.id} className="hover:bg-slate-800/40">
-                          <td className="p-4 font-semibold text-white">{exp.translations?.es?.role} en {exp.translations?.es?.company}</td>
+                      {experiences.map((exp, index) => (
+                        <tr key={exp.id || `exp-${index}`} className="hover:bg-slate-800/40">
+                          <td className="p-4">
+                            <div className="font-semibold text-white">{exp.translations?.es?.role}</div>
+                            <div className="text-xs text-indigo-300 font-normal mt-0.5">{exp.translations?.es?.company}</div>
+                          </td>
                           <td className="p-4">{exp.start_date} - {exp.end_date}</td>
                           <td className="p-4 text-right space-x-2">
                             <button onClick={() => { setSelectedExperience(exp); setIsExpModalOpen(true); }} className="px-3 py-1 bg-slate-800 text-xs rounded text-slate-200">Editar</button>
@@ -235,18 +239,21 @@ export default function AdminDashboard() {
                   </button>
                 </div>
                 <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-                  <table className="w-full text-left text-sm text-slate-300">
+                  <table className="w-full text-left text-sm text-slate-300 table-auto">
                     <thead className="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
                       <tr>
-                        <th className="p-4">Título / Institución</th>
-                        <th className="p-4">Años</th>
-                        <th className="p-4 text-right">Acciones</th>
+                        <th className="p-4 w-3/5">Título / Institución</th>
+                        <th className="p-4 w-1/5">Periodo</th>
+                        <th className="p-4 w-1/5 text-right">Acciones</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800">
-                      {educations.map((edu) => (
-                        <tr key={edu.id} className="hover:bg-slate-800/40">
-                          <td className="p-4 font-semibold text-white">{edu.translations?.es?.degree} ({edu.translations?.es?.institution})</td>
+                      {educations.map((edu, index) => (
+                        <tr key={edu.id || `edu-${index}`} className="hover:bg-slate-800/40">
+                          <td className="p-4">
+                            <div className="font-semibold text-white">{edu.translations?.es?.degree}</div>
+                            <div className="text-xs text-indigo-300 font-normal mt-0.5">{edu.translations?.es?.institution}</div>
+                          </td>
                           <td className="p-4">{edu.start_year} - {edu.end_year}</td>
                           <td className="p-4 text-right space-x-2">
                             <button onClick={() => { setSelectedEducation(edu); setIsEduModalOpen(true); }} className="px-3 py-1 bg-slate-800 text-xs rounded text-slate-200">Editar</button>
@@ -260,34 +267,41 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* 4. PUBLICACIONES */}
-            {activeTab === 'publications' && (
+            {/* 4. PROYECTOS */}
+            {activeTab === 'projects' && (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-bold text-white">Publicaciones</h2>
+                  <h2 className="text-xl font-bold text-white">Proyectos</h2>
                   <button 
-                    onClick={() => alert('Modal de publicaciones pendiente')}
+                    onClick={() => { setSelectedProject(null); setIsProjectModalOpen(true); }}
                     className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition"
                   >
-                    + Nueva Publicación
+                    + Nuevo Proyecto
                   </button>
                 </div>
                 <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-                  <table className="w-full text-left text-sm text-slate-300">
+                  <table className="w-full text-left text-sm text-slate-300 table-auto">
                     <thead className="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
                       <tr>
-                        <th className="p-4">Título</th>
-                        <th className="p-4">Año</th>
-                        <th className="p-4 text-right">Acciones</th>
+                        <th className="p-4 w-3/5">Título y Tecnologías</th>
+                        <th className="p-4 w-1/5">Enlaces</th>
+                        <th className="p-4 w-1/5 text-right">Acciones</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800">
-                      {publications.map((pub) => (
-                        <tr key={pub.id} className="hover:bg-slate-800/40">
-                          <td className="p-4 font-semibold text-white">{pub.translations?.es?.title}</td>
-                          <td className="p-4">{pub.year}</td>
+                      {projects.map((proj, index) => (
+                        <tr key={proj.id || `proj-${index}`} className="hover:bg-slate-800/40">
+                          <td className="p-4">
+                            <div className="font-semibold text-white">{proj.translations?.es?.name || proj.translations?.en?.name}</div>
+                            <div className="text-xs text-indigo-300 font-normal mt-1">{proj.technologies?.join(', ')}</div>
+                          </td>
+                          <td className="p-4 text-xs">
+                            {proj.live_url && <span className="block text-indigo-400 truncate max-w-[150px]">Live Demo</span>}
+                            {proj.github_urls?.length > 0 && <span className="text-slate-400">{proj.github_urls.length} Repos</span>}
+                          </td>
                           <td className="p-4 text-right space-x-2">
-                            <button onClick={() => handleDelete('publications', pub.id)} className="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded">Eliminar</button>
+                            <button onClick={() => { setSelectedProject(proj); setIsProjectModalOpen(true); }} className="px-3 py-1 bg-slate-800 text-xs rounded text-slate-200 hover:bg-slate-700">Editar</button>
+                            <button onClick={() => handleDelete('projects', proj.id)} className="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded hover:bg-red-600/30">Eliminar</button>
                           </td>
                         </tr>
                       ))}
@@ -297,22 +311,58 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* 5. ABOUT ME */}
-            {activeTab === 'aboutme' && (
-              <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl space-y-4">
-                <h2 className="text-xl font-bold text-white">Información General (About Me)</h2>
-                <p className="text-sm text-slate-400">Biografía actual cargada desde el servidor.</p>
-                <div className="bg-slate-950 p-4 rounded-xl text-sm text-slate-300 border border-slate-800">
-                  <p><strong>Título ES:</strong> {aboutMe?.translations?.es?.title || 'No registrado'}</p>
-                  <p><strong>Título EN:</strong> {aboutMe?.translations?.en?.title || 'No registrado'}</p>
+            {/* 5. PUBLICACIONES */}
+            {activeTab === 'publications' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold text-white">Publicaciones</h2>
+                <button 
+                    onClick={() => { setSelectedPublication(null); setIsPubModalOpen(true); }}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition"
+                >
+                    + Nueva Publicación
+                </button>
+                </div>
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                <table className="w-full text-left text-sm text-slate-300 table-auto">
+                    <thead className="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
+                    <tr>
+                        <th className="p-4 w-3/5">Título / Revista</th>
+                        <th className="p-4 w-1/5">Año</th>
+                        <th className="p-4 w-1/5 text-right">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800">
+                    {publications.map((pub, index) => (
+                        <tr key={pub.id || `pub-${index}`} className="hover:bg-slate-800/40">
+                        <td className="p-4">
+                            <div className="font-semibold text-white">{pub.translations?.es?.title}</div>
+                            <div className="text-xs text-indigo-300 font-normal mt-0.5">{pub.translations?.es?.journal}</div>
+                        </td>
+                        <td className="p-4">{pub.year}</td>
+                        <td className="p-4 text-right space-x-2">
+                            <button onClick={() => { setSelectedPublication(pub); setIsPubModalOpen(true); }} className="px-3 py-1 bg-slate-800 text-xs rounded text-slate-200 hover:bg-slate-700">Editar</button>
+                            <button onClick={() => handleDelete('publications', pub.id)} className="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded hover:bg-red-600/30">Eliminar</button>
+                        </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
                 </div>
               </div>
             )}
+
           </>
         )}
       </div>
 
       {/* Modales */}
+      <AboutMeModal 
+        isOpen={isAboutMeModalOpen}
+        onClose={() => setIsAboutMeModalOpen(false)}
+        onSuccess={fetchAllData}
+        aboutMeData={aboutMe}
+      />
       <ProjectModal 
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
@@ -332,6 +382,13 @@ export default function AdminDashboard() {
         onClose={() => setIsEduModalOpen(false)}
         onSuccess={fetchAllData}
         educationToEdit={selectedEducation}
+      />
+
+      <PublicationModal 
+        isOpen={isPubModalOpen}
+        onClose={() => setIsPubModalOpen(false)}
+        onSuccess={fetchAllData}
+        publicationToEdit={selectedPublication}
       />
     </main>
   );
