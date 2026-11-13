@@ -68,11 +68,36 @@ export default function AdminDashboard() {
         api.get('/portfolio/publications').catch(() => ({ data: [] }))
       ]);
 
-      setAboutMe(aboutRes.data);
-      setProjects(Array.isArray(projRes.data) ? projRes.data : []);
-      setExperiences(Array.isArray(expRes.data) ? expRes.data : []);
-      setEducations(Array.isArray(eduRes.data) ? eduRes.data : []);
-      setPublications(Array.isArray(pubRes.data) ? pubRes.data : []);
+      // Normalizar About Me
+      setAboutMe(aboutRes.data ? {
+        ...aboutRes.data,
+        id: aboutRes.data.id || aboutRes.data._id
+      } : null);
+
+      // Normalizar Proyectos
+      const normalizedProjects = Array.isArray(projRes.data) 
+        ? projRes.data.map((item: any) => ({ ...item, id: item.id || item._id })) 
+        : [];
+      setProjects(normalizedProjects);
+
+      // Normalizar Experiencias
+      const normalizedExperiences = Array.isArray(expRes.data) 
+        ? expRes.data.map((item: any) => ({ ...item, id: item.id || item._id })) 
+        : [];
+      setExperiences(normalizedExperiences);
+
+      // Normalizar Educación
+      const normalizedEducations = Array.isArray(eduRes.data) 
+        ? eduRes.data.map((item: any) => ({ ...item, id: item.id || item._id })) 
+        : [];
+      setEducations(normalizedEducations);
+
+      // Normalizar Publicaciones
+      const normalizedPublications = Array.isArray(pubRes.data) 
+        ? pubRes.data.map((item: any) => ({ ...item, id: item.id || item._id })) 
+        : [];
+      setPublications(normalizedPublications);
+
     } catch (err: any) {
       if (err.response?.status === 401) {
         localStorage.removeItem('access_token');

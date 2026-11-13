@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>CV - Fabricio Mendoza Granada</title>
+    <meta name="author" content="Fabricio Mendoza Granada">
+    <meta name="description" content="Curriculum Vitae of Fabricio Mendoza Granada - Ph.D. Candidate in Computing Science">
+    <style>
+        /* Basic CV Styles for PDF Generation */
+        @page {
+            size: A4;
+            margin: 1.2cm;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.25;
+            color: #333;
+        }
+
+        h1, h2, h3, h4 {
+            color: #2E3D49;
+            margin-bottom: 0.1em;
+            page-break-after: avoid;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            text-align: left;
+            margin-bottom: 0;
+        }
+
+        .contact-info {
+            text-align: left;
+            margin-bottom: 2.5em;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .contact-info a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .section {
+            margin-bottom: 1em; /* Further reduced space between sections */
+        }
+
+        .section h2 {
+            font-size: 1.5em;
+            color: #4A90E2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 0.8em; /* Further reduced space after section titles */
+        }
+
+        .item {
+            margin-bottom: 1em;
+            page-break-inside: avoid;
+        }
+
+        .item-date {
+            font-weight: bold;
+            color: #4A90E2;
+            margin-bottom: 0.2em;
+        }
+
+        .item-date:empty {
+            display: none;
+        }
+
+        .item h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 0.2em;
+            color: #2E3D49;
+        }
+
+        .item p {
+            margin: 0.3em 0;
+            color: #4A4A4A;
+        }
+
+        .item em {
+            color: #666;
+        }
+
+        ul {
+            padding-left: 20px; /* Add left padding to the unordered list */
+        }
+    </style>
+</head>
+<body>
+    <h1>Fabricio Mendoza Granada</h1>
+    <div class="contact-info">
+        <h3>{{ ui_text.contact_cv}}</h3>
+        {# Display Email on its own line for prominence #}
+        {% for link in social_links if link.name == 'Email' %}
+            <p style="margin-bottom: 0.2em;"><a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a></p>
+        {% endfor %}
+        {# Display other key links on the next line #}
+        <div>
+            <a href="https://fabriciomg.pythonanywhere.com/{{ lang }}/">website: https://fabriciomg.pythonanywhere.com/{{ lang }}/</a>
+            {% for link in social_links if link.name in ['LinkedIn', 'GitHub'] %}
+                 | <a href="{{ link.url }}">{{ link.name.lower() }}: {{ link.username }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section" id="profile">
+        <h3>{{ ui_text.profile_cv}}</h3>
+        <div class="item">
+            {% for paragraph in about.intro %}
+                <p>{{ paragraph | safe }}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if skills %}
+    <div class="section" id="skills">
+        <h3>{{ ui_text.skills_cv | default('Skills') }}</h3>
+        <div class="item">
+            <p>{{ skills | join(', ') }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="section" id="education">
+        <h3>{{ ui_text.education_title }}</h3>
+        <ul>
+            {% for item in education %}
+                <div class="item">
+                    <div class="item-content">
+                        <li>{{ item.degree }} | {{ item.institution }} | {{ item.location }} | {{item.start_year }} - {{ item.end_year }} </li>
+                    </div>
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section" id="experience">
+        <h3>{{ ui_text.experience_title }}</h3>
+        {% for job in experience %}
+            <div class="item">
+                <div class="item-content">
+                    {# Render the title with the desired format #}
+                    <h4>{{ job.role }} | {{ job.company }} | {{ job.location }} | {{ job.start_date }} - {{ job.end_date }}</h4>
+                    
+                    {# Render the description as a bulleted list #}
+                    {% if job.description_cv %}
+                        <ul>
+                            {% for point in job.description_cv %}
+                                <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="section" id="projects">
+        <h3>{{ ui_text.projects_title }}</h3>
+        {% for project in projects %}
+            <div class="item">
+                <div class="item-content">
+                    <h4>{{ project.name }} | 
+                        {%for tech in project.technologies_cv %}
+                            <em>{{ tech }} </em> |
+                        {% endfor %}
+                        <a href="{{ project.github_urls[0] }}" target="_blank" rel="noopener noreferrer">GitHub</a></h4>
+                    {# Render the description as a bulleted list #}
+                    {% if project.description_cv %}
+                        <ul>
+                            {% for point in project.description_cv %}
+                                <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <div class="section" id="publications">
+        <h3>{{ ui_text.publications_title_cv }}</h3>
+        <ul>
+        {% for pub in publications[:3] %}
+            <div class="item">
+                <div class="item-content">
+                    <li>{{ pub.title }} ({{ pub.year }})
+                        {% if pub.urls %}
+                            {% if pub.urls|length > 0 %}
+                                <a href="{{ pub.urls[0] }}" target="_blank" rel="noopener noreferrer"> - {{ pub.journal_cv }}</a>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="section" id="language-level">
+        <h3>{{ ui_text.languages_cv}}</h3>
+        <ul>
+        {% for lan in languages %}
+            <div class="item">
+                <div class="item-content">
+                    <li>{{ lan.name }}: {{ lan.level }}</li>
+                </div>
+            </div>
+        {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>

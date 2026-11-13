@@ -99,11 +99,13 @@ export default function ProjectModal({ isOpen, onClose, onSuccess, projectToEdit
     };
 
     try {
-      if (projectToEdit && projectToEdit.id) {
-        await api.put(`/portfolio/projects/${projectToEdit.id}`, payload);
-      } else {
-        await api.post('/portfolio/projects', payload);
+      if(projectToEdit){
+        const projId = projectToEdit?.id;
+        await api.put(`/portfolio/projects/${projId}`, payload);
+      }else{
+        await api.post('/portfolio/projects/', payload);
       }
+      
       onSuccess();
       onClose();
     } catch (err: any) {

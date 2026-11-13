@@ -100,11 +100,13 @@ export default function EducationModal({ isOpen, onClose, onSuccess, educationTo
     };
 
     try {
-      if (educationToEdit && educationToEdit.id) {
-        await api.put(`/portfolio/education/${educationToEdit.id}`, payload);
-      } else {
-        await api.post('/portfolio/education', payload);
+      if (educationToEdit){
+        const eduId = educationToEdit?.id;
+        await api.put(`/portfolio/education/${eduId}`, payload);
+      }else{
+        await api.post('/portfolio/education/', payload);
       }
+      
       onSuccess();
       onClose();
     } catch (err: any) {

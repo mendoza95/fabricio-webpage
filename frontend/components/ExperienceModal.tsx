@@ -104,8 +104,9 @@ export default function ExperienceModal({ isOpen, onClose, onSuccess, experience
     };
 
     try {
-      if (experienceToEdit && experienceToEdit.id) {
-        await api.put(`/portfolio/experience/${experienceToEdit.id}`, payload);
+      if (experienceToEdit) {
+        const expId = experienceToEdit?.id;
+        await api.put(`/portfolio/experience/${expId}`, payload);
       } else {
         await api.post('/portfolio/experience', payload);
       }

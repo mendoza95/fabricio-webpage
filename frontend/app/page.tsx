@@ -17,8 +17,9 @@ export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [loading, setLoading] = useState(true);
 
-  // Ubicacion de la imagen en el backend (PythonAnywhere)
+  // URLs del entorno
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
   // Estados para cada sección
   const [aboutMe, setAboutMe] = useState<AboutMeResponse | null>(null);
@@ -220,7 +221,7 @@ export default function Home() {
                     <p className="text-sm text-slate-500 dark:text-slate-400">{aboutMeTranslation.cv_intro?.[0]}</p>
                   </div>
                   <a 
-                    href={`/cv/${aboutMe.cv_filename}`} 
+                    href={`${apiUrl}/cv/pdf/${language}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl transition shadow-lg shadow-indigo-600/20 text-center"
@@ -244,7 +245,8 @@ export default function Home() {
                   <div key={exp.id || idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row justify-between gap-4 shadow-sm transition-colors">
                     <div className="space-y-2">
                       <div className="flex items-center gap-3">
-                        {exp.company_logo && (
+                      {exp.company_logo && (
+                        <div className="w-20 h-12 shrink-0 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-dark p-1 flex items-center justify-center">
                           <img 
                             src={
                               exp.company_logo.startsWith('http') 
@@ -252,11 +254,12 @@ export default function Home() {
                                 : `${backendUrl}${exp.company_logo.startsWith('/static/images/') ? '' : '/static/images/'}${exp.company_logo}`
                             } 
                             alt={trans?.company} 
-                            className="w-8 h-8 rounded object-cover" 
+                            className="w-full h-full object-contain" 
                           />
-                        )}
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{trans?.role}</h3>
-                      </div>
+                        </div>
+                      )}
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white">{trans?.role}</h3>
+                    </div>
                       <p className="text-indigo-600 dark:text-indigo-300 font-medium text-sm">{trans?.company} • {trans?.location}</p>
                       <p className="text-slate-600 dark:text-slate-300 text-sm">{trans?.description}</p>
                     </div>
@@ -299,7 +302,7 @@ export default function Home() {
                 return (
                   <div key={project.id || idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 transition shadow-sm">
                     <div className="space-y-4">
-                      {project.image && (
+                      {/*{project.image && (
                         <img 
                           src={
                             project.image.startsWith('http') 
@@ -309,7 +312,7 @@ export default function Home() {
                           alt={trans?.name} 
                           className="w-full h-48 object-cover rounded-xl" 
                         />
-                      )}
+                      )} */}
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white">{trans?.name}</h3>
                       <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{trans?.description}</p>
                       

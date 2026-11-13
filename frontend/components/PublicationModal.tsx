@@ -94,11 +94,13 @@ export default function PublicationModal({ isOpen, onClose, onSuccess, publicati
     };
 
     try {
-      if (publicationToEdit && publicationToEdit.id) {
-        await api.put(`/portfolio/publications/${publicationToEdit.id}`, payload);
-      } else {
+      if(publicationToEdit){
+        const pubId = publicationToEdit?.id;
+        await api.put(`/portfolio/publications/${pubId}`, payload);
+      }else{
         await api.post('/portfolio/publications', payload);
       }
+      
       onSuccess();
       onClose();
     } catch (err: any) {

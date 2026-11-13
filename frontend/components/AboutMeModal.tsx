@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import api from '@/services/api';
 import { AboutMeResponse } from '@/types/portfolio';
 import TextareaAutosize from 'react-textarea-autosize';
+import { abortOnSynchronousPlatformIOAccess } from 'next/dist/server/app-render/dynamic-rendering';
 
 interface AboutMeModalProps {
   isOpen: boolean;
@@ -99,8 +100,11 @@ export default function AboutMeModal({ isOpen, onClose, onSuccess, aboutMeData }
       },
     };
 
+    //console.log("Objeto aboutMe actual:", aboutMeData);
+    const aboutMeId = aboutMeData?.id;
+
     try {
-      await api.put('/portfolio/about_me', payload);
+      await api.put(`/portfolio/about_me/${aboutMeId}`, payload);
       onSuccess();
       onClose();
     } catch (err: any) {

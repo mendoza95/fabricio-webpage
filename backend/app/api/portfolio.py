@@ -170,10 +170,12 @@ async def delete_project(project_id: str,
 
 @router.get("/experience", response_model=list[ExperienceResponse])
 async def get_experience(db: AsyncIOMotorDatabase = Depends(get_database)):
-    """Obtiene la lista de experiencia laboral."""
-    experiences = await db["experience"].find().to_list(100)
+    """Obtiene la experiencia ordenada por fecha de fin (desc) y fecha de inicio (asc) en caso de empate."""
+    experiences = await db["experience"].find().sort([
+        ("end_date", -1),  # Principal: Lo más reciente al inicio
+        ("start_date", 1)  # Secundario: Si coinciden, el que empezó antes va primero
+    ]).to_list(100)
     return [format_doc(e) for e in experiences]
-
 
 @router.post("/experience", response_model=ExperienceResponse, 
              status_code=status.HTTP_201_CREATED)
@@ -230,10 +232,12 @@ async def delete_experience(exp_id: str,
 
 @router.get("/education", response_model=list[EducationResponse])
 async def get_education(db: AsyncIOMotorDatabase = Depends(get_database)):
-    """Obtiene la lista de educación."""
-    education_list = await db["education"].find().to_list(100)
+    """Obtiene la educación ordenada por año de fin (desc) y año de inicio (asc) en caso de empate."""
+    education_list = await db["education"].find().sort([
+        ("end_year", -1),  # Principal: Lo más reciente al inicio
+        ("start_year", 1)  # Secundario: Si coinciden, el que empezó antes va primero
+    ]).to_list(100)
     return [format_doc(e) for e in education_list]
-
 
 @router.post("/education", response_model=EducationResponse, status_code=status.HTTP_201_CREATED)
 async def create_education(education: EducationBase, 
