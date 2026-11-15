@@ -16,3 +16,5 @@ test_connection.py
 migrar_datos.py
 init_db.py
 .DS_Store
+data/database_dump.json
+export_mongo.py
