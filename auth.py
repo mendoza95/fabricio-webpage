@@ -90,9 +90,7 @@ def login():
         return jsonify({"success": True, "message": "Inicio de sesión exitoso."})
 
     return (
-        jsonify(
-            {"success": False, "message": "Usuario o contraseña incorrectos."}
-        ),
+        jsonify({"success": False, "message": "Usuario o contraseña incorrectos."}),
         401,
     )
 

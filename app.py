@@ -28,6 +28,7 @@ def create_app(test_config=None):
         app.config["DB"] = test_config["DB"]
     elif use_local_json:
         from json_db import JsonDatabase
+
         app.config["DB"] = JsonDatabase("data/database_dump.json")
     else:
         mongo_uri = os.environ.get("MONGO_URI")

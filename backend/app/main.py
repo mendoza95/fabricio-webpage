@@ -4,10 +4,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
-from app.api.portfolio import router as portfolio_router
-from app.api.profile import router as profile_router
 from app.api.cv import router as cv_router
+from app.api.portfolio import router as portfolio_router
 from app.api.posts import router as post_router
+from app.api.profile import router as profile_router
 from app.core.config import settings
 from app.core.database import close_mongo_connection, connect_to_mongo
 

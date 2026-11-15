@@ -1,8 +1,8 @@
-import os
 from pathlib import Path
-from fastapi import APIRouter, HTTPException
+
 import frontmatter
 import markdown
+from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/posts", tags=["Posts & News"])
 
@@ -71,4 +71,4 @@ async def get_post_detail(lang: str, slug: str):
             "content_html": html_content
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error procesando el post: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error procesando el post: {e!s}")

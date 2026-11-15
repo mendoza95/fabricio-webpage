@@ -1,8 +1,8 @@
 import locale
 import logging
+import re
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import re
 
 BOGOTA_TZ = ZoneInfo("America/Bogota")
 
@@ -33,24 +33,25 @@ def _extract_year(date_value):
         return 9999  # Presente o vacío va al inicio (más reciente)
     if isinstance(date_value, (int, float)):
         return int(date_value)
-    
+
     val_str = str(date_value).strip().lower()
     if val_str in ["present", "actualidad", "current", "presente"]:
         return 9999
-    
-    match = re.search(r'\b(20\d{2}|19\d{2})\b', val_str)
+
+    match = re.search(r"\b(20\d{2}|19\d{2})\b", val_str)
     if match:
         return int(match.group(1))
-    
+
     parsed = _parse_date_flexible(date_value)
     return parsed.year
 
 
 def _sort_by_date_and_duration(items, start_key, end_key):
     """
-    Ordena descendente por fecha de fin. 
+    Ordena descendente por fecha de fin.
     En empate, prioriza el rango más largo (año de inicio más antiguo primero).
     """
+
     def sort_key(item):
         end_y = _extract_year(item.get(end_key))
         start_y = _extract_year(item.get(start_key))
@@ -135,7 +136,9 @@ def load_site_data(db, lang: str) -> dict:
                 "end_date": exp.get("end_date", ""),
             }
         )
-    experience_data = _sort_by_date_and_duration(experience_data, "start_date", "end_date")
+    experience_data = _sort_by_date_and_duration(
+        experience_data, "start_date", "end_date"
+    )
 
     education_data = []
     for edu in raw_education:
@@ -153,7 +156,9 @@ def load_site_data(db, lang: str) -> dict:
                 "end_year": edu.get("end_year", ""),
             }
         )
-    education_data = _sort_by_date_and_duration(education_data, "start_year", "end_year")
+    education_data = _sort_by_date_and_duration(
+        education_data, "start_year", "end_year"
+    )
 
     publications_data = []
     for pub in raw_publications:
@@ -170,12 +175,12 @@ def load_site_data(db, lang: str) -> dict:
             }
         )
 
-    #ui_text_data = portfolio_global.get("ui_text", {}).get(lang, {})
+    # ui_text_data = portfolio_global.get("ui_text", {}).get(lang, {})
     ui_doc = db["ui_translations"].find_one()
     ui_translations = ui_doc.get("translations", {}) if ui_doc else {}
     ui_text_data = ui_translations.get(lang, {})  # lang suele ser 'es' o 'en'
     social_links_data = portfolio_global.get("social_media", [])
-    
+
     # Procesar habilidades de forma limpia
     raw_skills = portfolio_global.get("skills", [])
     skills_data = []
@@ -192,10 +197,18 @@ def load_site_data(db, lang: str) -> dict:
         if isinstance(lang_item, dict):
             name_dict = lang_item.get("name", {})
             level_dict = lang_item.get("level", {})
-            
-            lang_name = name_dict.get(lang, name_dict.get("en", "")) if isinstance(name_dict, dict) else str(name_dict)
-            lang_level = level_dict.get(lang, level_dict.get("en", "")) if isinstance(level_dict, dict) else str(level_dict)
-            
+
+            lang_name = (
+                name_dict.get(lang, name_dict.get("en", ""))
+                if isinstance(name_dict, dict)
+                else str(name_dict)
+            )
+            lang_level = (
+                level_dict.get(lang, level_dict.get("en", ""))
+                if isinstance(level_dict, dict)
+                else str(level_dict)
+            )
+
             if lang_name and lang_level:
                 languages_data.append(f"{lang_name}: {lang_level}")
             elif lang_name:

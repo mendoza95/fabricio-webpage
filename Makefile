@@ -13,14 +13,14 @@ install: ## Install production and dev dependencies
 	@if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
 lint: ## Run Ruff linter checks
-	ruff check .
+	ruff check . --exclude backend --exclude frontend
 
 format: ## Auto-format code with Ruff
-	ruff check . --fix
-	ruff format .
+	ruff check . --exclude backend --exclude frontend --fix
+	ruff format . --exclude backend --exclude frontend
 
 test: ## Run tests with Pytest
-	pytest -v
+	pytest -v tests/
 
 check: lint test ## Run all checks (linting + tests) locally before pushing
 

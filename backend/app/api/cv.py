@@ -135,4 +135,4 @@ async def generate_cv_pdf(lang: str, db: AsyncIOMotorDatabase = Depends(get_data
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al generar el PDF: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error al generar el PDF: {e!s}")
