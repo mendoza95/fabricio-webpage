@@ -9,8 +9,11 @@ import {
   EducationResponse, 
   PublicationResponse, 
   PortfolioGlobalResponse, 
-  UiTranslationsResponse 
+  UiTranslationsResponse,
+  PostSummary
 } from '@/types/portfolio';
+
+import { PostModal, PostDetail } from '@/components/PostModal'; // Ajusta la ruta según tu estructura
 
 export default function Home() {
   const [language, setLanguage] = useState<'es' | 'en'>('es');
@@ -29,6 +32,12 @@ export default function Home() {
   const [publications, setPublications] = useState<PublicationResponse[]>([]);
   const [globalData, setGlobalData] = useState<PortfolioGlobalResponse | null>(null);
   const [uiTranslations, setUiTranslations] = useState<UiTranslationsResponse | null>(null);
+
+  // Estados para los posts
+  const [selectedPost, setSelectedPost] = useState<PostDetail | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loadingSlug, setLoadingSlug] = useState<string | null>(null);
+  const [posts, setPosts] = useState<PostSummary[]>([]);
 
   useEffect(() => {
     // Cargar preferencia de tema guardada o usar 'dark' por defecto
@@ -81,6 +90,19 @@ export default function Home() {
     fetchPortfolioData();
   }, []);
 
+  // Cargar posts cuando cambie el idioma
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const res = await api.get(`/posts/${language}`);
+        setPosts(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error("Error al cargar los posts:", err);
+      }
+    }
+    fetchPosts();
+  }, [language]);
+
   // Función para alternar entre modo oscuro y claro
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -90,6 +112,20 @@ export default function Home() {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+    }
+  };
+
+  // Funcion para obtener el post
+  const handleOpenPost = async (slug: string) => {
+    try {
+      setLoadingSlug(slug);
+      const res = await api.get(`/posts/${language}/${slug}`);
+      setSelectedPost(res.data);
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error("Error al cargar el detalle del post:", err);
+    } finally {
+      setLoadingSlug(null);
     }
   };
 
@@ -117,6 +153,7 @@ export default function Home() {
     ...(globalData?.skills && globalData.skills.length > 0 
       ? [{ href: '#skills', label: ui?.skills_cv || (language === 'es' ? 'Habilidades' : 'Skills') }] 
       : []),
+    { href: '#posts', label: language === 'es' ? 'Noticias' : 'Posts' },
     { href: '#contact', label: ui?.contact_title || (language === 'es' ? 'Contacto' : 'Contact') },
   ];
 
@@ -366,7 +403,45 @@ export default function Home() {
             </section>
           )}
 
-          {/* 6. HABILIDADES Y PORTAFOLIO GLOBAL */}
+          {/* 6. SECCIÓN DE POSTS / NOTICIAS */}
+          {posts.length > 0 && (
+            <section id="posts" className="scroll-mt-24 space-y-6">
+              <h2 className="text-2xl md:text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                {language === 'es' ? 'Últimas Noticias & Artículos' : 'Latest Posts & News'}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {posts.map((post) => (
+                  <div key={post.slug} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-sm transition-colors">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 font-mono">
+                        <span>{post.date}</span>
+                        <span>{post.author}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white">{post.title}</h3>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{post.summary}</p>
+                    </div>
+                    
+                    {/* 👇 Botón interactivo para abrir el modal */}
+                    <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                      <button 
+                        onClick={() => handleOpenPost(post.slug)}
+                        disabled={loadingSlug === post.slug}
+                        className="text-indigo-600 dark:text-indigo-400 text-sm font-medium hover:underline cursor-pointer flex items-center gap-1 bg-transparent border-none p-0"
+                      >
+                        {loadingSlug === post.slug ? (
+                          <span>{language === 'es' ? 'Cargando...' : 'Loading...'}</span>
+                        ) : (
+                          <span>{language === 'es' ? 'Leer más →' : 'Read more →'}</span>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 7. HABILIDADES Y PORTAFOLIO GLOBAL */}
           {globalData?.skills && globalData.skills.length > 0 && (
             <section id="skills" className="scroll-mt-24 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl space-y-4 shadow-sm transition-colors">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -414,7 +489,14 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
+      
+      {/* MODAL PARA MOSTRAR EL POST COMPLETO */}
+      <PostModal 
+        isOpen={isModalOpen}
+        post={selectedPost}
+        onClose={() => setIsModalOpen(false)}
+        language={language}
+      />
     </div>
   );
 }

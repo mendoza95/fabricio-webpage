@@ -199,3 +199,19 @@ export interface UiTranslationsResponse {
     id?: string | null;
     translations: Record<string, UiTextDict>;
 }
+
+// ==========================================
+// SECTION: POSTS
+// ==========================================
+
+export interface PostSummary {
+  slug: string;
+  title: string;
+  date: string;
+  author: string;
+  summary: string;
+}
+
+export interface PostDetail extends PostSummary {
+  content_html: string;
+}
