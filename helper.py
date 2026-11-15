@@ -2,6 +2,7 @@ import locale
 import logging
 from datetime import datetime
 from zoneinfo import ZoneInfo
+import re
 
 BOGOTA_TZ = ZoneInfo("America/Bogota")
 
@@ -9,14 +10,13 @@ logger = logging.getLogger(__name__)
 
 
 def _parse_date_flexible(d):
-    """
-    Parsea una fecha de manera flexible. Ya no requiere pasar 'app'.
-    """
+    """Parsea una fecha de manera flexible."""
     date_str = str(d)
     formats_to_try = [
         "%Y-%m-%d",
         "%d-%m-%Y",
         "%B %d, %Y",
+        "%Y",
     ]
     for fmt in formats_to_try:
         try:
@@ -25,6 +25,38 @@ def _parse_date_flexible(d):
             continue
     logger.warning(f"Could not parse date '{date_str}'. Using default 1970-01-01.")
     return datetime(1970, 1, 1, tzinfo=BOGOTA_TZ)
+
+
+def _extract_year(date_value):
+    """Extrae un año numérico de un string o fecha para ordenamiento."""
+    if not date_value:
+        return 9999  # Presente o vacío va al inicio (más reciente)
+    if isinstance(date_value, (int, float)):
+        return int(date_value)
+    
+    val_str = str(date_value).strip().lower()
+    if val_str in ["present", "actualidad", "current", "presente"]:
+        return 9999
+    
+    match = re.search(r'\b(20\d{2}|19\d{2})\b', val_str)
+    if match:
+        return int(match.group(1))
+    
+    parsed = _parse_date_flexible(date_value)
+    return parsed.year
+
+
+def _sort_by_date_and_duration(items, start_key, end_key):
+    """
+    Ordena descendente por fecha de fin. 
+    En empate, prioriza el rango más largo (año de inicio más antiguo primero).
+    """
+    def sort_key(item):
+        end_y = _extract_year(item.get(end_key))
+        start_y = _extract_year(item.get(start_key))
+        return (-end_y, start_y)
+
+    return sorted(items, key=sort_key)
 
 
 def _set_locale(lang: str):
@@ -41,10 +73,6 @@ def _set_locale(lang: str):
 
 
 def load_site_data(db, lang: str) -> dict:
-    """
-    Carga y procesa la información pasando la instancia 'db' explícitamente.
-    Esto permite pasarle una base de datos mock durante las pruebas.
-    """
     db_users_coll = db["users"]
 
     usuario = db_users_coll.find_one()
@@ -107,6 +135,7 @@ def load_site_data(db, lang: str) -> dict:
                 "end_date": exp.get("end_date", ""),
             }
         )
+    experience_data = _sort_by_date_and_duration(experience_data, "start_date", "end_date")
 
     education_data = []
     for edu in raw_education:
@@ -124,6 +153,7 @@ def load_site_data(db, lang: str) -> dict:
                 "end_year": edu.get("end_year", ""),
             }
         )
+    education_data = _sort_by_date_and_duration(education_data, "start_year", "end_year")
 
     publications_data = []
     for pub in raw_publications:
@@ -142,8 +172,33 @@ def load_site_data(db, lang: str) -> dict:
 
     ui_text_data = portfolio_global.get("ui_text", {}).get(lang, {})
     social_links_data = portfolio_global.get("social_media", [])
-    skills_data = portfolio_global.get("skills", [])
-    languages_data = about_doc.get("languages", [])
+    
+    # Procesar habilidades de forma limpia
+    raw_skills = portfolio_global.get("skills", [])
+    skills_data = []
+    for skill in raw_skills:
+        if isinstance(skill, dict):
+            skills_data.append(skill.get(lang, skill.get("en", str(skill))))
+        else:
+            skills_data.append(str(skill))
+
+    # Procesar idiomas adaptado a la lista de diccionarios de la base de datos
+    raw_languages = about_doc.get("languages", [])
+    languages_data = []
+    for lang_item in raw_languages:
+        if isinstance(lang_item, dict):
+            name_dict = lang_item.get("name", {})
+            level_dict = lang_item.get("level", {})
+            
+            lang_name = name_dict.get(lang, name_dict.get("en", "")) if isinstance(name_dict, dict) else str(name_dict)
+            lang_level = level_dict.get(lang, level_dict.get("en", "")) if isinstance(level_dict, dict) else str(level_dict)
+            
+            if lang_name and lang_level:
+                languages_data.append(f"{lang_name}: {lang_level}")
+            elif lang_name:
+                languages_data.append(lang_name)
+        else:
+            languages_data.append(str(lang_item))
 
     return {
         "about": about_data,

@@ -21,9 +21,14 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.secret_key = os.environ.get("SECRET_KEY", "default-dev-key")
 
-    # Configuración de la Base de Datos (Inyección de Dependencia)
+    # Configuración de la Base de Datos (Modificado para soportar JSON local)
+    use_local_json = os.environ.get("USE_LOCAL_JSON", "False").lower() == "true"
+
     if test_config and "DB" in test_config:
         app.config["DB"] = test_config["DB"]
+    elif use_local_json:
+        from json_db import JsonDatabase
+        app.config["DB"] = JsonDatabase("data/database_dump.json")
     else:
         mongo_uri = os.environ.get("MONGO_URI")
         if not mongo_uri:
@@ -36,7 +41,7 @@ def create_app(test_config=None):
             tlsCAFile=certifi.where(),
             connectTimeoutMS=30000,
             socketTimeoutMS=None,
-            connect=False,  # Delay connection until actual read/write operation
+            connect=False,
             maxPoolSize=1,
         )
         app.config["DB"] = client["personal_webpage"]

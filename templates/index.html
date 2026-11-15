@@ -25,7 +25,7 @@
                     </p>
                 {% endfor %}
                 
-                <a href="{{ url_for('generate_cv_pdf', lang=lang) }}" class="button" target="_blank" rel="noopener noreferrer">{{ about.cv_button }}</a>
+                
             </div>
             <div class="about-image">
                 <img src="{{ url_for('static', filename='images/' + about.profile_image) }}" alt="{{ about.profile_image_alt }}">
@@ -35,7 +35,7 @@
 
     {# Education Section #}
     <section id="education">
-        <h2>{{ ui_text.education_title }}</h2>
+        <h2>{{ ui_text.education_title | default('Education') }}</h2>
         <div class="education-container">
             {% for item in education %}
             <div class="education-item" id="edu-card-{{ item.id }}">
@@ -72,7 +72,7 @@
 
     {# Work Experience Section #}
     <section id="experience">
-        <h2>{{ ui_text.experience_title }}</h2>
+        <h2>{{ ui_text.experience_title | default('Experience') }}</h2>
         <div class="experience-container">
             {% for job in experience %}
             <div class="experience-item" id="exp-card-{{ job.id }}">
@@ -104,14 +104,14 @@
                 </div>
             </div>
             {% else %}
-            <p>{{ ui_text.no_experience_message }}</p>
+            <p>{{ ui_text.no_experience_message | default('No experience listed.') }}</p>
             {% endfor %}
         </div>
     </section>
 
     {# Projects Section #}
     <section id="projects">
-        <h2>{{ ui_text.projects_title }}</h2>
+        <h2>{{ ui_text.projects_title | default('Projects') }}</h2>
         <div class="projects-container">
             {% for project in projects %}
             <div class="project-card" id="project-card-{{ project.id }}">
@@ -134,12 +134,12 @@
                 </p>
                 
                 {% if project.live_url %}
-                    <a href="{{ project.live_url }}" target="_blank">{{ ui_text.live_demo_button }}</a>
+                    <a href="{{ project.live_url }}" target="_blank">{{ ui_text.live_demo_button | default('Live Demo') }}</a>
                 {% endif %}
                 
                 {% if project.github_urls %}
                     {% for url in project.github_urls %}
-                        <a href="{{ url }}" target="_blank">{{ ui_text.github_repo_button }} #{{ loop.index }}</a>
+                        <a href="{{ url }}" target="_blank">{{ ui_text.github_repo_button | default('GitHub') }} #{{ loop.index }}</a>
                     {% endfor %}
                 {% endif %}
             </div>
@@ -149,7 +149,7 @@
 
     {# Publications Section #}
     <section id="publications">
-        <h2>{{ ui_text.publications_title }}</h2>
+        <h2>{{ ui_text.publications_title | default('Publications') }}</h2>
         <div class="publications-container">
             {% for pub in publications %}
             <div class="publication-item" id="pub-card-{{ pub.id }}">
@@ -172,33 +172,36 @@
                 {% endif %}
             </div>
             {% else %}
-            <p>{{ ui_text.no_publications_message }}</p>
+            <p>{{ ui_text.no_publications_message | default('No publications listed.') }}</p>
             {% endfor %}
         </div>
     </section>
 
     {# Latest News Section #}
     <section id="news">
-        <h2>{{ ui_text.news_title }}</h2>
+        <h2>{{ ui_text.news_title | default('News') }}</h2>
         <div class="posts-container">
             {% for post in latest_posts %}
             <div class="post-summary" id="post-summary-{{ loop.index }}">
                 <h3>{{ post.title }}</h3>
-                <p class="post-meta">{{ ui_text.published_on_prefix }} {{ post.meta.date.strftime(ui_text.date_format) }}</p>
+                <p class="post-meta">
+                    {{ ui_text.published_on_prefix | default('Published on') }} 
+                    {{ post.meta.date.strftime(ui_text.date_format | default('%B %d, %Y')) }}
+                </p>
                 <div class="post-content">{{ post.html | safe }}</div>
             </div>
             {% else %}
-            <p>{{ ui_text.no_news_message }}</p>
+            <p>{{ ui_text.no_news_message | default('No news available.') }}</p>
             {% endfor %}
         </div>
         <p style="text-align: center; margin-top: 2rem;">
-            <a href="{{ url_for('blog', lang=lang) }}" target="_blank" rel="noopener noreferrer">{{ ui_text.view_all_posts_button }}</a>
+            <a href="{{ url_for('blog', lang=lang) }}" target="_blank" rel="noopener noreferrer">{{ ui_text.view_all_posts_button | default('View all posts') }}</a>
         </p>
     </section>
 
     {# Contact Section #}
     <section id="contact">
-        <h2>{{ ui_text.contact_title }}</h2>
+        <h2>{{ ui_text.contact_title | default('Contact') }}</h2>
 
         <div class="social-contact-container">
             {% for link in social_links %}
