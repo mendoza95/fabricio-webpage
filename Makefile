@@ -13,7 +13,7 @@ install: ## Install production and dev dependencies
 	@if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
 lint: ## Run Ruff linter checks
-	ruff check . --exclude backend --exclude frontend
+	ruff check . --exclude backend --exclude frontend --fix
 
 format: ## Auto-format code with Ruff
 	ruff check . --exclude backend --exclude frontend --fix
