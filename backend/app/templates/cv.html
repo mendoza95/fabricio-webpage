@@ -110,7 +110,7 @@
     </div>
 
     <div class="section" id="profile">
-        <h3>{{ ui_text.profile_cv}}</h3>
+        <h3>{{ ui_text.profile_cv | default("Profile")}}</h3>
         <div class="item">
             {% for paragraph in about.intro %}
                 <p>{{ paragraph | safe }}</p>
@@ -128,7 +128,7 @@
     {% endif %}
 
     <div class="section" id="education">
-        <h3>{{ ui_text.education_title }}</h3>
+        <h3>{{ ui_text.education_title | default("Education")}}</h3>
         <ul>
             {% for item in education %}
                 <div class="item">
@@ -141,7 +141,7 @@
     </div>
 
     <div class="section" id="experience">
-        <h3>{{ ui_text.experience_title }}</h3>
+        <h3>{{ ui_text.experience_title | default("Experience") }}</h3>
         {% for job in experience %}
             <div class="item">
                 <div class="item-content">
@@ -162,7 +162,7 @@
     </div>
 
     <div class="section" id="projects">
-        <h3>{{ ui_text.projects_title }}</h3>
+        <h3>{{ ui_text.projects_title | default("Projects")}}</h3>
         {% for project in projects %}
             <div class="item">
                 <div class="item-content">
@@ -186,7 +186,7 @@
 
 
     <div class="section" id="publications">
-        <h3>{{ ui_text.publications_title_cv }}</h3>
+        <h3>{{ ui_text.publications_title_c | default("Publications") }}</h3>
         <ul>
         {% for pub in publications[:3] %}
             <div class="item">
@@ -203,7 +203,7 @@
         {% endfor %}
     </div>
     <div class="section" id="language-level">
-        <h3>{{ ui_text.languages_cv}}</h3>
+        <h3>{{ ui_text.languages_cv | default("Languages") }}</h3>
         <ul>
         {% for lan in languages %}
             <div class="item">

@@ -45,6 +45,7 @@ async def generate_cv_pdf(lang: str, db: AsyncIOMotorDatabase = Depends(get_data
 
         global_doc = await db["portfolio_global"].find_one()
         global_data = format_doc(global_doc) if global_doc else {}
+        print(global_data.keys())
 
         # 👈 PROCESAR LAS HABILIDADES SEGÚN EL IDIOMA
         raw_skills = global_data.get("skills", [])
@@ -65,6 +66,8 @@ async def generate_cv_pdf(lang: str, db: AsyncIOMotorDatabase = Depends(get_data
             "title": about_trans.get("cv_title") or about_trans.get("title", ""),
             "intro": about_trans.get("cv_intro") or about_trans.get("intro", []),
         }
+        languages = [{"name": lang_item["name"][lang], "level":lang_item["level"][lang]} 
+                     for lang_item in about.get("languages", [])]
 
         formatted_projects = [
             {
@@ -121,7 +124,7 @@ async def generate_cv_pdf(lang: str, db: AsyncIOMotorDatabase = Depends(get_data
             publications=formatted_publications,
             social_links=global_data.get("social_media", []),
             skills=formatted_skills,
-            languages=global_data.get("languages", []),
+            languages=languages,
         )
 
         pdf_bytes = HTML(string=rendered_html).write_pdf()
